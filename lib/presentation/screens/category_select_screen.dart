@@ -123,7 +123,7 @@ class CategorySelectScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon
+            // Icon (Emoji)
             Container(
               width: 60,
               height: 60,
@@ -132,10 +132,9 @@ class CategorySelectScreen extends ConsumerWidget {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: Icon(
-                  categoryInfo.icon,
-                  size: 32,
-                  color: AppTheme.textPrimary,
+                child: Text(
+                  _getCategoryEmoji(category),
+                  style: const TextStyle(fontSize: 32),
                 ),
               ),
             ),
@@ -192,41 +191,52 @@ class CategorySelectScreen extends ConsumerWidget {
     );
   }
 
+  String _getCategoryEmoji(LevelCategory category) {
+    switch (category) {
+      case LevelCategory.basic:
+        return '🔢';
+      case LevelCategory.formatted:
+        return '📐';
+      case LevelCategory.time:
+        return '⏰';
+      case LevelCategory.names:
+        return '👤';
+      case LevelCategory.mixed:
+        return '🎲';
+      case LevelCategory.knowledge:
+        return '🧠';
+    }
+  }
+
   _CategoryInfo _getCategoryInfo(LevelCategory category) {
     switch (category) {
       case LevelCategory.basic:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Basic Numbers',
           color: AppTheme.basicColor,
         );
       case LevelCategory.formatted:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Formatted',
           color: AppTheme.formattedColor,
         );
       case LevelCategory.time:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Time Formats',
           color: AppTheme.timeColor,
         );
       case LevelCategory.names:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Name Sorting',
           color: AppTheme.namesColor,
         );
       case LevelCategory.mixed:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Mixed Formats',
           color: AppTheme.mixedColor,
         );
       case LevelCategory.knowledge:
         return _CategoryInfo(
-          icon: category.icon,
           title: 'Knowledge',
           color: AppTheme.knowledgeColor,
         );
@@ -235,12 +245,10 @@ class CategorySelectScreen extends ConsumerWidget {
 }
 
 class _CategoryInfo {
-  final IconData icon;
   final String title;
   final Color color;
   
   _CategoryInfo({
-    required this.icon,
     required this.title,
     required this.color,
   });
