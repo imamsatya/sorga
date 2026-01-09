@@ -1,0 +1,638 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
+import '../../domain/entities/level.dart';
+import '../../domain/entities/level_item.dart';
+import '../providers/game_state_provider.dart';
+
+
+enum DragMode { swap, shift }
+
+class GameScreen extends ConsumerStatefulWidget {
+  final int levelId;
+  
+  const GameScreen({super.key, required this.levelId});
+
+  @override
+  ConsumerState<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends ConsumerState<GameScreen> {
+  int? _draggedIndex;
+  DragMode _dragMode = DragMode.shift; // Default to shift mode
+  
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentState = ref.read(gameStateProvider);
+      // Start new game if:
+      // - No existing state
+      // - Different level
+      // - Game was completed (not continuing)
+      final shouldStartNewGame = currentState == null || 
+          currentState.level.id != widget.levelId ||
+          (currentState.isCompleted && !currentState.isRunning);
+      
+      if (shouldStartNewGame) {
+        ref.read(gameStateProvider.notifier).startGame(widget.levelId);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = ref.watch(gameStateProvider);
+    
+    if (gameState == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppTheme.primaryColor),
+        ),
+      );
+    }
+    
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: AppTheme.backgroundGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  _buildHeader(gameState),
+                  _buildLevelInfo(gameState.level),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: _buildSortableGrid(gameState),
+                  ),
+                  _buildModeToggle(),
+                  const SizedBox(height: 8),
+                  _buildBottomButtons(gameState),
+                ],
+              ),
+            ),
+          ),
+          
+          // Countdown Overlay
+          if (!gameState.isRunning && !gameState.isCompleted)
+            _CountdownOverlay(
+              onFinished: () {
+                ref.read(gameStateProvider.notifier).startPlaying();
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModeToggle() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildModeButton(DragMode.shift, 'Shift', Icons.swap_horiz),
+          const SizedBox(width: 4),
+          _buildModeButton(DragMode.swap, 'Swap', Icons.swap_calls),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModeButton(DragMode mode, String label, IconData icon) {
+    final isSelected = _dragMode == mode;
+    return GestureDetector(
+      onTap: () => setState(() => _dragMode = mode),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          gradient: isSelected ? AppTheme.primaryGradient : null,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon, 
+              size: 18, 
+              color: isSelected ? Colors.white : AppTheme.textMuted,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppTheme.textMuted,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(GameState gameState) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              ref.read(gameStateProvider.notifier).endGame();
+              context.go('/levels');
+            },
+            icon: const Icon(Icons.close, color: AppTheme.textPrimary, size: 28),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceColor,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.timer, color: AppTheme.accentColor, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  gameState.formattedTime,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Level ${gameState.level.id}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLevelInfo(Level level) {
+    final categoryColor = _getCategoryColor(level.category);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: categoryColor.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: categoryColor.withValues(alpha: 0.3), width: 1),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(level.category.icon, color: categoryColor, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  level.description,
+                  style: const TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            ],
+          ),
+          if (level.hint != null) ...[
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.lightbulb_outline,
+                  size: 14,
+                  color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                ),
+                const SizedBox(width: 4),
+                Flexible(
+                  child: Text(
+                    level.hint!,
+                    style: TextStyle(
+                      color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                      fontSize: 11,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Color _getCategoryColor(LevelCategory category) {
+    switch (category) {
+      case LevelCategory.basic:
+        return AppTheme.basicColor;
+      case LevelCategory.formatted:
+        return AppTheme.formattedColor;
+      case LevelCategory.time:
+        return AppTheme.timeColor;
+      case LevelCategory.names:
+        return AppTheme.namesColor;
+      case LevelCategory.mixed:
+        return AppTheme.mixedColor;
+      case LevelCategory.knowledge:
+        return AppTheme.knowledgeColor;
+    }
+  }
+
+  Widget _buildSortableGrid(GameState gameState) {
+    final items = gameState.currentOrder;
+    final categoryColor = _getCategoryColor(gameState.level.category);
+    final totalItems = items.length;
+    
+    final (cardWidth, cardHeight, fontSize) = _getCardDimensions(totalItems);
+    
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: SingleChildScrollView(
+        child: Center(
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: List.generate(items.length, (index) {
+              final item = items[index];
+              return _buildDraggableCard(
+                item, 
+                index, 
+                categoryColor, 
+                cardWidth, 
+                cardHeight, 
+                fontSize,
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  (double, double, double) _getCardDimensions(int totalItems) {
+    if (totalItems <= 5) {
+      return (70.0, 80.0, 16.0);
+    } else if (totalItems <= 10) {
+      return (65.0, 75.0, 14.0);
+    } else if (totalItems <= 15) {
+      return (60.0, 70.0, 13.0);
+    } else if (totalItems <= 20) {
+      return (55.0, 65.0, 12.0);
+    } else {
+      return (50.0, 60.0, 11.0);
+    }
+  }
+
+  Widget _buildDraggableCard(
+    LevelItem item, 
+    int index, 
+    Color categoryColor,
+    double cardWidth,
+    double cardHeight,
+    double fontSize,
+  ) {
+    return SizedBox(
+      width: cardWidth,
+      height: cardHeight,
+      child: Draggable<int>(
+        data: index,
+        feedback: Material(
+          color: Colors.transparent,
+          child: Opacity(
+            opacity: 0.9,
+            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true),
+          ),
+        ),
+        childWhenDragging: Opacity(
+          opacity: 0.3,
+          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false),
+        ),
+        onDragStarted: () {
+          setState(() => _draggedIndex = index);
+        },
+        onDragEnd: (_) {
+          setState(() => _draggedIndex = null);
+        },
+        child: DragTarget<int>(
+          hitTestBehavior: HitTestBehavior.opaque,
+          onWillAcceptWithDetails: (details) => details.data != index,
+          onAcceptWithDetails: (details) {
+            final fromIndex = details.data;
+            if (_dragMode == DragMode.swap) {
+              ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
+            } else {
+              ref.read(gameStateProvider.notifier).insertItem(fromIndex, index);
+            }
+          },
+          builder: (context, candidateData, rejectedData) {
+            final isHovering = candidateData.isNotEmpty;
+            
+            // Visual feedback based on mode
+            BoxDecoration? decoration;
+            Widget? overlay;
+            
+            if (isHovering) {
+              if (_dragMode == DragMode.swap) {
+                // Swap: Highlight entire card
+                decoration = BoxDecoration(
+                  border: Border.all(
+                    color: AppTheme.accentColor, 
+                    width: 3,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  color: AppTheme.accentColor.withValues(alpha: 0.2),
+                );
+                overlay = const Center(
+                  child: Icon(
+                    Icons.swap_calls,
+                    color: AppTheme.accentColor,
+                    size: 32,
+                  ),
+                );
+              } else {
+                // Shift: Show insertion line (Cursor)
+                decoration = BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                      color: AppTheme.warningColor,
+                      width: 4,
+                    ),
+                  ),
+                );
+              }
+            }
+            
+            return Stack(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  transform: isHovering && _dragMode == DragMode.swap
+                      ? (Matrix4.identity()..scale(1.05))
+                      : Matrix4.identity(),
+                  foregroundDecoration: decoration,
+                  child: _buildCard(
+                    item, 
+                    index, 
+                    categoryColor, // Keep original color
+                    cardWidth, 
+                    cardHeight, 
+                    fontSize, 
+                    false,
+                  ),
+                ),
+                if (overlay != null)
+                  Positioned.fill(child: overlay),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(
+    LevelItem item, 
+    int index, 
+    Color categoryColor, 
+    double width, 
+    double height, 
+    double fontSize,
+    bool isDragging,
+  ) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.surfaceColor,
+            AppTheme.surfaceColor.withValues(alpha: 0.9),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDragging ? AppTheme.primaryColor : categoryColor.withValues(alpha: 0.5),
+          width: isDragging ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDragging 
+                ? AppTheme.primaryColor.withValues(alpha: 0.4)
+                : Colors.black.withValues(alpha: 0.2),
+            blurRadius: isDragging ? 12 : 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: categoryColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              '${index + 1}',
+              style: TextStyle(
+                color: categoryColor,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              item.displayValue,
+              style: TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: fontSize,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomButtons(GameState gameState) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => ref.read(gameStateProvider.notifier).retry(),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceColor,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.refresh, color: AppTheme.textSecondary),
+                    SizedBox(width: 8),
+                    Text('Reset', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 2,
+            child: GestureDetector(
+              onTap: () async {
+                await ref.read(gameStateProvider.notifier).checkAnswer();
+                if (mounted) context.go('/result');
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text('Check', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CountdownOverlay extends StatefulWidget {
+  final VoidCallback onFinished;
+  
+  const _CountdownOverlay({required this.onFinished});
+
+  @override
+  State<_CountdownOverlay> createState() => _CountdownOverlayState();
+}
+
+class _CountdownOverlayState extends State<_CountdownOverlay> {
+  int _count = 3;
+  
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+  }
+  
+  void _startCountdown() async {
+    for (int i = 3; i > 0; i--) {
+      if (!mounted) return;
+      setState(() => _count = i);
+      await Future.delayed(const Duration(seconds: 1));
+    }
+    if (mounted) {
+      widget.onFinished();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppTheme.backgroundDark, // Opaque to hide questions
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Get Ready!',
+              style: TextStyle(
+                fontSize: 24,
+                color: AppTheme.textPrimary.withValues(alpha: 0.7),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return ScaleTransition(scale: animation, child: child);
+              },
+              child: Text(
+                '$_count',
+                key: ValueKey<int>(_count),
+                style: const TextStyle(
+                  fontSize: 72,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

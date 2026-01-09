@@ -1,0 +1,446 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../providers/game_state_provider.dart';
+import '../widgets/game_button.dart';
+
+class ResultScreen extends ConsumerWidget {
+  const ResultScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gameState = ref.watch(gameStateProvider);
+    
+    // Also redirect if game is running (not completed) - this happens during next level transition
+    if (gameState == null || !gameState.isCompleted) {
+       // Just return empty, navigation is likely happening or state is resetting
+       // If no navigation happens, we might want to redirect, but for now just shrink
+       return const SizedBox.shrink();
+    }
+    
+    final isSuccess = gameState.isCorrect;
+    final levelId = gameState.level.id;
+    final hasNextLevel = levelId < AppConstants.totalLevels;
+    
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Scrollable content area - centered vertically
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildResultIcon(isSuccess),
+                          const SizedBox(height: 16),
+                          _buildResultTitle(isSuccess),
+                          const SizedBox(height: 4),
+                          _buildResultSubtitle(isSuccess, gameState),
+                          if (isSuccess && gameState.level.fact != null) ...[
+                            const SizedBox(height: 16),
+                            _buildFactCard(gameState.level.fact!),
+                            const SizedBox(height: 16),
+                          ] else
+                            const SizedBox(height: 20),
+                          _buildTimeCard(gameState),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Fixed action buttons at bottom
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+                child: _buildActionButtons(context, ref, isSuccess, hasNextLevel, levelId),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultIcon(bool isSuccess) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: isSuccess
+              ? [AppTheme.successColor, const Color(0xFF00D9A5)]
+              : [AppTheme.errorColor, const Color(0xFFFF6B6B)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: (isSuccess ? AppTheme.successColor : AppTheme.errorColor)
+                .withOpacity(0.4),
+            blurRadius: 30,
+            spreadRadius: 5,
+          ),
+        ],
+      ),
+      child: Center(
+        child: Icon(
+          isSuccess ? Icons.check_rounded : Icons.close_rounded,
+          size: 56,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultTitle(bool isSuccess) {
+    return Text(
+      isSuccess ? 'PERFECT!' : 'TRY AGAIN',
+      style: TextStyle(
+        fontSize: 36,
+        fontWeight: FontWeight.bold,
+        color: isSuccess ? AppTheme.successColor : AppTheme.errorColor,
+        letterSpacing: 4,
+      ),
+    );
+  }
+
+  Widget _buildResultSubtitle(bool isSuccess, GameState gameState) {
+    if (isSuccess) {
+      return Text(
+        'Level ${gameState.level.id} completed!',
+        style: TextStyle(
+          fontSize: 16,
+          color: AppTheme.textSecondary.withValues(alpha: 0.8),
+        ),
+      );
+    }
+    
+    // Show attempts remaining
+    final attemptsRemaining = 2 - gameState.failedAttempts;
+    return Column(
+      children: [
+        Text(
+          'The order was not quite right.',
+          style: TextStyle(
+            fontSize: 16,
+            color: AppTheme.textSecondary.withValues(alpha: 0.8),
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (gameState.canContinue)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.lightbulb_outline, color: AppTheme.warningColor, size: 16),
+              const SizedBox(width: 8),
+              Text(
+                'You have $attemptsRemaining chance${attemptsRemaining > 1 ? 's' : ''} left!',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.warningColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          )
+        else
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.cancel_outlined, color: AppTheme.errorColor, size: 16),
+              SizedBox(width: 8),
+              Text(
+                'No more chances. Try again!',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.errorColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _buildFactCard(String fact) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.knowledgeColor.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.knowledgeColor.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.lightbulb, color: AppTheme.knowledgeColor, size: 28),
+              SizedBox(width: 8),
+              Text(
+                'DID YOU KNOW?',
+                style: TextStyle(
+                  color: AppTheme.knowledgeColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            fact,
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 13,
+              height: 1.4,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeCard(GameState gameState) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.primaryColor.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          const Text(
+            'YOUR TIME',
+            style: TextStyle(
+              fontSize: 12,
+              color: AppTheme.textMuted,
+              letterSpacing: 2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.timer, color: AppTheme.accentColor, size: 28),
+              const SizedBox(width: 12),
+              Text(
+                gameState.formattedTime,
+                style: const TextStyle(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                  fontFamily: 'monospace',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(
+    BuildContext context,
+    WidgetRef ref,
+    bool isSuccess,
+    bool hasNextLevel,
+    int currentLevelId,
+  ) {
+    final gameState = ref.watch(gameStateProvider);
+    final canContinue = gameState?.canContinue ?? false;
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Column(
+        children: [
+          if (isSuccess && hasNextLevel) ...[
+            // Next Level button
+            GestureDetector(
+              onTap: () {
+                context.go('/game/${currentLevelId + 1}');
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.4),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'NEXT LEVEL',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ] else if (!isSuccess && canContinue) ...[
+            // Continue (Resume) button
+            GestureDetector(
+              onTap: () {
+                ref.read(gameStateProvider.notifier).continueGame(); 
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppTheme.warningColor, Color(0xFFFFB347)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.warningColor.withValues(alpha: 0.4),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                    SizedBox(width: 8),
+                    Text(
+                      'CONTINUE',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ] else if (!isSuccess) ...[
+            // Failed - Retry Level
+            OutlinedButton(
+              onPressed: () {
+                 ref.read(gameStateProvider.notifier).retry();
+              },
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 18),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
+                  SizedBox(width: 8),
+                  Text(
+                    'RETRY LEVEL',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 16),
+          
+          Row(
+            children: [
+              if (isSuccess || !canContinue)
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      ref.read(gameStateProvider.notifier).retry();
+                    },
+                    icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),
+                    label: const Text(
+                      'Retry', 
+                      style: TextStyle(color: AppTheme.textSecondary),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AppTheme.surfaceColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+                ),
+              
+              if (isSuccess || !canContinue)
+                const SizedBox(width: 12),
+                
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: () {
+                    ref.read(gameStateProvider.notifier).endGame();
+                    context.go('/');
+                  },
+                  icon: const Icon(Icons.home_rounded, color: AppTheme.textSecondary),
+                  label: const Text(
+                    'Home', 
+                    style: TextStyle(color: AppTheme.textSecondary),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppTheme.surfaceColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
