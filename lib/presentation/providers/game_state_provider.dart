@@ -142,10 +142,8 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       failedAttempts: isCorrect ? state!.failedAttempts : state!.failedAttempts + 1,
     );
     
-    // Save progress only if correct
-    if (isCorrect) {
-      await _saveProgress();
-    }
+    // Save progress (update attempts and completion)
+    await _saveProgress(isCorrect);
     
     return isCorrect;
   }
@@ -164,7 +162,7 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   }
   
   /// Save progress to database
-  Future<void> _saveProgress() async {
+  Future<void> _saveProgress(bool success) async {
     if (state == null) return;
     
     final repository = _ref.read(progressRepositoryProvider);
@@ -174,14 +172,14 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     if (existingProgress != null) {
       newProgress = existingProgress.withNewAttempt(
         state!.elapsedTime,
-        success: true,
+        success: success,
       );
     } else {
       newProgress = UserProgress(
         levelId: state!.level.id,
-        completed: true,
-        bestTimeMs: state!.elapsedTime.inMilliseconds,
-        completedAt: DateTime.now(),
+        completed: success,
+        bestTimeMs: success ? state!.elapsedTime.inMilliseconds : null,
+        completedAt: success ? DateTime.now() : null,
         attempts: 1,
       );
     }

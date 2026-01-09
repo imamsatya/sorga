@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../providers/game_providers.dart';
+import '../providers/feedback_settings_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(gameStatsProvider);
+    final feedbackSettings = ref.watch(feedbackSettingsProvider);
     
     return Scaffold(
       body: Container(
@@ -17,35 +19,82 @@ class HomeScreen extends ConsumerWidget {
           gradient: AppTheme.backgroundGradient,
         ),
         child: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo/Title Area
-                const Spacer(flex: 2),
-                _buildLogo(),
-                const SizedBox(height: 16),
-                _buildTitle(),
-                const SizedBox(height: 8),
-                _buildSubtitle(),
-                const Spacer(flex: 1),
-                
-                // Stats Card
-                statsAsync.when(
-                  data: (stats) => _buildStatsCard(stats),
-                  loading: () => const SizedBox(height: 100),
-                  error: (_, __) => const SizedBox(height: 100),
+          child: Stack(
+            children: [
+              // Settings Row at top
+              Positioned(
+                top: 16,
+                right: 16,
+                child: Row(
+                  children: [
+                    // Sound Toggle
+                    GestureDetector(
+                      onTap: () => ref.read(feedbackSettingsProvider.notifier).toggleSound(),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          feedbackSettings.soundEnabled ? Icons.volume_up : Icons.volume_off,
+                          color: feedbackSettings.soundEnabled ? AppTheme.accentColor : AppTheme.textMuted,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Haptic Toggle
+                    GestureDetector(
+                      onTap: () => ref.read(feedbackSettingsProvider.notifier).toggleHaptic(),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          feedbackSettings.hapticEnabled ? Icons.vibration : Icons.phone_android,
+                          color: feedbackSettings.hapticEnabled ? AppTheme.accentColor : AppTheme.textMuted,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                
-                const Spacer(flex: 1),
-                
-                // Play Button
-                _buildPlayButton(context),
-                const SizedBox(height: 16),
-                
-                const Spacer(flex: 2),
-              ],
-            ),
+              ),
+              // Main Content
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Logo/Title Area
+                    const Spacer(flex: 2),
+                    _buildLogo(),
+                    const SizedBox(height: 16),
+                    _buildTitle(),
+                    const SizedBox(height: 8),
+                    _buildSubtitle(),
+                    const Spacer(flex: 1),
+                    
+                    // Stats Card
+                    statsAsync.when(
+                      data: (stats) => _buildStatsCard(stats),
+                      loading: () => const SizedBox(height: 100),
+                      error: (_, __) => const SizedBox(height: 100),
+                    ),
+                    
+                    const Spacer(flex: 1),
+                    
+                    // Play Button
+                    _buildPlayButton(context),
+                    const SizedBox(height: 16),
+                    
+                    const Spacer(flex: 2),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

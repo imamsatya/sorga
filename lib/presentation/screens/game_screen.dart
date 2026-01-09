@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/services/audio_service.dart';
+import '../../core/services/haptic_service.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../providers/game_state_provider.dart';
@@ -22,9 +25,19 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
   DragMode _dragMode = DragMode.shift; // Default to shift mode
   
+  // Services
+  final AudioService _audioService = AudioService();
+  final HapticService _hapticService = HapticService();
+  
+  // Confetti controller
+  late ConfettiController _confettiController;
+  
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _audioService.init();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentState = ref.read(gameStateProvider);
       // Start new game if:
@@ -39,6 +52,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         ref.read(gameStateProvider.notifier).startGame(widget.levelId);
       }
     });
+  }
+  
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,6 +103,30 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 ref.read(gameStateProvider.notifier).startPlaying();
               },
             ),
+            
+          // Confetti Widget - positioned at top center
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+              ],
+              numberOfParticles: 30,
+              gravity: 0.2,
+              emissionFrequency: 0.05,
+              maxBlastForce: 20,
+              minBlastForce: 8,
+            ),
+          ),
         ],
       ),
     );
@@ -111,7 +154,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   Widget _buildModeButton(DragMode mode, String label, IconData icon) {
     final isSelected = _dragMode == mode;
     return GestureDetector(
-      onTap: () => setState(() => _dragMode = mode),
+      onTap: () {
+        _hapticService.selectionClick();
+        setState(() => _dragMode = mode);
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -350,6 +396,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         ),
         onDragStarted: () {
           setState(() => _draggedIndex = index);
+          _hapticService.lightTap();
+          _audioService.playPop();
         },
         onDragEnd: (_) {
           setState(() => _draggedIndex = null);
@@ -359,6 +407,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           onWillAcceptWithDetails: (details) => details.data != index,
           onAcceptWithDetails: (details) {
             final fromIndex = details.data;
+            _hapticService.mediumTap();
+            _audioService.playPop();
             if (_dragMode == DragMode.swap) {
               ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
             } else {
@@ -512,7 +562,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => ref.read(gameStateProvider.notifier).retry(),
+              onTap: () {
+                _hapticService.selectionClick();
+                ref.read(gameStateProvider.notifier).retry();
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
@@ -536,7 +589,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             flex: 2,
             child: GestureDetector(
               onTap: () async {
+                _hapticService.selectionClick();
                 await ref.read(gameStateProvider.notifier).checkAnswer();
+                final state = ref.read(gameStateProvider);
+                if (state?.isCorrect == true) {
+                  _confettiController.play();
+                  _audioService.playSuccess();
+                  _hapticService.successVibrate();
+                } else {
+                  _audioService.playError();
+                  _hapticService.errorVibrate();
+                }
                 if (mounted) context.go('/result');
               },
               child: Container(

@@ -1,16 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
+import '../../domain/entities/level.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
+import 'package:share_plus/share_plus.dart';
+import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
 import '../widgets/game_button.dart';
 
-class ResultScreen extends ConsumerWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  final GlobalKey _globalKey = GlobalKey();
+  late ConfettiController _confettiController;
+  
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    
+    // Trigger confetti on success after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final gameState = ref.read(gameStateProvider);
+      if (gameState?.isCorrect == true) {
+        _confettiController.play();
+      }
+    });
+  }
+  
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _captureAndShare() async {
+    try {
+      final boundary = _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
+      
+      final image = await boundary.toImage(pixelRatio: 3.0);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final pngBytes = byteData!.buffer.asUint8List();
+
+      final xFile = XFile.fromData(
+        pngBytes,
+        mimeType: 'image/png',
+        name: 'sorga_achievement.png',
+      );
+
+      await Share.shareXFiles(
+        [xFile],
+        text: 'I just completed this level in Sorga! Can you beat my time?',
+      );
+    } catch (e) {
+      debugPrint('Error sharing: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share image')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final gameState = ref.watch(gameStateProvider);
     
     // Also redirect if game is running (not completed) - this happens during next level transition
@@ -25,48 +88,113 @@ class ResultScreen extends ConsumerWidget {
     final hasNextLevel = levelId < AppConstants.totalLevels;
     
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Scrollable content area - centered vertically
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildResultIcon(isSuccess),
-                          const SizedBox(height: 16),
-                          _buildResultTitle(isSuccess),
-                          const SizedBox(height: 4),
-                          _buildResultSubtitle(isSuccess, gameState),
-                          if (isSuccess && gameState.level.fact != null) ...[
-                            const SizedBox(height: 16),
-                            _buildFactCard(gameState.level.fact!),
-                            const SizedBox(height: 16),
-                          ] else
-                            const SizedBox(height: 20),
-                          _buildTimeCard(gameState),
-                        ],
+      body: Stack(
+        children: [
+          // Background + Main Content
+          Container(
+            decoration: const BoxDecoration(
+              gradient: AppTheme.backgroundGradient,
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // Scrollable content area - centered vertically
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              RepaintBoundary(
+                                key: _globalKey,
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.surfaceColor,
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      _buildResultIcon(isSuccess),
+                                      const SizedBox(height: 16),
+                                      _buildResultTitle(isSuccess),
+                                      const SizedBox(height: 4),
+                                      _buildResultSubtitle(isSuccess, gameState, levelId),
+                                      if (isSuccess && gameState.level.fact != null) ...[
+                                        const SizedBox(height: 16),
+                                        _buildFactCard(gameState.level.fact!),
+                                        const SizedBox(height: 16),
+                                      ] else
+                                        const SizedBox(height: 20),
+                                      _buildTimeCard(gameState),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if (isSuccess) ...[
+                                const SizedBox(height: 20),
+                                TextButton.icon(
+                                  onPressed: _captureAndShare,
+                                  icon: const Icon(Icons.share_rounded, color: AppTheme.accentColor),
+                                  label: const Text(
+                                    'Share Achievement',
+                                    style: TextStyle(
+                                      color: AppTheme.accentColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  // Fixed action buttons at bottom
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+                    child: _buildActionButtons(context, ref, isSuccess, hasNextLevel, levelId),
+                  ),
+                ],
               ),
-              // Fixed action buttons at bottom
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-                child: _buildActionButtons(context, ref, isSuccess, hasNextLevel, levelId),
-              ),
-            ],
+            ),
           ),
-        ),
+          // Confetti Widget
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+              ],
+              numberOfParticles: 30,
+              gravity: 0.2,
+              emissionFrequency: 0.05,
+              maxBlastForce: 20,
+              minBlastForce: 8,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -115,14 +243,57 @@ class ResultScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildResultSubtitle(bool isSuccess, GameState gameState) {
+  Widget _buildResultSubtitle(bool isSuccess, GameState gameState, int levelId) {
     if (isSuccess) {
-      return Text(
-        'Level ${gameState.level.id} completed!',
-        style: TextStyle(
-          fontSize: 16,
-          color: AppTheme.textSecondary.withValues(alpha: 0.8),
-        ),
+      final levelProgress = ref.watch(levelProgressProvider(levelId));
+      final attempts = levelProgress.valueOrNull?.attempts ?? 1;
+      final category = gameState.level.category;
+
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _getCategoryEmoji(category),
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                category.displayName,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: _getCategoryColor(category),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Level ${gameState.level.id} completed!',
+            style: TextStyle(
+              fontSize: 16,
+              color: AppTheme.textSecondary.withValues(alpha: 0.8),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'Attempt #$attempts',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.primaryColor,
+              ),
+            ),
+          ),
+        ],
       );
     }
     
@@ -320,7 +491,11 @@ class ResultScreen extends ConsumerWidget {
             // Continue (Resume) button
             GestureDetector(
               onTap: () {
-                ref.read(gameStateProvider.notifier).continueGame(); 
+                final levelId = ref.read(gameStateProvider)?.level.id;
+                ref.read(gameStateProvider.notifier).continueGame();
+                if (levelId != null) {
+                  context.go('/game/$levelId');
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -363,7 +538,11 @@ class ResultScreen extends ConsumerWidget {
             // Failed - Retry Level
             OutlinedButton(
               onPressed: () {
+                 final levelId = ref.read(gameStateProvider)?.level.id;
                  ref.read(gameStateProvider.notifier).retry();
+                 if (levelId != null) {
+                   context.go('/game/$levelId');
+                 }
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppTheme.primaryColor, width: 2),
@@ -397,7 +576,11 @@ class ResultScreen extends ConsumerWidget {
                 Expanded(
                   child: TextButton.icon(
                     onPressed: () {
+                      final levelId = ref.read(gameStateProvider)?.level.id;
                       ref.read(gameStateProvider.notifier).retry();
+                      if (levelId != null) {
+                        context.go('/game/$levelId');
+                      }
                     },
                     icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),
                     label: const Text(
@@ -442,5 +625,39 @@ class ResultScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _getCategoryEmoji(LevelCategory category) {
+    switch (category) {
+      case LevelCategory.basic:
+        return '🔢';
+      case LevelCategory.formatted:
+        return '📐';
+      case LevelCategory.time:
+        return '⏰';
+      case LevelCategory.names:
+        return '👤';
+      case LevelCategory.mixed:
+        return '🎲';
+      case LevelCategory.knowledge:
+        return '🧠';
+    }
+  }
+
+  Color _getCategoryColor(LevelCategory category) {
+    switch (category) {
+      case LevelCategory.basic:
+        return AppTheme.basicColor;
+      case LevelCategory.formatted:
+        return AppTheme.formattedColor;
+      case LevelCategory.time:
+        return AppTheme.timeColor;
+      case LevelCategory.names:
+        return AppTheme.namesColor;
+      case LevelCategory.mixed:
+        return AppTheme.mixedColor;
+      case LevelCategory.knowledge:
+        return AppTheme.knowledgeColor;
+    }
   }
 }
