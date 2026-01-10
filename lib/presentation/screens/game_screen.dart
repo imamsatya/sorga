@@ -245,6 +245,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
   Widget _buildLevelInfo(Level level) {
     final categoryColor = _getCategoryColor(level.category);
+    final isAscending = level.sortOrder == SortOrder.ascending;
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -275,6 +276,41 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 8),
+          // Sort order indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: isAscending 
+                  ? AppTheme.successColor.withValues(alpha: 0.2)
+                  : AppTheme.warningColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isAscending 
+                    ? AppTheme.successColor.withValues(alpha: 0.5)
+                    : AppTheme.warningColor.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isAscending ? Icons.arrow_upward : Icons.arrow_downward,
+                  size: 16,
+                  color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  isAscending ? 'Smallest → Largest' : 'Largest → Smallest',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
+                  ),
+                ),
+              ],
+            ),
           ),
           if (level.hint != null) ...[
             const SizedBox(height: 6),

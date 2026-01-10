@@ -124,13 +124,27 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     
     _stopTimer();
     
-    final correctOrder = state!.level.correctOrder;
+    final level = state!.level;
+    final currentOrder = state!.currentOrder;
     bool isCorrect = true;
     
-    for (int i = 0; i < state!.currentOrder.length; i++) {
-      if (state!.currentOrder[i].id != correctOrder[i].id) {
-        isCorrect = false;
-        break;
+    // Check if items are correctly sorted by comparing sortValues
+    for (int i = 0; i < currentOrder.length - 1; i++) {
+      final current = currentOrder[i].sortValue;
+      final next = currentOrder[i + 1].sortValue;
+      
+      if (level.sortOrder == SortOrder.ascending) {
+        // For ascending: current should be <= next
+        if (current > next) {
+          isCorrect = false;
+          break;
+        }
+      } else {
+        // For descending: current should be >= next
+        if (current < next) {
+          isCorrect = false;
+          break;
+        }
       }
     }
     

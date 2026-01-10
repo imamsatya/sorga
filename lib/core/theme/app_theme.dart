@@ -51,6 +51,7 @@ class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: backgroundDark,
       primaryColor: primaryColor,
+      fontFamily: 'Poppins',
       colorScheme: const ColorScheme.dark(
         primary: primaryColor,
         secondary: secondaryColor,
@@ -58,6 +59,7 @@ class AppTheme {
         error: errorColor,
       ),
       textTheme: Typography.material2021(platform: TargetPlatform.android).white.apply(
+        fontFamily: 'Poppins',
         bodyColor: textPrimary,
         displayColor: textPrimary,
       ),
@@ -66,6 +68,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
+          fontFamily: 'Poppins',
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textPrimary,
@@ -80,6 +83,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(16),
           ),
           textStyle: const TextStyle(
+            fontFamily: 'Poppins',
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
