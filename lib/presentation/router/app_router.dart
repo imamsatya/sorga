@@ -43,20 +43,25 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/game/:category/:localId',
       builder: (context, state) {
-        final categoryStr = state.pathParameters['category'] ?? 'basic';
-        final localIdStr = state.pathParameters['localId'] ?? '1';
-        
-        final category = LevelCategory.values.firstWhere(
-          (e) => e.name == categoryStr,
-          orElse: () => LevelCategory.basic,
-        );
-        final localId = int.tryParse(localIdStr) ?? 1;
-        
-        // Convert to global ID
-        final generator = LevelGenerator();
-        final levelId = generator.getGlobalId(category, localId);
-        
-        return GameScreen(levelId: levelId);
+        try {
+          final categoryStr = state.pathParameters['category'] ?? 'basic';
+          final localIdStr = state.pathParameters['localId'] ?? '1';
+          
+          final category = LevelCategory.values.firstWhere(
+            (e) => e.name == categoryStr,
+            orElse: () => LevelCategory.basic,
+          );
+          final localId = int.tryParse(localIdStr) ?? 1;
+          
+          // Convert to global ID
+          final generator = LevelGenerator();
+          final levelId = generator.getGlobalId(category, localId);
+          
+          return GameScreen(levelId: levelId);
+        } catch (e) {
+          // Fallback to home/categories on error (prevent crash)
+          return const CategorySelectScreen();
+        }
       },
     ),
     GoRoute(
