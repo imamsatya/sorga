@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/achievement_service.dart';
 import 'data/datasources/local_database.dart';
@@ -40,6 +42,23 @@ class SorgaApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
+      // Localization Configuration
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English (Default)
+        Locale('es'), // Spanish
+        Locale('pt'), // Portuguese
+        Locale('de'), // German
+        Locale('fr'), // French
+        Locale('ja'), // Japanese
+        Locale('ko'), // Korean
+        Locale('id'), // Indonesian
+      ],
     );
   }
 }
