@@ -4,6 +4,7 @@ import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/user_progress.dart';
 import '../../data/datasources/local_database.dart';
+import '../../core/services/achievement_service.dart';
 import 'game_providers.dart';
 import 'game_stats_provider.dart';
 
@@ -202,22 +203,72 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     
     await repository.saveProgress(newProgress);
     
+    // Invalidate all progress providers FIRST to refresh counts
+    _ref.invalidate(allProgressProvider);
+    _ref.invalidate(completedCountProvider);
+    _ref.invalidate(highestUnlockedProvider);
+    _ref.invalidate(levelProgressProvider(state!.level.id));
+    
     // Record play time for streak tracking on successful completion
     if (success) {
       await LocalDatabase.instance.recordPlay(
         playTimeMs: state!.elapsedTime.inMilliseconds,
       );
+      // Update consecutive perfect counter
+      await LocalDatabase.instance.incrementPerfect();
       // Refresh game stats provider to update streak badge
       _ref.read(gameStatsNotifierProvider.notifier).refresh();
+      
+      // Check for new achievements AFTER invalidation
+      await _checkAchievements();
+    } else {
+      // Reset consecutive perfect on failure
+      await LocalDatabase.instance.resetPerfect();
+      _ref.read(gameStatsNotifierProvider.notifier).refresh();
+    }
+  }
+
+  /// Check and unlock achievements
+  Future<void> _checkAchievements() async {
+    final gameStats = LocalDatabase.instance.getStats();
+    
+    // Count completed levels directly from database
+    final progressBox = LocalDatabase.instance.progressBox;
+    final allProgress = progressBox.values.toList();
+    int completedCount = 0;
+    final completedPerCategory = <LevelCategory, int>{};
+    final levelGenerator = _ref.read(levelGeneratorProvider);
+    
+    for (final progress in allProgress) {
+      if (progress.completed) {
+        completedCount++;
+        final level = levelGenerator.getLevel(progress.levelId);
+        completedPerCategory[level.category] = 
+            (completedPerCategory[level.category] ?? 0) + 1;
+      }
     }
     
-    // Invalidate all progress providers to refresh UI
-    _ref.invalidate(allProgressProvider);
-    _ref.invalidate(completedCountProvider);
-    _ref.invalidate(highestUnlockedProvider);
-    // Also invalidate the specific level progress
-    _ref.invalidate(levelProgressProvider(state!.level.id));
+    // Check achievements
+    final newlyUnlocked = await AchievementService.instance.checkUnlocks(
+      completedLevels: completedCount,
+      currentStreak: gameStats.currentStreak,
+      totalPlayTimeMs: gameStats.totalPlayTimeMs,
+      lastLevelTimeMs: state?.elapsedTime.inMilliseconds,
+      completedPerCategory: completedPerCategory,
+      consecutivePerfect: gameStats.consecutivePerfect,
+    );
+    
+    // Store newly unlocked for display (can be shown in result screen)
+    if (newlyUnlocked.isNotEmpty) {
+      _lastUnlockedAchievements = newlyUnlocked;
+    }
   }
+
+  /// Get last unlocked achievements (for notification display)
+  static List<dynamic> _lastUnlockedAchievements = [];
+  static List<dynamic> get lastUnlockedAchievements => _lastUnlockedAchievements;
+  static void clearLastUnlockedAchievements() => _lastUnlockedAchievements = [];
+
   
   /// Retry the current level
   void retry() {

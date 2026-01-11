@@ -29,6 +29,10 @@ class GameStats extends Equatable {
   /// First time the app was opened
   @HiveField(5)
   final DateTime? firstOpenedAt;
+  
+  /// Consecutive levels completed without mistakes (for Perfect Run achievement)
+  @HiveField(6)
+  final int consecutivePerfect;
 
   const GameStats({
     this.currentStreak = 0,
@@ -37,6 +41,7 @@ class GameStats extends Equatable {
     this.totalPlayTimeMs = 0,
     this.hasSeenTutorial = false,
     this.firstOpenedAt,
+    this.consecutivePerfect = 0,
   });
 
   /// Get total play time as Duration
@@ -116,7 +121,18 @@ class GameStats extends Equatable {
       totalPlayTimeMs: totalPlayTimeMs + playTimeMs,
       hasSeenTutorial: hasSeenTutorial,
       firstOpenedAt: firstOpenedAt ?? now,
+      consecutivePerfect: consecutivePerfect,
     );
+  }
+
+  /// Increment consecutive perfect count (no mistakes)
+  GameStats incrementPerfect() {
+    return copyWith(consecutivePerfect: consecutivePerfect + 1);
+  }
+
+  /// Reset consecutive perfect count (made a mistake)
+  GameStats resetPerfect() {
+    return copyWith(consecutivePerfect: 0);
   }
 
   GameStats copyWith({
@@ -126,6 +142,7 @@ class GameStats extends Equatable {
     int? totalPlayTimeMs,
     bool? hasSeenTutorial,
     DateTime? firstOpenedAt,
+    int? consecutivePerfect,
   }) {
     return GameStats(
       currentStreak: currentStreak ?? this.currentStreak,
@@ -134,6 +151,7 @@ class GameStats extends Equatable {
       totalPlayTimeMs: totalPlayTimeMs ?? this.totalPlayTimeMs,
       hasSeenTutorial: hasSeenTutorial ?? this.hasSeenTutorial,
       firstOpenedAt: firstOpenedAt ?? this.firstOpenedAt,
+      consecutivePerfect: consecutivePerfect ?? this.consecutivePerfect,
     );
   }
 
@@ -145,5 +163,6 @@ class GameStats extends Equatable {
     totalPlayTimeMs, 
     hasSeenTutorial,
     firstOpenedAt,
+    consecutivePerfect,
   ];
 }

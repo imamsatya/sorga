@@ -60,6 +60,18 @@ class LocalDatabase {
     await saveStats(stats.copyWith(hasSeenTutorial: true));
   }
   
+  /// Increment consecutive perfect count
+  Future<void> incrementPerfect() async {
+    final stats = getStats();
+    await saveStats(stats.incrementPerfect());
+  }
+  
+  /// Reset consecutive perfect count
+  Future<void> resetPerfect() async {
+    final stats = getStats();
+    await saveStats(stats.resetPerfect());
+  }
+  
   /// Close the database
   Future<void> close() async {
     await _progressBox.close();
