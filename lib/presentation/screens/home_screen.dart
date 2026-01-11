@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../providers/game_providers.dart';
 import '../providers/feedback_settings_provider.dart';
+import '../providers/game_stats_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -12,6 +13,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(gameStatsProvider);
     final feedbackSettings = ref.watch(feedbackSettingsProvider);
+    final gameStats = ref.watch(gameStatsNotifierProvider);
     
     return Scaffold(
       body: Container(
@@ -21,12 +23,31 @@ class HomeScreen extends ConsumerWidget {
         child: SafeArea(
           child: Stack(
             children: [
-              // Settings Row at top
+              // Streak Badge at top left (always visible)
+              Positioned(
+                top: 16,
+                left: 16,
+                child: _buildStreakBadge(gameStats.currentStreak),
+              ),
+              // Settings Row at top right
               Positioned(
                 top: 16,
                 right: 16,
                 child: Row(
                   children: [
+                    // Achievements Button
+                    GestureDetector(
+                      onTap: () => context.push('/achievements'),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text('🏆', style: TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     // Sound Toggle
                     GestureDetector(
                       onTap: () => ref.read(feedbackSettingsProvider.notifier).toggleSound(),
@@ -286,6 +307,43 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStreakBadge(int streak) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.warningColor.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.warningColor.withOpacity(0.5),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('🔥', style: TextStyle(fontSize: 18)),
+          const SizedBox(width: 6),
+          Text(
+            '$streak',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.warningColor,
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            streak == 1 ? 'day' : 'days',
+            style: TextStyle(
+              fontSize: 12,
+              color: AppTheme.warningColor.withOpacity(0.8),
+            ),
+          ),
+        ],
       ),
     );
   }

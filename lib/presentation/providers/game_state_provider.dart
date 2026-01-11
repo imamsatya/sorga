@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/user_progress.dart';
+import '../../data/datasources/local_database.dart';
 import 'game_providers.dart';
+import 'game_stats_provider.dart';
 
 /// State for the active game
 class GameState {
@@ -199,6 +201,15 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     }
     
     await repository.saveProgress(newProgress);
+    
+    // Record play time for streak tracking on successful completion
+    if (success) {
+      await LocalDatabase.instance.recordPlay(
+        playTimeMs: state!.elapsedTime.inMilliseconds,
+      );
+      // Refresh game stats provider to update streak badge
+      _ref.read(gameStatsNotifierProvider.notifier).refresh();
+    }
     
     // Invalidate all progress providers to refresh UI
     _ref.invalidate(allProgressProvider);
