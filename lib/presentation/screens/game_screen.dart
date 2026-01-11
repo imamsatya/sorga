@@ -748,13 +748,24 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _confettiController.play();
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
+                  // Go directly to result for success
+                  if (mounted) context.go('/result');
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
+                  
+                  // Show TRY AGAIN feedback overlay only for wrong answers
+                  if (mounted) {
+                    setState(() {
+                      _showResultFeedback = true;
+                      _isResultCorrect = false;
+                    });
+                    
+                    // Wait for feedback to display, then navigate
+                    await Future.delayed(const Duration(milliseconds: 800));
+                    if (mounted) context.go('/result');
+                  }
                 }
-                
-                // Go directly to result screen
-                if (mounted) context.go('/result');
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
