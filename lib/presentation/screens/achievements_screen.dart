@@ -116,7 +116,8 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   
   Widget _buildAchievementGrid() {
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 0.75, // Taller cards to prevent overflow

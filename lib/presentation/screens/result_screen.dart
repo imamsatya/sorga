@@ -102,8 +102,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                   Expanded(
                     child: Center(
                       child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 80),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
