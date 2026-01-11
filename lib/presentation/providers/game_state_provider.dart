@@ -253,9 +253,15 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     for (final progress in allProgress) {
       if (progress.completed) {
         completedCount++;
-        final level = levelGenerator.getLevel(progress.levelId);
-        completedPerCategory[level.category] = 
-            (completedPerCategory[level.category] ?? 0) + 1;
+        try {
+          // Skip daily challenge levels (IDs > 1000 are likely date-based)
+          if (progress.levelId > 1000) continue;
+          final level = levelGenerator.getLevel(progress.levelId);
+          completedPerCategory[level.category] = 
+              (completedPerCategory[level.category] ?? 0) + 1;
+        } catch (e) {
+          // Skip levels that don't exist in generator (e.g., daily challenges)
+        }
       }
     }
     
