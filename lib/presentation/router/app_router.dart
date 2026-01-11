@@ -5,6 +5,7 @@ import '../screens/level_select_screen.dart';
 import '../screens/game_screen.dart';
 import '../screens/result_screen.dart';
 import '../screens/achievements_screen.dart';
+import '../screens/statistics_screen.dart';
 
 /// App routes
 class AppRoutes {
@@ -14,6 +15,7 @@ class AppRoutes {
   static const String game = '/game/:levelId';
   static const String result = '/result';
   static const String achievements = '/achievements';
+  static const String statistics = '/statistics';
 }
 
 /// App router configuration
@@ -49,6 +51,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.achievements,
       builder: (context, state) => const AchievementsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.statistics,
+      builder: (context, state) => const StatisticsScreen(),
     ),
   ],
 );

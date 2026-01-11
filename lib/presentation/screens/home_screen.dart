@@ -35,6 +35,19 @@ class HomeScreen extends ConsumerWidget {
                 right: 16,
                 child: Row(
                   children: [
+                    // Statistics Button
+                    GestureDetector(
+                      onTap: () => context.push('/statistics'),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text('📊', style: TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     // Achievements Button
                     GestureDetector(
                       onTap: () => context.push('/achievements'),
