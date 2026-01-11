@@ -98,35 +98,44 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               // Main Content
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo/Title Area
-                    const Spacer(flex: 2),
-                    _buildLogo(),
-                    const SizedBox(height: 16),
-                    _buildTitle(),
-                    const SizedBox(height: 8),
-                    _buildSubtitle(),
-                    const Spacer(flex: 1),
-                    
-                    // Stats Card
-                    statsAsync.when(
-                      data: (stats) => _buildStatsCard(stats),
-                      loading: () => const SizedBox(height: 100),
-                      error: (_, __) => const SizedBox(height: 100),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate scale factor based on screen height
+                  // standard height ~800, iPhone SE ~667
+                  final double screenHeight = constraints.maxHeight;
+                  final double scaleFactor = screenHeight < 700 ? 0.8 : 1.0;
+                  
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo/Title Area
+                        Spacer(flex: screenHeight < 700 ? 1 : 2),
+                        _buildLogo(scaleFactor),
+                        SizedBox(height: 16 * scaleFactor),
+                        _buildTitle(scaleFactor),
+                        SizedBox(height: 8 * scaleFactor),
+                        _buildSubtitle(scaleFactor),
+                        const Spacer(flex: 1),
+                        
+                        // Stats Card
+                        statsAsync.when(
+                          data: (stats) => _buildStatsCard(stats, scaleFactor),
+                          loading: () => const SizedBox(height: 100),
+                          error: (_, __) => const SizedBox(height: 100),
+                        ),
+                        
+                        const Spacer(flex: 1),
+                        
+                        // Play Button
+                        _buildPlayButton(context, scaleFactor),
+                        SizedBox(height: 16 * scaleFactor),
+                        
+                        Spacer(flex: screenHeight < 700 ? 1 : 2),
+                      ],
                     ),
-                    
-                    const Spacer(flex: 1),
-                    
-                    // Play Button
-                    _buildPlayButton(context),
-                    const SizedBox(height: 16),
-                    
-                    const Spacer(flex: 2),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -135,31 +144,31 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildLogo() {
+  Widget _buildLogo(double scale) {
     return Container(
-      width: 120,
-      height: 120,
+      width: 120 * scale,
+      height: 120 * scale,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30 * scale),
         boxShadow: [
           // Cyan glow (top/left - for up arrow)
           BoxShadow(
             color: AppTheme.accentColor.withOpacity(0.4),
-            blurRadius: 30,
-            spreadRadius: 3,
-            offset: const Offset(-5, -5),
+            blurRadius: 30 * scale,
+            spreadRadius: 3 * scale,
+            offset: Offset(-5 * scale, -5 * scale),
           ),
           // Orange glow (bottom/right - for down arrow)
           BoxShadow(
             color: AppTheme.warningColor.withOpacity(0.4),
-            blurRadius: 30,
-            spreadRadius: 3,
-            offset: const Offset(5, 5),
+            blurRadius: 30 * scale,
+            spreadRadius: 3 * scale,
+            offset: Offset(5 * scale, 5 * scale),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(30 * scale),
         child: Image.asset(
           'assets/icons/app_icon.png',
           fit: BoxFit.cover,
@@ -168,43 +177,43 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildTitle() {
+  Widget _buildTitle(double scale) {
     return ShaderMask(
       shaderCallback: (bounds) => const LinearGradient(
         colors: [AppTheme.accentColor, AppTheme.warningColor],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ).createShader(bounds),
-      child: const Text(
+      child: Text(
         'SORGA',
         style: TextStyle(
-          fontSize: 48,
+          fontSize: 48 * scale,
           fontWeight: FontWeight.bold,
           color: Colors.white,
-          letterSpacing: 8,
+          letterSpacing: 8 * scale,
         ),
       ),
     );
   }
   
-  Widget _buildSubtitle() {
+  Widget _buildSubtitle(double scale) {
     return Text(
       'Your Sorting Paradise',
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 16 * scale,
         color: AppTheme.textSecondary.withOpacity(0.8),
-        letterSpacing: 2,
+        letterSpacing: 2 * scale,
       ),
     );
   }
   
-  Widget _buildStatsCard(GameStats stats) {
+  Widget _buildStatsCard(GameStats stats, double scale) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
-      padding: const EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: 40 * scale),
+      padding: EdgeInsets.all(20 * scale),
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20 * scale),
         border: Border.all(
           color: AppTheme.primaryColor.withOpacity(0.3),
           width: 1,
@@ -220,10 +229,11 @@ class HomeScreen extends ConsumerWidget {
                   '${stats.completedLevels}',
                   'Done',
                   Icons.check_circle_outline,
+                  scale,
                 ),
               ),
               Container(
-                height: 40,
+                height: 40 * scale,
                 width: 1,
                 color: AppTheme.textMuted.withValues(alpha: 0.3),
               ),
@@ -232,10 +242,11 @@ class HomeScreen extends ConsumerWidget {
                   '${stats.completionPercentage.toStringAsFixed(0)}%',
                   'Progress',
                   Icons.trending_up,
+                  scale,
                 ),
               ),
               Container(
-                height: 40,
+                height: 40 * scale,
                 width: 1,
                 color: AppTheme.textMuted.withValues(alpha: 0.3),
               ),
@@ -244,17 +255,18 @@ class HomeScreen extends ConsumerWidget {
                   stats.formattedPlayTime,
                   'Time',
                   Icons.timer_outlined,
+                  scale,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16 * scale),
           // Progress bar
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10 * scale),
             child: LinearProgressIndicator(
               value: stats.completionPercentage / 100,
-              minHeight: 8,
+              minHeight: 8 * scale,
               backgroundColor: AppTheme.backgroundDark,
               valueColor: const AlwaysStoppedAnimation(AppTheme.primaryColor),
             ),
@@ -264,15 +276,15 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildStatItem(String value, String label, IconData icon) {
+  Widget _buildStatItem(String value, String label, IconData icon, double scale) {
     return Column(
       children: [
-        Icon(icon, color: AppTheme.accentColor, size: 24),
-        const SizedBox(height: 4),
+        Icon(icon, color: AppTheme.accentColor, size: 24 * scale),
+        SizedBox(height: 4 * scale),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: 18 * scale,
             fontWeight: FontWeight.bold,
             color: AppTheme.textPrimary,
           ),
@@ -280,7 +292,7 @@ class HomeScreen extends ConsumerWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12 * scale,
             color: AppTheme.textSecondary.withOpacity(0.8),
           ),
         ),
@@ -288,37 +300,41 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildPlayButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push('/levels'),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-        decoration: BoxDecoration(
-          gradient: AppTheme.primaryGradient,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.play_arrow_rounded, size: 32, color: Colors.white),
-            SizedBox(width: 8),
-            Text(
-              'PLAY',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 4,
+  Widget _buildPlayButton(BuildContext context, double scale) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => context.push('/levels'),
+        borderRadius: BorderRadius.circular(30 * scale),
+        child: Ink(
+          padding: EdgeInsets.symmetric(horizontal: 60 * scale, vertical: 20 * scale),
+          decoration: BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+            borderRadius: BorderRadius.circular(30 * scale),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.primaryColor.withOpacity(0.4),
+                blurRadius: 20 * scale,
+                offset: Offset(0, 10 * scale),
               ),
-            ),
-          ],
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.play_arrow_rounded, size: 32 * scale, color: Colors.white),
+              SizedBox(width: 8 * scale),
+              Text(
+                'PLAY',
+                style: TextStyle(
+                  fontSize: 24 * scale,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 4 * scale,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

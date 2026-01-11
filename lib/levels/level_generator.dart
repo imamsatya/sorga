@@ -8,8 +8,63 @@ class LevelGenerator {
   /// Cache of generated levels
   final Map<int, Level> _levelCache = {};
   
+  /// Cache of sort order patterns per category
+  final Map<LevelCategory, List<SortOrder>> _sortOrderCache = {};
+  
   /// Random generator with seed for reproducibility
   Random _getSeededRandom(int levelId) => Random(levelId * 12345);
+  
+  /// Get sort order for a level within its category (ensures max 3 consecutive same type)
+  SortOrder _getSortOrder(LevelCategory category, int relativeId) {
+    if (!_sortOrderCache.containsKey(category)) {
+      _sortOrderCache[category] = _buildSortOrderPattern(category);
+    }
+    final patterns = _sortOrderCache[category]!;
+    return patterns[relativeId % patterns.length];
+  }
+  
+  /// Build unpredictable sort order pattern with max 3 consecutive same type
+  List<SortOrder> _buildSortOrderPattern(LevelCategory category) {
+    final (start, end) = _getCategoryRange(category);
+    final count = end - start + 1;
+    final random = Random(category.index * 999); // Seeded per category
+    final pattern = <SortOrder>[];
+    
+    int consecutiveCount = 0;
+    SortOrder? lastOrder;
+    
+    for (int i = 0; i < count; i++) {
+      SortOrder order;
+      
+      if (consecutiveCount >= 3) {
+        // Force switch after 3 consecutive
+        order = lastOrder == SortOrder.ascending 
+            ? SortOrder.descending 
+            : SortOrder.ascending;
+      } else {
+        // 60% chance to switch, 40% chance to stay same
+        final shouldSwitch = random.nextDouble() < 0.6;
+        if (lastOrder == null) {
+          order = random.nextBool() ? SortOrder.ascending : SortOrder.descending;
+        } else {
+          order = shouldSwitch 
+              ? (lastOrder == SortOrder.ascending ? SortOrder.descending : SortOrder.ascending)
+              : lastOrder;
+        }
+      }
+      
+      if (order == lastOrder) {
+        consecutiveCount++;
+      } else {
+        consecutiveCount = 1;
+      }
+      
+      lastOrder = order;
+      pattern.add(order);
+    }
+    
+    return pattern;
+  }
 
   /// Get a level by ID
   Level getLevel(int levelId) {
@@ -91,9 +146,8 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     final relativeId = levelId - AppConstants.basicNumbersStart;
     
-    // First 30 levels are ascending, next 30 are descending
-    final isAscending = relativeId < 30;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    // Unpredictable ASC/DESC pattern (max 3 consecutive same type)
+    final sortOrder = _getSortOrder(LevelCategory.basic, relativeId);
     
     // Calculate item count: cycles of 5, 10, 15, 20, 25, 30
     final cyclePosition = (relativeId % 30);
@@ -133,9 +187,8 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     final relativeId = levelId - AppConstants.formattedNumbersStart;
     
-    // Alternate between ascending and descending
-    final isAscending = relativeId % 2 == 0;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    // Unpredictable ASC/DESC pattern
+    final sortOrder = _getSortOrder(LevelCategory.formatted, relativeId);
     
     // Gradually increase difficulty
     final itemCount = 4 + (relativeId ~/ 20); // 4 to ~10 items
@@ -225,8 +278,7 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     final relativeId = levelId - AppConstants.timeFormatsStart;
     
-    final isAscending = relativeId % 2 == 0;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    final sortOrder = _getSortOrder(LevelCategory.time, relativeId);
     
     final itemCount = 4 + (relativeId ~/ 15);
     final items = _generateTimeItems(random, itemCount);
@@ -307,8 +359,7 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     final relativeId = levelId - AppConstants.nameSortingStart;
     
-    final isAscending = relativeId % 2 == 0;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    final sortOrder = _getSortOrder(LevelCategory.names, relativeId);
     
     // 5 to 15 names
     final itemCount = 5 + (relativeId ~/ 20);
@@ -352,8 +403,7 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     final relativeId = levelId - AppConstants.mixedFormatsStart;
     
-    final isAscending = relativeId % 2 == 0;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    final sortOrder = _getSortOrder(LevelCategory.mixed, relativeId);
     
     final itemCount = 5 + (relativeId ~/ 25);
     final clampedCount = itemCount.clamp(5, 12);
@@ -427,8 +477,7 @@ class LevelGenerator {
     final random = _getSeededRandom(levelId);
     
     // Alternate ascending/descending
-    final isAscending = (relativeId ~/ _knowledgeData.length) % 2 == 0;
-    final sortOrder = isAscending ? SortOrder.ascending : SortOrder.descending;
+    final sortOrder = _getSortOrder(LevelCategory.knowledge, relativeId);
     
     final items = data.items.asMap().entries.map((entry) {
       return LevelItem(
