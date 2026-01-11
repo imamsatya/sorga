@@ -5,9 +5,11 @@ import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/audio_service.dart';
 import '../../core/services/haptic_service.dart';
+import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../providers/game_state_provider.dart';
+import '../widgets/tutorial_overlay.dart';
 
 
 enum DragMode { swap, shift }
@@ -24,6 +26,7 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
   DragMode _dragMode = DragMode.shift; // Default to shift mode
+  bool _showTutorial = false;
   
   // Services
   final AudioService _audioService = AudioService();
@@ -37,6 +40,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.initState();
     _confettiController = ConfettiController(duration: const Duration(seconds: 3));
     _audioService.init();
+    
+    // Check if user has seen tutorial
+    final stats = LocalDatabase.instance.getStats();
+    if (!stats.hasSeenTutorial) {
+      _showTutorial = true;
+    }
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentState = ref.read(gameStateProvider);
@@ -52,6 +61,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         ref.read(gameStateProvider.notifier).startGame(widget.levelId);
       }
     });
+  }
+  
+  void _completeTutorial() {
+    LocalDatabase.instance.markTutorialSeen();
+    setState(() => _showTutorial = false);
   }
   
   @override
@@ -127,6 +141,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               minBlastForce: 8,
             ),
           ),
+          
+          // Tutorial Overlay (for first-time users)
+          if (_showTutorial)
+            TutorialOverlay(
+              onComplete: _completeTutorial,
+            ),
         ],
       ),
     );
