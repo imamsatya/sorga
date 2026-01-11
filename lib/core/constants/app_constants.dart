@@ -9,26 +9,26 @@ class AppConstants {
   static const bool isDevMode = true;
   
   // Level Constants
-  static const int totalLevels = 1000;
+  static const int totalLevels = 835;
   
-  // Level Ranges per Category
+  // Level Ranges per Category (107 levels each for non-knowledge)
   static const int basicNumbersStart = 1;
-  static const int basicNumbersEnd = 60;
+  static const int basicNumbersEnd = 107;
   
-  static const int formattedNumbersStart = 61;
-  static const int formattedNumbersEnd = 180;
+  static const int formattedNumbersStart = 108;
+  static const int formattedNumbersEnd = 214;
   
-  static const int timeFormatsStart = 181;
-  static const int timeFormatsEnd = 300;
+  static const int timeFormatsStart = 215;
+  static const int timeFormatsEnd = 321;
   
-  static const int nameSortingStart = 301;
-  static const int nameSortingEnd = 500;
+  static const int nameSortingStart = 322;
+  static const int nameSortingEnd = 428;
   
-  static const int mixedFormatsStart = 501;
-  static const int mixedFormatsEnd = 700;
+  static const int mixedFormatsStart = 429;
+  static const int mixedFormatsEnd = 535;
   
-  static const int knowledgeStart = 701;
-  static const int knowledgeEnd = 1000;
+  static const int knowledgeStart = 536;
+  static const int knowledgeEnd = 835; // 300 levels (15 sets * 20)
   
   // Timer
   static const int maxTimerSeconds = 3600; // 1 hour max

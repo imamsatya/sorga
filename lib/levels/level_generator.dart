@@ -66,6 +66,34 @@ class LevelGenerator {
     return pattern;
   }
 
+  /// Get item count based on level progression (relativeId is 0-indexed)
+  int _getItemCountForLevel(int relativeId) {
+    // Level 1-7 (0-6): Items 3-9 (1 level each)
+    if (relativeId < 7) {
+      return 3 + relativeId;
+    }
+    
+    // Level 8-37 (7-36): Items 10-19 (3 levels each)
+    // 30 levels total
+    if (relativeId < 37) {
+      final step = (relativeId - 7) ~/ 3;
+      return 10 + step;
+    }
+    
+    // Level 38-77 (37-76): Items 20-29 (4 levels each)
+    // 40 levels total
+    if (relativeId < 77) {
+      final step = (relativeId - 37) ~/ 4;
+      return 20 + step;
+    }
+    
+    // Level 78-107 (77-106): Items 30-35 (5 levels each)
+    // 30 levels total
+    final step = (relativeId - 77) ~/ 5;
+    final count = 30 + step;
+    return count.clamp(30, 35);
+  }
+
   /// Get a level by ID
   Level getLevel(int levelId) {
     if (levelId < 1 || levelId > AppConstants.totalLevels) {
@@ -149,9 +177,8 @@ class LevelGenerator {
     // Unpredictable ASC/DESC pattern (max 3 consecutive same type)
     final sortOrder = _getSortOrder(LevelCategory.basic, relativeId);
     
-    // Calculate item count: cycles of 5, 10, 15, 20, 25, 30
-    final cyclePosition = (relativeId % 30);
-    final itemCount = ((cyclePosition ~/ 5) + 1) * 5; // 5, 10, 15, 20, 25, 30
+    // Calculate item count based on progression
+    final itemCount = _getItemCountForLevel(relativeId);
     
     // Generate random numbers
     final maxValue = 100 + (levelId * 5); // Increase range as levels progress
@@ -190,8 +217,8 @@ class LevelGenerator {
     // Unpredictable ASC/DESC pattern
     final sortOrder = _getSortOrder(LevelCategory.formatted, relativeId);
     
-    // Gradually increase difficulty
-    final itemCount = 4 + (relativeId ~/ 20); // 4 to ~10 items
+    // Calculate item count based on progression
+    final itemCount = _getItemCountForLevel(relativeId);
     
     // Determine format type based on level range
     final formatType = (relativeId ~/ 40) % 3; // 0: fractions, 1: powers, 2: percentages
@@ -214,13 +241,20 @@ class LevelGenerator {
   List<LevelItem> _generateFormattedItems(Random random, int count, int formatType, int levelId) {
     final items = <LevelItem>[];
     final usedValues = <double>{};
+    int attempts = 0;
     
     for (int i = 0; i < count; i++) {
       LevelItem item;
+      int itemAttempts = 0;
       do {
         item = _generateSingleFormattedItem(random, formatType, i);
+        itemAttempts++;
+        // Safety break if we simply can't find a unique value after 50 tries
+        if (itemAttempts > 50) break;
       } while (usedValues.contains(item.sortValue));
       
+      // If we failed to find unique, just take the last generated one (duplicate)
+      // Or in a real scenario, we might want to change strategy, but this prevents hang.
       usedValues.add(item.sortValue);
       items.add(item);
     }
@@ -230,18 +264,21 @@ class LevelGenerator {
 
   LevelItem _generateSingleFormattedItem(Random random, int formatType, int index) {
     switch (formatType) {
-      case 0: // Fractions
-        final numerator = random.nextInt(20) + 1;
-        final denominator = random.nextInt(10) + 1;
+      case 0: // Fractions - Expanded range
+        // Numerator 1-30, Denominator 1-15
+        final numerator = random.nextInt(30) + 1;
+        final denominator = random.nextInt(15) + 1;
         return LevelItem(
           id: 'item_$index',
           displayValue: '$numerator/$denominator',
           sortValue: numerator / denominator,
         );
       
-      case 1: // Powers
-        final base = random.nextInt(10) + 2;
-        final power = random.nextInt(3) + 1;
+      case 1: // Powers - Expanded range
+        // Base 2-15
+        final base = random.nextInt(14) + 2;
+        // Power 1-4 (to keep numbers reasonable but increase combinations)
+        final power = random.nextInt(4) + 1;
         final value = pow(base, power).toDouble();
         final superscript = _toSuperscript(power);
         return LevelItem(
@@ -280,7 +317,7 @@ class LevelGenerator {
     
     final sortOrder = _getSortOrder(LevelCategory.time, relativeId);
     
-    final itemCount = 4 + (relativeId ~/ 15);
+    final itemCount = _getItemCountForLevel(relativeId);
     final items = _generateTimeItems(random, itemCount);
     items.shuffle(random);
     
@@ -353,6 +390,12 @@ class LevelGenerator {
     'Oscar', 'Piper', 'Quinn', 'Rose', 'Sean', 'Tara', 'Uma', 'Vincent',
     'Wendy', 'Xavier', 'Yvonne', 'Zach', 'Amelia', 'Benjamin', 'Charlotte', 'Daniel',
     'Emma', 'Felix', 'Grace', 'Henry', 'Isabella', 'Jack', 'Katherine', 'Liam',
+    'Mia', 'Noah', 'Olivia', 'Parker', 'Queen', 'Riley', 'Sophia', 'Thomas',
+    'Ursula', 'Victor', 'Willow', 'Xander', 'Yasmine', 'Zane',
+    'Arthur', 'Betty', 'Chris', 'Donna', 'Eric', 'Fran', 'Gary', 'Helen',
+    'Ian', 'Jane', 'Karl', 'Lisa', 'Mark', 'Nora', 'Otis', 'Paula',
+    'Quincy', 'Ruth', 'Steve', 'Tessa', 'Ugo', 'Vera', 'Walt', 'Xenia',
+    'Yuri', 'Zoe', 'Adam', 'Beth', 'Carl', 'Dara', 'Evan', 'Faye',
   ];
 
   Level _generateNamesLevel(int levelId) {
@@ -361,9 +404,9 @@ class LevelGenerator {
     
     final sortOrder = _getSortOrder(LevelCategory.names, relativeId);
     
-    // 5 to 15 names
-    final itemCount = 5 + (relativeId ~/ 20);
-    final clampedCount = itemCount.clamp(5, 15);
+    // Calculate item count based on progression
+    final itemCount = _getItemCountForLevel(relativeId);
+    final clampedCount = itemCount; // No clamp needed, logic handles it
     
     // Pick random unique names
     final shuffledNames = List<String>.from(_commonNames)..shuffle(random);
@@ -405,8 +448,8 @@ class LevelGenerator {
     
     final sortOrder = _getSortOrder(LevelCategory.mixed, relativeId);
     
-    final itemCount = 5 + (relativeId ~/ 25);
-    final clampedCount = itemCount.clamp(5, 12);
+    final itemCount = _getItemCountForLevel(relativeId);
+    final clampedCount = itemCount; // No clamp needed, logic handles it
     
     // Mix different formats
     final items = <LevelItem>[];
