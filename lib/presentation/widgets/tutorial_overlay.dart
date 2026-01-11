@@ -52,7 +52,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
     final step = _steps[_currentStep];
     
     return Container(
-      color: Colors.black.withOpacity(0.85),
+      color: AppTheme.backgroundDark, // Fully opaque to hide game content
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

@@ -6,7 +6,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
-  static const bool isDevMode = false;
+  static const bool isDevMode = true;
   
   // Level Constants
   static const int totalLevels = 1000;

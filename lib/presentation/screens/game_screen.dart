@@ -110,8 +110,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
           ),
           
-          // Countdown Overlay
-          if (!gameState.isRunning && !gameState.isCompleted)
+          // Countdown Overlay - only show when tutorial is not active
+          if (!gameState.isRunning && !gameState.isCompleted && !_showTutorial)
             _CountdownOverlay(
               onFinished: () {
                 ref.read(gameStateProvider.notifier).startPlaying();
