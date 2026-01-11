@@ -273,7 +273,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Level ${gameState.level.localId} completed!',
+            gameState.level.localId == 0 
+                ? 'Daily Challenge completed!' 
+                : 'Level ${gameState.level.localId} completed!',
             style: TextStyle(
               fontSize: 16,
               color: AppTheme.textSecondary.withValues(alpha: 0.8),
