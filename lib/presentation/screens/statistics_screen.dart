@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../providers/game_providers.dart';
+import '../../core/constants/app_constants.dart';
 
 class StatisticsScreen extends ConsumerWidget {
   const StatisticsScreen({super.key});
@@ -181,7 +182,7 @@ class StatisticsScreen extends ConsumerWidget {
     bool fullWidth = false,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color.withOpacity(0.15),
         borderRadius: BorderRadius.circular(16),
@@ -193,27 +194,30 @@ class StatisticsScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: fullWidth ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 28)),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: color,
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
                 ),
-              ),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary,
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.textSecondary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -233,12 +237,12 @@ class StatisticsScreen extends ConsumerWidget {
 
   Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats) {
     final categories = [
-      (LevelCategory.basic, 'Basic Numbers', 60, AppTheme.basicColor),
-      (LevelCategory.formatted, 'Formatted Numbers', 190, AppTheme.formattedColor),
-      (LevelCategory.time, 'Time & Dates', 200, AppTheme.timeColor),
-      (LevelCategory.names, 'Names', 200, AppTheme.namesColor),
-      (LevelCategory.mixed, 'Mixed', 200, AppTheme.mixedColor),
-      (LevelCategory.knowledge, 'Knowledge', 150, AppTheme.knowledgeColor),
+      (LevelCategory.basic, 'Basic Numbers', AppConstants.basicNumbersEnd - AppConstants.basicNumbersStart + 1, AppTheme.basicColor),
+      (LevelCategory.formatted, 'Formatted Numbers', AppConstants.formattedNumbersEnd - AppConstants.formattedNumbersStart + 1, AppTheme.formattedColor),
+      (LevelCategory.time, 'Time & Dates', AppConstants.timeFormatsEnd - AppConstants.timeFormatsStart + 1, AppTheme.timeColor),
+      (LevelCategory.names, 'Names', AppConstants.nameSortingEnd - AppConstants.nameSortingStart + 1, AppTheme.namesColor),
+      (LevelCategory.mixed, 'Mixed', AppConstants.mixedFormatsEnd - AppConstants.mixedFormatsStart + 1, AppTheme.mixedColor),
+      (LevelCategory.knowledge, 'Knowledge', AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor),
     ];
 
     return Column(

@@ -503,7 +503,7 @@ class LevelGenerator {
         return LevelItem(
           id: 'item_$index',
           displayValue: '$percent%',
-          sortValue: percent.toDouble(),
+          sortValue: percent / 100.0,
         );
       case 3: // Decimal
         final value = (random.nextDouble() * 100).roundToDouble() / 10;
