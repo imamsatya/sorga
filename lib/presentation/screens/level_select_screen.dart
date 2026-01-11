@@ -148,8 +148,8 @@ class LevelSelectScreen extends ConsumerWidget {
   Widget _buildLevelGrid(BuildContext context, WidgetRef ref, List<Level> levels) {
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 110,
         childAspectRatio: 1,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
