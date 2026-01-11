@@ -217,7 +217,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           IconButton(
             onPressed: () {
               ref.read(gameStateProvider.notifier).endGame();
-              context.go('/levels');
+              context.go('/levels/${gameState.level.category.name}');
             },
             icon: const Icon(Icons.close, color: AppTheme.textPrimary, size: 28),
           ),
@@ -250,7 +250,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Level ${gameState.level.id}',
+              'Level ${gameState.level.localId}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,

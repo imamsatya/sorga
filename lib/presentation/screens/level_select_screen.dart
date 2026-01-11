@@ -169,7 +169,7 @@ class LevelSelectScreen extends ConsumerWidget {
 
     return GestureDetector(
       onTap: isUnlocked
-          ? () => context.go('/game/${level.id}')
+          ? () => context.go('/game/${level.category.name}/${level.localId}')
           : null,
       onLongPress: isCompleted
           ? () => _showShareDialog(context, level, progress!, categoryColor)
@@ -224,7 +224,7 @@ class LevelSelectScreen extends ConsumerWidget {
                       )
                     else ...[
                       Text(
-                        '${level.id}',
+                        '${level.localId}',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -343,7 +343,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Level ${level.id}',
+                      'Level ${level.localId}',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -467,7 +467,7 @@ class LevelSelectScreen extends ConsumerWidget {
         name: 'sorga_level_${level.id}.png',
       );
 
-      final message = '''🎮 Sorga - Level ${level.id} Completed!
+      final message = '''🎮 Sorga - ${level.category.displayName} Level ${level.localId} Completed!
 
 📝 ${level.description}
 ⏱️ Best Time: ${progress.bestTimeFormatted}

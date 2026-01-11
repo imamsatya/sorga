@@ -271,7 +271,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Level ${gameState.level.id} completed!',
+            'Level ${gameState.level.localId} completed!',
             style: TextStyle(
               fontSize: 16,
               color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -452,7 +452,15 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             // Next Level button
             GestureDetector(
               onTap: () {
-                context.go('/game/${currentLevelId + 1}');
+                try {
+                  final nextLevelId = currentLevelId + 1;
+                  // Get next level info for navigation
+                  final nextLevel = ref.read(levelRepositoryProvider).getLevel(nextLevelId);
+                  context.go('/game/${nextLevel.category.name}/${nextLevel.localId}');
+                } catch (e) {
+                  // Fallback or end of game
+                  context.go('/');
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -491,10 +499,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             // Continue (Resume) button
             GestureDetector(
               onTap: () {
-                final levelId = ref.read(gameStateProvider)?.level.id;
-                ref.read(gameStateProvider.notifier).continueGame();
-                if (levelId != null) {
-                  context.go('/game/$levelId');
+                final gameState = ref.read(gameStateProvider);
+                if (gameState != null) {
+                  ref.read(gameStateProvider.notifier).continueGame();
+                  context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
                 }
               },
               child: Container(
@@ -538,10 +546,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             // Failed - Retry Level
             OutlinedButton(
               onPressed: () {
-                 final levelId = ref.read(gameStateProvider)?.level.id;
-                 ref.read(gameStateProvider.notifier).retry();
-                 if (levelId != null) {
-                   context.go('/game/$levelId');
+                 final gameState = ref.read(gameStateProvider);
+                 if (gameState != null) {
+                   ref.read(gameStateProvider.notifier).retry();
+                   context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
                  }
               },
               style: OutlinedButton.styleFrom(
@@ -576,10 +584,10 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 Expanded(
                   child: TextButton.icon(
                     onPressed: () {
-                      final levelId = ref.read(gameStateProvider)?.level.id;
-                      ref.read(gameStateProvider.notifier).retry();
-                      if (levelId != null) {
-                        context.go('/game/$levelId');
+                      final gameState = ref.read(gameStateProvider);
+                      if (gameState != null) {
+                        ref.read(gameStateProvider.notifier).retry();
+                        context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
                       }
                     },
                     icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),

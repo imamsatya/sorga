@@ -78,8 +78,11 @@ extension SortOrderExtension on SortOrder {
 
 /// Represents a game level
 class Level extends Equatable {
-  /// Unique level ID (1-1000)
+  /// Unique level ID (Global 1-835)
   final int id;
+  
+  /// Local ID within category (e.g. 1-107)
+  final int localId;
   
   /// Category of the level
   final LevelCategory category;
@@ -104,6 +107,7 @@ class Level extends Equatable {
 
   const Level({
     required this.id,
+    required this.localId,
     required this.category,
     required this.sortOrder,
     required this.title,
@@ -129,8 +133,31 @@ class Level extends Equatable {
   /// Number of items in this level
   int get itemCount => items.length;
 
+  /// Unique composite ID string (e.g., 'basic_1', 'time_5')
+  String get compositeId => '${category.name}_$localId';
+  
+  /// Helper to parse "category_localId" string
+  static (LevelCategory, int)? parseCompositeId(String compositeId) {
+    try {
+      final parts = compositeId.split('_');
+      if (parts.length != 2) return null;
+      
+      final category = LevelCategory.values.firstWhere(
+        (c) => c.name == parts[0],
+        orElse: () => LevelCategory.basic,
+      );
+      
+      final localId = int.tryParse(parts[1]);
+      if (localId == null) return null;
+      
+      return (category, localId);
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
-  List<Object?> get props => [id, category, sortOrder, title, items];
+  List<Object?> get props => [id, localId, category, sortOrder, title, items];
   
   @override
   String toString() => 'Level($id: $title)';

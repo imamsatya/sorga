@@ -138,6 +138,12 @@ class LevelGenerator {
     }
   }
 
+  /// Get global level ID from category and local ID (1-based)
+  int getGlobalId(LevelCategory category, int localId) {
+    final (start, _) = _getCategoryRange(category);
+    return start + localId - 1;
+  }
+
   /// Determine category for a level ID
   LevelCategory _getCategoryForLevel(int levelId) {
     if (levelId <= AppConstants.basicNumbersEnd) return LevelCategory.basic;
@@ -200,9 +206,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.basic,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: 'Sort $itemCount numbers ${sortOrder.shortName}',
       items: items,
     );
@@ -230,9 +237,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.formatted,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: 'Sort $itemCount $formatName ${sortOrder.shortName}',
       items: items,
     );
@@ -323,9 +331,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.time,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: 'Sort $itemCount time durations ${sortOrder.shortName}',
       items: items,
     );
@@ -432,9 +441,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.names,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: 'Sort $clampedCount names alphabetically ${sortOrder.shortName}',
       items: items,
     );
@@ -462,9 +472,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.mixed,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: 'Sort $clampedCount mixed values ${sortOrder.shortName}',
       items: items,
     );
@@ -534,9 +545,10 @@ class LevelGenerator {
     
     return Level(
       id: levelId,
+      localId: relativeId + 1,
       category: LevelCategory.knowledge,
       sortOrder: sortOrder,
-      title: 'Level $levelId',
+      title: 'Level ${relativeId + 1}',
       description: '${data.description} ${sortOrder.shortName}',
       items: items,
       hint: data.hint,
