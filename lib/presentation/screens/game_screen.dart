@@ -401,50 +401,53 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final categoryColor = _getCategoryColor(gameState.level.category);
     final totalItems = items.length;
     
-    final (cardWidth, cardHeight, fontSize) = _getCardDimensions(totalItems);
-    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 20), // Add padding to check overflowing items
-        child: Center(
-          child: Wrap(
-            spacing: totalItems > 30 ? 6 : 8, // Tighter spacing for many items
-            runSpacing: totalItems > 30 ? 6 : 8,
-            alignment: WrapAlignment.center,
-            children: List.generate(items.length, (index) {
-              final item = items[index];
-              return _buildDraggableCard(
-                item, 
-                index, 
-                categoryColor, 
-                cardWidth, 
-                cardHeight, 
-                fontSize,
-              );
-            }),
-          ),
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // User requested max 5 items per row to make them larger
+          const int crossAxisCount = 5;
+          const double spacing = 8.0;
+          
+          // Calculate width based on available space and column count
+          final double totalSpacing = (crossAxisCount - 1) * spacing;
+          final double availableWidth = constraints.maxWidth;
+          final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
+          
+          // Dynamic height and font size
+          final double cardHeight = cardWidth * 1.2; // 1.2 aspect ratio
+          final double fontSize = cardWidth * 0.22; // Proportional font size
+          
+          return SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              children: [
+                Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  alignment: WrapAlignment.center,
+                  children: List.generate(items.length, (index) {
+                    final item = items[index];
+                    return _buildDraggableCard(
+                      item, 
+                      index, 
+                      categoryColor, 
+                      cardWidth, 
+                      cardHeight, 
+                      fontSize,
+                    );
+                  }),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  (double, double, double) _getCardDimensions(int totalItems) {
-    if (totalItems <= 5) {
-      return (70.0, 80.0, 16.0);
-    } else if (totalItems <= 10) {
-      return (65.0, 75.0, 14.0);
-    } else if (totalItems <= 15) {
-      return (60.0, 70.0, 13.0);
-    } else if (totalItems <= 20) {
-      return (55.0, 65.0, 12.0);
-    } else if (totalItems <= 30) {
-      return (50.0, 60.0, 11.0);
-    } else {
-      // Very compact for 30+ items (max 35)
-      return (46.0, 56.0, 10.0);
-    }
-  }
+  // Helper moved inside or calculation is dynamic now
+  // _getCardDimensions is deprecated by dynamic LayoutBuilder logic
 
   Widget _buildDraggableCard(
     LevelItem item, 
