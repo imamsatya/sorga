@@ -6,6 +6,7 @@ import '../screens/game_screen.dart';
 import '../screens/result_screen.dart';
 import '../screens/achievements_screen.dart';
 import '../screens/statistics_screen.dart';
+import '../screens/settings_screen.dart';
 
 import 'package:sorga/domain/entities/level.dart';
 import 'package:sorga/levels/level_generator.dart';
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String result = '/result';
   static const String achievements = '/achievements';
   static const String statistics = '/statistics';
+  static const String settings = '/settings';
 }
 
 /// App router configuration
@@ -75,6 +77,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.statistics,
       builder: (context, state) => const StatisticsScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.settings,
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );

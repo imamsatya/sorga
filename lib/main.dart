@@ -7,6 +7,7 @@ import 'core/theme/app_theme.dart';
 import 'core/services/achievement_service.dart';
 import 'data/datasources/local_database.dart';
 import 'presentation/router/app_router.dart';
+import 'presentation/providers/locale_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,16 +33,21 @@ void main() async {
   runApp(const ProviderScope(child: SorgaApp()));
 }
 
-class SorgaApp extends StatelessWidget {
+class SorgaApp extends ConsumerWidget {
   const SorgaApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch locale provider for in-app language switching
+    final selectedLocale = ref.watch(localeProvider);
+    
     return MaterialApp.router(
       title: 'Sorga',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
+      // Use selected locale if set, otherwise use system default
+      locale: selectedLocale,
       // Localization Configuration
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -49,16 +55,7 @@ class SorgaApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'), // English (Default)
-        Locale('es'), // Spanish
-        Locale('pt'), // Portuguese
-        Locale('de'), // German
-        Locale('fr'), // French
-        Locale('ja'), // Japanese
-        Locale('ko'), // Korean
-        Locale('id'), // Indonesian
-      ],
+      supportedLocales: supportedLocales,
     );
   }
 }

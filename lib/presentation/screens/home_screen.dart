@@ -94,6 +94,23 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    // Settings Button
+                    GestureDetector(
+                      onTap: () => context.push('/settings'),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.settings,
+                          color: AppTheme.textSecondary,
+                          size: 24,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

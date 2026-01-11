@@ -12,8 +12,10 @@ class LocalDatabase {
   
   late Box<UserProgress> _progressBox;
   late Box<GameStats> _statsBox;
+  late Box<dynamic> _settingsBox;
   
   static const String _statsBoxName = 'game_stats';
+  static const String _settingsBoxName = 'app_settings';
   static const String _statsKey = 'stats';
   
   /// Initialize the database
@@ -31,10 +33,14 @@ class LocalDatabase {
     // Open boxes
     _progressBox = await Hive.openBox<UserProgress>(AppConstants.progressBoxName);
     _statsBox = await Hive.openBox<GameStats>(_statsBoxName);
+    _settingsBox = await Hive.openBox<dynamic>(_settingsBoxName);
   }
   
   /// Get the progress box
   Box<UserProgress> get progressBox => _progressBox;
+  
+  /// Get the settings box (for app preferences like locale)
+  Box<dynamic> get settingsBox => _settingsBox;
   
   /// Get current game stats
   GameStats getStats() {
