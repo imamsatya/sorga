@@ -390,10 +390,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 20), // Add padding to check overflowing items
         child: Center(
           child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: totalItems > 30 ? 6 : 8, // Tighter spacing for many items
+            runSpacing: totalItems > 30 ? 6 : 8,
             alignment: WrapAlignment.center,
             children: List.generate(items.length, (index) {
               final item = items[index];
@@ -421,8 +422,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       return (60.0, 70.0, 13.0);
     } else if (totalItems <= 20) {
       return (55.0, 65.0, 12.0);
-    } else {
+    } else if (totalItems <= 30) {
       return (50.0, 60.0, 11.0);
+    } else {
+      // Very compact for 30+ items (max 35)
+      return (46.0, 56.0, 10.0);
     }
   }
 
