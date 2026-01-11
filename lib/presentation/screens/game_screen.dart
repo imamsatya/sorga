@@ -267,45 +267,87 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final categoryColor = _getCategoryColor(level.category);
     final isAscending = level.sortOrder == SortOrder.ascending;
     
+    // Determine instruction text
+    String instruction;
+    if (level.category == LevelCategory.knowledge) {
+      instruction = level.description; // Keep full description for knowledge
+    } else if (level.category == LevelCategory.names) {
+      instruction = 'Sort Names';
+    } else {
+      instruction = 'Sort Items';
+    }
+    
+    // Determine sort label
+    String sortLabel;
+    if (level.category == LevelCategory.names || level.category == LevelCategory.knowledge) {
+      sortLabel = isAscending ? 'A → Z' : 'Z → A';
+    } else {
+      sortLabel = isAscending ? 'Low → High' : 'High → Low';
+    }
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: categoryColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: categoryColor.withValues(alpha: 0.3), width: 1),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(level.category.icon, color: categoryColor, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  level.description,
+          // Icon
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: categoryColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(level.category.icon, color: categoryColor, size: 24),
+          ),
+          const SizedBox(width: 12),
+          
+          // Text Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  instruction,
                   style: const TextStyle(
                     color: AppTheme.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                 ),
-              ),
-            ],
+                if (level.hint != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      level.hint!,
+                      style: TextStyle(
+                        color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 8),
-          // Sort order indicator
+          
+          const SizedBox(width: 12),
+          
+          // Sort Badge
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: isAscending 
                   ? AppTheme.successColor.withValues(alpha: 0.2)
                   : AppTheme.warningColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isAscending 
                     ? AppTheme.successColor.withValues(alpha: 0.5)
@@ -317,47 +359,21 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               children: [
                 Icon(
                   isAscending ? Icons.arrow_upward : Icons.arrow_downward,
-                  size: 16,
+                  size: 14,
                   color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 4),
                 Text(
-                  isAscending ? 'Smallest → Largest' : 'Largest → Smallest',
+                  sortLabel,
                   style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                     color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
                   ),
                 ),
               ],
             ),
           ),
-          if (level.hint != null) ...[
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  size: 14,
-                  color: AppTheme.textSecondary.withValues(alpha: 0.8),
-                ),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    level.hint!,
-                    style: TextStyle(
-                      color: AppTheme.textSecondary.withValues(alpha: 0.8),
-                      fontSize: 11,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );
