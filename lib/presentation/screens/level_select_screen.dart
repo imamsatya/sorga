@@ -401,7 +401,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
+                        color: AppTheme.primaryColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Row(

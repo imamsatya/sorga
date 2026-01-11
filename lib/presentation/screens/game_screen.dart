@@ -162,7 +162,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          gradient: isSelected ? AppTheme.primaryGradient : null,
+          color: isSelected ? AppTheme.primaryColor : null,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -226,8 +226,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(20),
+            color: AppTheme.primaryColor,
+            borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               'Level ${gameState.level.id}',
@@ -641,7 +641,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(

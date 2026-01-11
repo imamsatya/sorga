@@ -155,7 +155,7 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildSubtitle() {
     return Text(
-      'Master the Art of Sorting',
+      'Your Sorting Paradise',
       style: TextStyle(
         fontSize: 16,
         color: AppTheme.textSecondary.withOpacity(0.8),

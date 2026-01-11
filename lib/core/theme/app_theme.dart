@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  // Colors
-  static const Color primaryColor = Color(0xFF6C5CE7);
-  static const Color secondaryColor = Color(0xFFA29BFE);
-  static const Color accentColor = Color(0xFF00CEC9);
-  static const Color successColor = Color(0xFF00B894);
-  static const Color errorColor = Color(0xFFD63031);
-  static const Color warningColor = Color(0xFFFDAA5D);
+  // Colors - Cyan/Orange Brand Identity
+  static const Color primaryColor = Color(0xFF00CEC9);       // Cyan (Up Arrow)
+  static const Color secondaryColor = Color(0xFFFDAA5D);     // Orange (Down Arrow)
+  static const Color accentColor = Color(0xFF00CEC9);        // Cyan
+  static const Color successColor = Color(0xFF00B894);       // Green
+  static const Color errorColor = Color(0xFFD63031);         // Red
+  static const Color warningColor = Color(0xFFFDAA5D);       // Orange
   
   // Background Colors
   static const Color backgroundDark = Color(0xFF1A1A2E);
@@ -23,7 +23,7 @@ class AppTheme {
   static const Color textSecondary = Color(0xFFB2BEC3);
   static const Color textMuted = Color(0xFF636E72);
 
-  // Gradients
+  // Gradients - Cyan to Orange
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primaryColor, secondaryColor],
     begin: Alignment.topLeft,
