@@ -119,7 +119,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.75, // Taller cards to prevent overflow
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
@@ -149,14 +149,14 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Emoji/Icon
             Container(
-              width: 60,
-              height: 60,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 color: unlocked 
                     ? achievement.color.withOpacity(0.2)
@@ -167,13 +167,13 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                 child: Text(
                   isHidden ? '❓' : achievement.emoji,
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 24,
                     color: unlocked ? null : Colors.grey,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             // Name
             Text(
               isHidden ? '???' : achievement.name,
