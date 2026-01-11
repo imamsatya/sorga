@@ -67,31 +67,27 @@ class LevelGenerator {
   }
 
   /// Get item count based on level progression (relativeId is 0-indexed)
+  /// Get item count based on level progression (relativeId is 0-indexed, max 99)
+  /// User Refactor: Max 30 items distributed over 100 levels.
   int _getItemCountForLevel(int relativeId) {
-    // Level 1-7 (0-6): Items 3-9 (1 level each)
-    if (relativeId < 7) {
-      return 3 + relativeId;
+    // Phase 1: Easy (Levels 1-20 / ID 0-19) -> 3 to 8 items
+    if (relativeId < 20) {
+      // 3 + (0..19 / 19 * 5) -> 3..8
+      final extra = (relativeId / 19 * 5).round();
+      return 3 + extra;
     }
     
-    // Level 8-37 (7-36): Items 10-19 (3 levels each)
-    // 30 levels total
-    if (relativeId < 37) {
-      final step = (relativeId - 7) ~/ 3;
-      return 10 + step;
+    // Phase 2: Moderate (Levels 21-60 / ID 20-59) -> 9 to 20 items
+    if (relativeId < 60) {
+      // 9 + (0..39 / 39 * 11) -> 9..20
+      final extra = ((relativeId - 20) / 39 * 11).round();
+      return 9 + extra;
     }
     
-    // Level 38-77 (37-76): Items 20-29 (4 levels each)
-    // 40 levels total
-    if (relativeId < 77) {
-      final step = (relativeId - 37) ~/ 4;
-      return 20 + step;
-    }
-    
-    // Level 78-107 (77-106): Items 30-35 (5 levels each)
-    // 30 levels total
-    final step = (relativeId - 77) ~/ 5;
-    final count = 30 + step;
-    return count.clamp(30, 35);
+    // Phase 3: Hard (Levels 61-100 / ID 60-99) -> 21 to 30 items
+    // 21 + (0..39 / 39 * 9) -> 21..30
+    final extra = ((relativeId - 60) / 39 * 9).round();
+    return (21 + extra).clamp(21, 30);
   }
 
   /// Get a level by ID
