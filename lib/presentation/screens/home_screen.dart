@@ -106,21 +106,29 @@ class HomeScreen extends ConsumerWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        gradient: AppTheme.primaryGradient,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
+          // Cyan glow (top/left - for up arrow)
           BoxShadow(
-            color: AppTheme.primaryColor.withOpacity(0.4),
+            color: AppTheme.accentColor.withOpacity(0.4),
             blurRadius: 30,
-            spreadRadius: 5,
+            spreadRadius: 3,
+            offset: const Offset(-5, -5),
+          ),
+          // Orange glow (bottom/right - for down arrow)
+          BoxShadow(
+            color: AppTheme.warningColor.withOpacity(0.4),
+            blurRadius: 30,
+            spreadRadius: 3,
+            offset: const Offset(5, 5),
           ),
         ],
       ),
-      child: const Center(
-        child: Icon(
-          Icons.sort,
-          size: 60,
-          color: Colors.white,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: Image.asset(
+          'assets/icons/app_icon.png',
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -128,7 +136,11 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildTitle() {
     return ShaderMask(
-      shaderCallback: (bounds) => AppTheme.primaryGradient.createShader(bounds),
+      shaderCallback: (bounds) => const LinearGradient(
+        colors: [AppTheme.accentColor, AppTheme.warningColor],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ).createShader(bounds),
       child: const Text(
         'SORGA',
         style: TextStyle(
