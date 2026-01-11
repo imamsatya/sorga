@@ -16,8 +16,13 @@ enum DragMode { swap, shift }
 
 class GameScreen extends ConsumerStatefulWidget {
   final int levelId;
+  final bool isDailyChallenge;
   
-  const GameScreen({super.key, required this.levelId});
+  const GameScreen({
+    super.key, 
+    required this.levelId,
+    this.isDailyChallenge = false,
+  });
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();

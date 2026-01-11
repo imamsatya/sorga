@@ -146,6 +146,10 @@ class HomeScreen extends ConsumerWidget {
                         
                         // Play Button
                         _buildPlayButton(context, scaleFactor),
+                        SizedBox(height: 12 * scaleFactor),
+                        
+                        // Daily Challenge Button
+                        _buildDailyChallengeButton(context, scaleFactor),
                         SizedBox(height: 16 * scaleFactor),
                         
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
@@ -390,6 +394,44 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDailyChallengeButton(BuildContext context, double scale) {
+    return GestureDetector(
+      onTap: () => context.push('/daily'),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 24 * scale,
+          vertical: 12 * scale,
+        ),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceColor,
+          borderRadius: BorderRadius.circular(16 * scale),
+          border: Border.all(
+            color: AppTheme.warningColor.withOpacity(0.5),
+            width: 2,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '📅',
+              style: TextStyle(fontSize: 22 * scale),
+            ),
+            SizedBox(width: 10 * scale),
+            Text(
+              'Daily Challenge',
+              style: TextStyle(
+                fontSize: 16 * scale,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
