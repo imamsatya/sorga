@@ -171,7 +171,12 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     );
     
     // Save progress (update attempts and completion)
-    await _saveProgress(isCorrect);
+    try {
+      await _saveProgress(isCorrect);
+    } catch (e) {
+      debugPrint('Error saving progress: $e');
+      // Continue anyway so game doesn't freeze
+    }
     
     return isCorrect;
   }
