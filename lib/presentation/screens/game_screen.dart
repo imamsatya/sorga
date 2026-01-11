@@ -17,11 +17,13 @@ enum DragMode { swap, shift }
 class GameScreen extends ConsumerStatefulWidget {
   final int levelId;
   final bool isDailyChallenge;
+  final Level? dailyLevel; // For daily challenge, pass the level directly
   
   const GameScreen({
     super.key, 
     required this.levelId,
     this.isDailyChallenge = false,
+    this.dailyLevel,
   });
 
   @override
@@ -63,7 +65,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           (currentState.isCompleted && !currentState.isRunning);
       
       if (shouldStartNewGame) {
-        ref.read(gameStateProvider.notifier).startGame(widget.levelId);
+        if (widget.isDailyChallenge && widget.dailyLevel != null) {
+          // Use the provided level for daily challenge
+          ref.read(gameStateProvider.notifier).startGameWithLevel(widget.dailyLevel!);
+        } else {
+          ref.read(gameStateProvider.notifier).startGame(widget.levelId);
+        }
       }
     });
   }

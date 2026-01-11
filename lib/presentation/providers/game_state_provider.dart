@@ -66,11 +66,22 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   
   GameStateNotifier(this._ref) : super(null);
   
-  /// Start a new game with a level
+  /// Start a new game with a level ID
   void startGame(int levelId) {
     _stopTimer();
     
     final level = _ref.read(levelProvider(levelId));
+    _initializeGameWithLevel(level);
+  }
+
+  /// Start a new game with a Level object directly (for Daily Challenge)
+  void startGameWithLevel(Level level) {
+    _stopTimer();
+    _initializeGameWithLevel(level);
+  }
+
+  /// Initialize game state with a level
+  void _initializeGameWithLevel(Level level) {
     // Shuffle items for initial display
     final shuffled = List<LevelItem>.from(level.items);
     

@@ -283,6 +283,7 @@ class DailyChallengeScreen extends ConsumerWidget {
                     builder: (context) => GameScreen(
                       levelId: challenge.level.id,
                       isDailyChallenge: true,
+                      dailyLevel: challenge.level,
                     ),
                   ),
                 );

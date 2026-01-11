@@ -36,8 +36,8 @@ class DailyChallengeGenerator {
     ];
     final category = categories[random.nextInt(categories.length)];
     
-    // Random difficulty (15-25 items for challenge - medium difficulty)
-    final itemCount = 15 + random.nextInt(11);
+    // Random difficulty (15-30 items for challenge - medium to hard)
+    final itemCount = 15 + random.nextInt(16);
     
     // Random sort order
     final sortOrder = random.nextBool() 
