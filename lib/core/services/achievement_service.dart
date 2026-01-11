@@ -23,12 +23,23 @@ class AchievementService {
   
   /// Get list of unlocked achievement types
   Set<AchievementType> get unlockedTypes {
-    final List<String>? stored = _box.get('unlocked');
-    if (stored == null) return {};
-    return stored.map((s) => AchievementType.values.firstWhere(
-      (t) => t.name == s,
-      orElse: () => AchievementType.firstLevel,
-    )).toSet();
+    if (!_box.isOpen) return {};
+    
+    try {
+      final stored = _box.get('unlocked');
+      if (stored == null) return {};
+      
+      // Handle potential type mismatch from legacy data
+      final List<String> stringList = (stored as List).map((e) => e.toString()).toList();
+      
+      return stringList.map((s) => AchievementType.values.firstWhere(
+        (t) => t.name == s,
+        orElse: () => AchievementType.firstLevel,
+      )).toSet();
+    } catch (e) {
+      // Return empty set on error fallback
+      return {};
+    }
   }
   
   /// Check if an achievement is unlocked
@@ -36,12 +47,18 @@ class AchievementService {
   
   /// Unlock an achievement (returns true if newly unlocked)
   Future<bool> unlock(AchievementType type) async {
-    final current = unlockedTypes;
-    if (current.contains(type)) return false;
+    if (!_box.isOpen) return false;
     
-    current.add(type);
-    await _box.put('unlocked', current.map((t) => t.name).toList());
-    return true;
+    try {
+      final current = unlockedTypes;
+      if (current.contains(type)) return false;
+      
+      current.add(type);
+      await _box.put('unlocked', current.map((t) => t.name).toList());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
   
   /// Check and unlock achievements based on game state
@@ -82,7 +99,7 @@ class AchievementService {
         newlyUnlocked.add(Achievement.getByType(AchievementType.level500));
       }
     }
-    if (completedLevels >= 1000) {
+    if (completedLevels >= 800) { // Adjusted from 1000
       if (await unlock(AchievementType.level1000)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.level1000));
       }
@@ -119,28 +136,28 @@ class AchievementService {
       }
     }
     
-    // Category mastery (using AppConstants ranges)
-    if ((completedPerCategory[LevelCategory.basic] ?? 0) >= 60) {
+    // Category mastery (Updated ranges: each category has ~107 levels)
+    if ((completedPerCategory[LevelCategory.basic] ?? 0) >= 100) {
       if (await unlock(AchievementType.basicMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.basicMaster));
       }
     }
-    if ((completedPerCategory[LevelCategory.formatted] ?? 0) >= 190) {
+    if ((completedPerCategory[LevelCategory.formatted] ?? 0) >= 100) { // Adjusted from 190
       if (await unlock(AchievementType.formattedMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.formattedMaster));
       }
     }
-    if ((completedPerCategory[LevelCategory.time] ?? 0) >= 200) {
+    if ((completedPerCategory[LevelCategory.time] ?? 0) >= 100) { // Adjusted from 200
       if (await unlock(AchievementType.timeMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.timeMaster));
       }
     }
-    if ((completedPerCategory[LevelCategory.names] ?? 0) >= 200) {
+    if ((completedPerCategory[LevelCategory.names] ?? 0) >= 100) { // Adjusted from 200
       if (await unlock(AchievementType.namesMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.namesMaster));
       }
     }
-    if ((completedPerCategory[LevelCategory.mixed] ?? 0) >= 200) {
+    if ((completedPerCategory[LevelCategory.mixed] ?? 0) >= 100) { // Adjusted from 200
       if (await unlock(AchievementType.mixedMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.mixedMaster));
       }
