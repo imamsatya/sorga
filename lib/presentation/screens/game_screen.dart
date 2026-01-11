@@ -34,6 +34,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
   DragMode _dragMode = DragMode.shift; // Default to shift mode
   bool _showTutorial = false;
+  bool _showResultFeedback = false;
+  bool _isResultCorrect = false;
   
   // Services
   final AudioService _audioService = AudioService();
@@ -158,6 +160,51 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           if (_showTutorial)
             TutorialOverlay(
               onComplete: _completeTutorial,
+            ),
+          
+          // Result Feedback Overlay
+          if (_showResultFeedback)
+            Container(
+              color: Colors.black54,
+              child: Center(
+                child: AnimatedScale(
+                  scale: _showResultFeedback ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.elasticOut,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: _isResultCorrect 
+                              ? AppTheme.successColor 
+                              : AppTheme.errorColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          _isResultCorrect ? Icons.check : Icons.close,
+                          color: Colors.white,
+                          size: 60,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        _isResultCorrect ? 'PERFECT!' : 'TRY AGAIN',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: _isResultCorrect 
+                              ? AppTheme.successColor 
+                              : AppTheme.errorColor,
+                          letterSpacing: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
         ],
       ),
@@ -687,7 +734,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 _hapticService.selectionClick();
                 await ref.read(gameStateProvider.notifier).checkAnswer();
                 final state = ref.read(gameStateProvider);
-                if (state?.isCorrect == true) {
+                final isCorrect = state?.isCorrect == true;
+                
+                if (isCorrect) {
                   _confettiController.play();
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
@@ -695,7 +744,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                 }
-                if (mounted) context.go('/result');
+                
+                // Show feedback overlay
+                if (mounted) {
+                  setState(() {
+                    _showResultFeedback = true;
+                    _isResultCorrect = isCorrect;
+                  });
+                  
+                  // Wait for feedback to display, then navigate
+                  await Future.delayed(const Duration(milliseconds: 800));
+                  if (mounted) context.go('/result');
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
