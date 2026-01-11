@@ -287,6 +287,11 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     final levelId = state!.level.id;
     startGame(levelId);
   }
+
+  /// Retry with the same level object (for Daily Challenge)
+  void retryWithLevel(Level level) {
+    startGameWithLevel(level);
+  }
   
   /// Stop and clear the game
   void endGame() {

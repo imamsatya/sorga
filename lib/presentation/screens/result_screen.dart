@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
 import '../widgets/game_button.dart';
+import 'game_screen.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
@@ -549,8 +550,22 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               onPressed: () {
                  final gameState = ref.read(gameStateProvider);
                  if (gameState != null) {
-                   ref.read(gameStateProvider.notifier).retry();
-                   context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                   // For daily challenges (localId == 0), use Navigator instead of URL routing
+                   if (gameState.level.localId == 0) {
+                     ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
+                     Navigator.of(context).pushReplacement(
+                       MaterialPageRoute(
+                         builder: (context) => GameScreen(
+                           levelId: gameState.level.id,
+                           isDailyChallenge: true,
+                           dailyLevel: gameState.level,
+                         ),
+                       ),
+                     );
+                   } else {
+                     ref.read(gameStateProvider.notifier).retry();
+                     context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                   }
                  }
               },
               style: OutlinedButton.styleFrom(
@@ -587,8 +602,22 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                     onPressed: () {
                       final gameState = ref.read(gameStateProvider);
                       if (gameState != null) {
-                        ref.read(gameStateProvider.notifier).retry();
-                        context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                        // For daily challenges (localId == 0), use Navigator instead of URL routing
+                        if (gameState.level.localId == 0) {
+                          ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(
+                                levelId: gameState.level.id,
+                                isDailyChallenge: true,
+                                dailyLevel: gameState.level,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ref.read(gameStateProvider.notifier).retry();
+                          context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                        }
                       }
                     },
                     icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),

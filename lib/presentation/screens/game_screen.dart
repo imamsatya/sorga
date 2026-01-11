@@ -258,11 +258,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-            color: AppTheme.primaryColor,
+            color: widget.isDailyChallenge 
+                ? AppTheme.warningColor 
+                : AppTheme.primaryColor,
             borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Level ${gameState.level.localId}',
+              widget.isDailyChallenge 
+                  ? '📅 Daily' 
+                  : 'Level ${gameState.level.localId}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
