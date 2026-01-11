@@ -506,7 +506,20 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 final gameState = ref.read(gameStateProvider);
                 if (gameState != null) {
                   ref.read(gameStateProvider.notifier).continueGame();
-                  context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                  // For daily challenges (localId == 0), use Navigator instead of URL routing
+                  if (gameState.level.localId == 0) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => GameScreen(
+                          levelId: gameState.level.id,
+                          isDailyChallenge: true,
+                          dailyLevel: gameState.level,
+                        ),
+                      ),
+                    );
+                  } else {
+                    context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                  }
                 }
               },
               child: Container(
