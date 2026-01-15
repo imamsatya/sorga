@@ -62,7 +62,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       // - Game was completed (not continuing)
       final shouldStartNewGame = currentState == null || 
           currentState.level.id != widget.levelId ||
-          (currentState.isCompleted && !currentState.isRunning);
+          (currentState.isCompleted && !currentState.isRunning) ||
+          // For daily challenges, force restart if we are initializing a new screen
+          // This handles the "Retry" scenario where we push a replacement route
+          (widget.isDailyChallenge && currentState.level.id == widget.levelId);
       
       if (shouldStartNewGame) {
         if (widget.isDailyChallenge && widget.dailyLevel != null) {
@@ -705,13 +708,27 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _hapticService.successVibrate();
                   
                   // Go immediatey to result
-                  if (mounted) context.go('/result');
+                  if (mounted) {
+                    context.go('/result');
+                  } else {
+                    // Retry navigation if not immediately mounted (edge case)
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      if (mounted) context.go('/result');
+                    });
+                  }
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                   
                   // Go immediately to result
-                  if (mounted) context.go('/result');
+                  if (mounted) {
+                    context.go('/result');
+                  } else {
+                     // Retry navigation if not immediately mounted (edge case)
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      if (mounted) context.go('/result');
+                    });
+                  }
                 }
               },
               child: Container(
