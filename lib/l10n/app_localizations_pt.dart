@@ -210,4 +210,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get selectLevel => 'Selecionar Nível';
+
+  @override
+  String get about => 'Sobre';
 }

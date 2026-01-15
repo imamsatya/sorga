@@ -210,4 +210,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get selectLevel => 'レベルを選択';
+
+  @override
+  String get about => 'アプリについて';
 }

@@ -210,4 +210,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectLevel => 'Seleccionar Nivel';
+
+  @override
+  String get about => 'Acerca de';
 }

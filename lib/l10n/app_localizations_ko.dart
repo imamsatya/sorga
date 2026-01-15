@@ -210,4 +210,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get selectLevel => '레벨 선택';
+
+  @override
+  String get about => '정보';
 }

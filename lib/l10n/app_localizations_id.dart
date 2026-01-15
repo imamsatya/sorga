@@ -210,4 +210,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get selectLevel => 'Pilih Level';
+
+  @override
+  String get about => 'Tentang';
 }

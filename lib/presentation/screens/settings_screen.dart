@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -46,11 +47,11 @@ class SettingsScreen extends ConsumerWidget {
             onPressed: () => context.go('/'),
             icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Settings',
+              AppLocalizations.of(context)!.settings,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
@@ -89,9 +90,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Language',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.language,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.textPrimary,
@@ -117,13 +118,13 @@ class SettingsScreen extends ConsumerWidget {
                   fontSize: 16,
                 ),
                 items: [
-                  const DropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'system',
                     child: Row(
                       children: [
-                        Icon(Icons.phone_android, color: AppTheme.textSecondary, size: 20),
-                        SizedBox(width: 12),
-                        Text('System Default'),
+                        const Icon(Icons.phone_android, color: AppTheme.textSecondary, size: 20),
+                        const SizedBox(width: 12),
+                        Text(AppLocalizations.of(context)!.systemDefault),
                       ],
                     ),
                   ),
@@ -199,9 +200,9 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'About',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.about,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.textPrimary,

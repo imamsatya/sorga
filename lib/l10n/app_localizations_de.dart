@@ -211,4 +211,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get selectLevel => 'Level Wählen';
+
+  @override
+  String get about => 'Über';
 }

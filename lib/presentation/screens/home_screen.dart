@@ -219,9 +219,8 @@ class HomeScreen extends ConsumerWidget {
   }
   
   Widget _buildSubtitle(BuildContext context, double scale) {
-    final l10n = AppLocalizations.of(context)!;
     return Text(
-      l10n.yourSortingParadise,
+      'Your Sorting Paradise',
       style: TextStyle(
         fontSize: 16 * scale,
         color: AppTheme.textSecondary.withOpacity(0.8),
