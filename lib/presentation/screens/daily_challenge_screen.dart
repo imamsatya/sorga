@@ -33,21 +33,27 @@ class DailyChallengeScreen extends ConsumerWidget {
               _buildHeader(context),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                   child: Column(
                     children: [
                       _buildDateCard(dailyChallenge),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
                       _buildStreakCard(streak),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
                       _buildChallengeCard(context, ref, dailyChallenge),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 16),
                       if (dailyChallenge.isCompletedToday)
                         _buildCompletedBadge(dailyChallenge),
                     ],
                   ),
                 ),
               ),
+              // Fixed bottom Share button - only show when completed
+              if (dailyChallenge.isCompletedToday)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: _buildFixedShareButton(dailyChallenge),
+                ),
             ],
           ),
         ),
@@ -375,14 +381,11 @@ class DailyChallengeScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        // Share button
-        _buildShareButton(challenge),
       ],
     );
   }
 
-  Widget _buildShareButton(DailyChallengeState challenge) {
+  Widget _buildFixedShareButton(DailyChallengeState challenge) {
     return Builder(
       builder: (context) => GestureDetector(
         onTap: () => _shareDailyResult(context, challenge),
