@@ -8,6 +8,7 @@ import '../../data/datasources/local_database.dart';
 import '../../core/services/achievement_service.dart';
 import 'game_providers.dart';
 import 'game_stats_provider.dart';
+import 'daily_challenge_provider.dart';
 
 /// State for the active game
 class GameState {
@@ -235,6 +236,13 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       await LocalDatabase.instance.incrementPerfect();
       // Refresh game stats provider to update streak badge
       _ref.read(gameStatsNotifierProvider.notifier).refresh();
+      
+      // Update daily challenge streak if this is a daily challenge (localId == 0)
+      if (state!.level.localId == 0) {
+        await _ref.read(dailyChallengeProvider.notifier).completeChallenge(
+          state!.elapsedTime.inMilliseconds,
+        );
+      }
       
       // Check for new achievements AFTER invalidation
       await _checkAchievements();
