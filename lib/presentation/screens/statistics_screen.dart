@@ -25,15 +25,24 @@ class StatisticsScreen extends ConsumerWidget {
     for (final progress in allProgress) {
       if (progress.completed) {
         totalCompleted++;
-        final level = levelGenerator.getLevel(progress.levelId);
         
-        // Update category stats
-        if (!categoryStats.containsKey(level.category)) {
-          categoryStats[level.category] = CategoryStat();
-        }
-        categoryStats[level.category]!.completed++;
-        if (progress.bestTimeMs != null) {
-          categoryStats[level.category]!.totalTimeMs += progress.bestTimeMs!;
+        // Skip daily challenge levels (IDs > 1000 are date-based)
+        // They don't exist in the level generator
+        if (progress.levelId > 1000) continue;
+        
+        try {
+          final level = levelGenerator.getLevel(progress.levelId);
+          
+          // Update category stats
+          if (!categoryStats.containsKey(level.category)) {
+            categoryStats[level.category] = CategoryStat();
+          }
+          categoryStats[level.category]!.completed++;
+          if (progress.bestTimeMs != null) {
+            categoryStats[level.category]!.totalTimeMs += progress.bestTimeMs!;
+          }
+        } catch (e) {
+          // Skip levels that don't exist in generator
         }
       }
       totalAttempts += progress.attempts;
