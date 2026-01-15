@@ -700,34 +700,20 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   isCorrect = false;
                 }
                 
+                // Play feedback
                 if (isCorrect) {
-                  // No confetti here - ResultScreen handles it
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
-                  
-                  // Go immediatey to result
-                  if (mounted) {
-                    context.go('/result');
-                  } else {
-                    // Retry navigation if not immediately mounted (edge case)
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      if (mounted) context.go('/result');
-                    });
-                  }
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
-                  
-                  // Go immediately to result
-                  if (mounted) {
-                    context.go('/result');
-                  } else {
-                     // Retry navigation if not immediately mounted (edge case)
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      if (mounted) context.go('/result');
-                    });
-                  }
                 }
+                
+                // Wait for state update to propagate through Riverpod before navigation
+                await Future.microtask(() {});
+                
+                // Navigate to result screen
+                if (mounted) context.go('/result');
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
