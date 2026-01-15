@@ -91,7 +91,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/daily/play',
       builder: (context, state) {
-        final level = state.extra as Level;
+        // Safety check: redirect to daily challenge screen if extra is null
+        final level = state.extra as Level?;
+        if (level == null) {
+          return const DailyChallengeScreen();
+        }
         return GameScreen(
           levelId: level.id,
           isDailyChallenge: true,

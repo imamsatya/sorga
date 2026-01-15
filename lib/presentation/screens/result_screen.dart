@@ -506,9 +506,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 final gameState = ref.read(gameStateProvider);
                 if (gameState != null) {
                   ref.read(gameStateProvider.notifier).continueGame();
-                  // For daily challenges (localId == 0), use GoRouter with extra
+                  // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
                   if (gameState.level.localId == 0) {
-                    context.go('/daily/play', extra: gameState.level);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => GameScreen(
+                          levelId: gameState.level.id,
+                          isDailyChallenge: true,
+                          dailyLevel: gameState.level,
+                        ),
+                      ),
+                    );
                   } else {
                     context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
                   }
@@ -608,10 +616,18 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                   child: TextButton.icon(
                     onPressed: () {
                       if (gameState != null) {
-                        // For daily challenges (localId == 0), use GoRouter with extra
+                        // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
                         if (gameState.level.localId == 0) {
                           ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
-                          context.go('/daily/play', extra: gameState.level);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(
+                                levelId: gameState.level.id,
+                                isDailyChallenge: true,
+                                dailyLevel: gameState.level,
+                              ),
+                            ),
+                          );
                         } else {
                           ref.read(gameStateProvider.notifier).retry();
                           context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
