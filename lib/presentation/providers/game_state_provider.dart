@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
@@ -171,7 +172,12 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     );
     
     // Save progress (update attempts and completion)
-    await _saveProgress(isCorrect);
+    try {
+      await _saveProgress(isCorrect);
+    } catch (e) {
+      debugPrint('Error saving progress: $e');
+      // Continue anyway so game doesn't freeze
+    }
     
     return isCorrect;
   }

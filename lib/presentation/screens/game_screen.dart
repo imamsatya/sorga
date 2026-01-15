@@ -732,9 +732,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             child: GestureDetector(
               onTap: () async {
                 _hapticService.selectionClick();
-                await ref.read(gameStateProvider.notifier).checkAnswer();
-                final state = ref.read(gameStateProvider);
-                final isCorrect = state?.isCorrect == true;
+                
+                bool isCorrect = false;
+                try {
+                  await ref.read(gameStateProvider.notifier).checkAnswer();
+                  final state = ref.read(gameStateProvider);
+                  isCorrect = state?.isCorrect == true;
+                } catch (e) {
+                  debugPrint('Error in checkAnswer: $e');
+                  // Fallback: assume wrong if something crashed
+                  isCorrect = false;
+                }
                 
                 if (isCorrect) {
                   _confettiController.play();
