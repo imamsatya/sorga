@@ -10,6 +10,7 @@ import 'dart:ui' as ui;
 import 'package:share_plus/share_plus.dart';
 import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/daily_challenge_provider.dart';
 import '../widgets/game_button.dart';
 import 'game_screen.dart';
 
@@ -68,6 +69,50 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to share image')),
+        );
+      }
+    }
+  }
+
+  /// Share Daily Challenge result as viral text format
+  Future<void> _shareDailyChallenge() async {
+    final gameState = ref.read(gameStateProvider);
+    if (gameState == null) return;
+
+    final dailyState = ref.read(dailyChallengeProvider);
+    final streak = ref.read(dailyStreakProvider);
+    
+    // Format date
+    final now = DateTime.now();
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final dateStr = '${now.day} ${monthNames[now.month - 1]} ${now.year}';
+    
+    // Format time
+    final time = gameState.elapsedTime;
+    final minutes = time.inMinutes.toString().padLeft(2, '0');
+    final seconds = (time.inSeconds % 60).toString().padLeft(2, '0');
+    final milliseconds = ((time.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
+    final timeStr = '$minutes:$seconds.$milliseconds';
+    
+    // Build share text
+    final shareText = '''
+🎯 Sorga Daily Challenge
+📅 $dateStr
+
+⏱️ $timeStr
+🔥 $streak Day${streak == 1 ? '' : 's'} Streak!
+
+Can you beat my time? 💪
+#SorgaDaily #PuzzleGame
+'''.trim();
+    
+    try {
+      await Share.share(shareText);
+    } catch (e) {
+      debugPrint('Error sharing daily challenge: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share')),
         );
       }
     }
@@ -146,11 +191,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                               if (isSuccess) ...[
                                 const SizedBox(height: 20),
                                 TextButton.icon(
-                                  onPressed: _captureAndShare,
+                                  // Use different share method for daily challenges
+                                  onPressed: gameState.level.localId == 0 
+                                      ? _shareDailyChallenge 
+                                      : _captureAndShare,
                                   icon: const Icon(Icons.share_rounded, color: AppTheme.accentColor),
-                                  label: const Text(
-                                    'Share Achievement',
-                                    style: TextStyle(
+                                  label: Text(
+                                    gameState.level.localId == 0 
+                                        ? 'Share Result 🎯' 
+                                        : 'Share Achievement',
+                                    style: const TextStyle(
                                       color: AppTheme.accentColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
