@@ -286,4 +286,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get wednesday => 'Quarta-feira';
+
+  @override
+  String get getReady => 'Preparar!';
+
+  @override
+  String get attempt => 'Tentativa';
 }

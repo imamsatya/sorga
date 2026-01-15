@@ -284,4 +284,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get wednesday => '水曜日';
+
+  @override
+  String get getReady => '準備はいい？';
+
+  @override
+  String get attempt => '試行';
 }

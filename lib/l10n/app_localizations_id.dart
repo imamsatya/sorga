@@ -286,4 +286,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get wednesday => 'Rabu';
+
+  @override
+  String get getReady => 'Bersiap!';
+
+  @override
+  String get attempt => 'Percobaan';
 }

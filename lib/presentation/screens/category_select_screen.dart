@@ -144,7 +144,7 @@ class CategorySelectScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             // Title
             Text(
-              categoryInfo.title,
+              _getCategoryTitle(context, category),
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class CategorySelectScreen extends ConsumerWidget {
             const SizedBox(height: 2),
             // Level count
             Text(
-              '${levels.length} levels',
+              '${levels.length} ${AppLocalizations.of(context)!.levels}',
               style: TextStyle(
                 fontSize: 11,
                 color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -211,36 +211,48 @@ class CategorySelectScreen extends ConsumerWidget {
     }
   }
 
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
+    }
+  }
+
   _CategoryInfo _getCategoryInfo(LevelCategory category) {
     switch (category) {
       case LevelCategory.basic:
         return _CategoryInfo(
-          title: 'Basic Numbers',
           color: AppTheme.basicColor,
         );
       case LevelCategory.formatted:
         return _CategoryInfo(
-          title: 'Formatted',
           color: AppTheme.formattedColor,
         );
       case LevelCategory.time:
         return _CategoryInfo(
-          title: 'Time Formats',
           color: AppTheme.timeColor,
         );
       case LevelCategory.names:
         return _CategoryInfo(
-          title: 'Name Sorting',
           color: AppTheme.namesColor,
         );
       case LevelCategory.mixed:
         return _CategoryInfo(
-          title: 'Mixed Formats',
           color: AppTheme.mixedColor,
         );
       case LevelCategory.knowledge:
         return _CategoryInfo(
-          title: 'Knowledge',
           color: AppTheme.knowledgeColor,
         );
     }
@@ -248,11 +260,9 @@ class CategorySelectScreen extends ConsumerWidget {
 }
 
 class _CategoryInfo {
-  final String title;
   final Color color;
   
   _CategoryInfo({
-    required this.title,
     required this.color,
   });
 }

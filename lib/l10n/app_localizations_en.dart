@@ -286,4 +286,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wednesday => 'Wednesday';
+
+  @override
+  String get getReady => 'Get Ready!';
+
+  @override
+  String get attempt => 'Attempt';
 }

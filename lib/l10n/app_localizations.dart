@@ -655,6 +655,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wednesday'**
   String get wednesday;
+
+  /// No description provided for @getReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Ready!'**
+  String get getReady;
+
+  /// No description provided for @attempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempt'**
+  String get attempt;
 }
 
 class _AppLocalizationsDelegate

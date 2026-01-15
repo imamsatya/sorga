@@ -91,5 +91,7 @@
   "sunday": "Dimanche",
   "monday": "Lundi",
   "tuesday": "Mardi",
-  "wednesday": "Mercredi"
+  "wednesday": "Mercredi",
+  "getReady": "Préparez-vous!",
+  "attempt": "Tentative"
 }

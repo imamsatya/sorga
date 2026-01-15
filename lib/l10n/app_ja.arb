@@ -91,5 +91,7 @@
   "sunday": "日曜日",
   "monday": "月曜日",
   "tuesday": "火曜日",
-  "wednesday": "水曜日"
+  "wednesday": "水曜日",
+  "getReady": "準備はいい？",
+  "attempt": "試行"
 }

@@ -91,5 +91,7 @@
   "sunday": "Minggu",
   "monday": "Senin",
   "tuesday": "Selasa",
-  "wednesday": "Rabu"
+  "wednesday": "Rabu",
+  "getReady": "Bersiap!",
+  "attempt": "Percobaan"
 }

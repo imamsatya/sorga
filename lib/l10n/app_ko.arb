@@ -91,5 +91,7 @@
   "sunday": "일요일",
   "monday": "월요일",
   "tuesday": "화요일",
-  "wednesday": "수요일"
+  "wednesday": "수요일",
+  "getReady": "준비하세요!",
+  "attempt": "시도"
 }

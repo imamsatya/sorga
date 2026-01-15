@@ -284,4 +284,10 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get wednesday => '수요일';
+
+  @override
+  String get getReady => '준비하세요!';
+
+  @override
+  String get attempt => '시도';
 }

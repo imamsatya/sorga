@@ -12,6 +12,7 @@ import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
 import '../providers/daily_challenge_provider.dart';
 import '../widgets/game_button.dart';
+import '../../l10n/app_localizations.dart';
 import 'game_screen.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
@@ -198,8 +199,8 @@ Can you beat my time? 💪
                                   icon: const Icon(Icons.share_rounded, color: AppTheme.accentColor),
                                   label: Text(
                                     gameState.level.localId == 0 
-                                        ? 'Share Result 🎯' 
-                                        : 'Share Achievement',
+                                        ? '${AppLocalizations.of(context)!.shareResult} 🎯' 
+                                        : AppLocalizations.of(context)!.shareAchievement,
                                     style: const TextStyle(
                                       color: AppTheme.accentColor,
                                       fontSize: 16,
@@ -285,7 +286,7 @@ Can you beat my time? 💪
 
   Widget _buildResultTitle(bool isSuccess) {
     return Text(
-      isSuccess ? 'PERFECT!' : 'TRY AGAIN',
+      isSuccess ? AppLocalizations.of(context)!.perfect : AppLocalizations.of(context)!.tryAgain,
       style: TextStyle(
         fontSize: 36,
         fontWeight: FontWeight.bold,
@@ -339,7 +340,7 @@ Can you beat my time? 💪
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'Attempt #$attempts',
+              '${AppLocalizations.of(context)!.attempt} #$attempts',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -356,7 +357,7 @@ Can you beat my time? 💪
     return Column(
       children: [
         Text(
-          'The order was not quite right.',
+          AppLocalizations.of(context)!.orderNotRight,
           style: TextStyle(
             fontSize: 16,
             color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -458,9 +459,9 @@ Can you beat my time? 💪
       ),
       child: Column(
         children: [
-          const Text(
-            'YOUR TIME',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.yourTime,
+            style: const TextStyle(
               fontSize: 12,
               color: AppTheme.textMuted,
               letterSpacing: 2,
@@ -530,12 +531,12 @@ Can you beat my time? 💪
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'NEXT LEVEL',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.nextLevel.toUpperCase(),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -590,14 +591,14 @@ Can you beat my time? 💪
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
-                    SizedBox(width: 8),
+                    const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                    const SizedBox(width: 8),
                     Text(
-                      'CONTINUE',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.continueGame,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -685,9 +686,9 @@ Can you beat my time? 💪
                       }
                     },
                     icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),
-                    label: const Text(
-                      'Retry', 
-                      style: TextStyle(color: AppTheme.textSecondary),
+                    label: Text(
+                      AppLocalizations.of(context)!.retry, 
+                      style: const TextStyle(color: AppTheme.textSecondary),
                     ),
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -709,9 +710,9 @@ Can you beat my time? 💪
                     context.go('/');
                   },
                   icon: const Icon(Icons.home_rounded, color: AppTheme.textSecondary),
-                  label: const Text(
-                    'Home', 
-                    style: TextStyle(color: AppTheme.textSecondary),
+                  label: Text(
+                    AppLocalizations.of(context)!.home, 
+                    style: const TextStyle(color: AppTheme.textSecondary),
                   ),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

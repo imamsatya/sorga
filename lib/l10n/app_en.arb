@@ -92,5 +92,7 @@
   "sunday": "Sunday",
   "monday": "Monday",
   "tuesday": "Tuesday",
-  "wednesday": "Wednesday"
+  "wednesday": "Wednesday",
+  "getReady": "Get Ready!",
+  "attempt": "Attempt"
 }
