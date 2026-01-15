@@ -703,14 +703,24 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _confettiController.play();
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
+                  
+                  // Wait for confetti to pop and async operations to settle
+                  await Future.delayed(const Duration(seconds: 1));
+                  
                   // Go directly to result for success
-                  if (mounted) context.go('/result');
+                  if (mounted) {
+                    debugPrint('Navigating to result screen (success)');
+                    context.go('/result');
+                  }
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                   
                   // Go directly to result screen for failure too (no overlay)
-                  if (mounted) context.go('/result');
+                  if (mounted) {
+                    debugPrint('Navigating to result screen (failure)');
+                    context.go('/result');
+                  }
                 }
               },
               child: Container(
