@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
 import '../providers/daily_challenge_provider.dart';
@@ -305,42 +306,127 @@ class DailyChallengeScreen extends ConsumerWidget {
   }
 
   Widget _buildCompletedBadge(DailyChallengeState challenge) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppTheme.successColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.successColor.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('✅', style: TextStyle(fontSize: 28)),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        // Completed status
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppTheme.successColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppTheme.successColor.withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Completed Today!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.successColor,
-                ),
-              ),
-              Text(
-                'Come back tomorrow for a new challenge',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary.withValues(alpha: 0.8),
+              const Text('✅', style: TextStyle(fontSize: 28)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Completed Today!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.successColor,
+                      ),
+                    ),
+                    Text(
+                      'Come back tomorrow for a new challenge',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ],
+        ),
+        const SizedBox(height: 16),
+        // Share button
+        _buildShareButton(challenge),
+      ],
+    );
+  }
+
+  Widget _buildShareButton(DailyChallengeState challenge) {
+    return Builder(
+      builder: (context) => GestureDetector(
+        onTap: () => _shareDailyResult(context, challenge),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppTheme.accentColor, Color(0xFF00D4AA)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.accentColor.withValues(alpha: 0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.share_rounded, color: Colors.white, size: 22),
+              SizedBox(width: 10),
+              Text(
+                'Share Result 🎯',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  void _shareDailyResult(BuildContext context, DailyChallengeState challenge) async {
+    // Import share_plus at top of file if not already
+    final streak = challenge.isCompletedToday ? 1 : 0; // fallback
+    
+    // Format date
+    final now = DateTime.now();
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final dateStr = '${now.day} ${monthNames[now.month - 1]} ${now.year}';
+    
+    // Format time
+    final timeMs = challenge.bestTimeMs ?? 0;
+    final seconds = timeMs ~/ 1000;
+    final ms = (timeMs % 1000) ~/ 10;
+    final timeStr = '$seconds.${ms.toString().padLeft(2, '0')}s';
+    
+    final shareText = '''
+🎯 Sorga Daily Challenge
+📅 $dateStr
+
+⏱️ $timeStr
+🔥 Daily Streak Active!
+
+Can you beat my time? 💪
+#SorgaDaily #PuzzleGame
+'''.trim();
+    
+    try {
+      await Share.share(shareText);
+    } catch (e) {
+      debugPrint('Error sharing: $e');
+    }
   }
 
   String _getCategoryEmoji(LevelCategory category) {
