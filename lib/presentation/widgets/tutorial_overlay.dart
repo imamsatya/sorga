@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Tutorial overlay for first-time users
 class TutorialOverlay extends StatefulWidget {
@@ -17,26 +18,29 @@ class TutorialOverlay extends StatefulWidget {
 class _TutorialOverlayState extends State<TutorialOverlay> {
   int _currentStep = 0;
   
-  final List<TutorialStep> _steps = [
-    const TutorialStep(
-      emoji: '👆',
-      title: 'Drag & Drop',
-      description: 'Drag items to rearrange them in the correct order',
-    ),
-    const TutorialStep(
-      emoji: '🔄',
-      title: 'Shift & Swap',
-      description: 'Use SHIFT mode to move items step by step, or SWAP to exchange positions',
-    ),
-    const TutorialStep(
-      emoji: '✅',
-      title: 'Check Answer',
-      description: 'When ready, tap CHECK to verify your answer. Good luck!',
-    ),
-  ];
+  List<TutorialStep> _getSteps(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      TutorialStep(
+        emoji: '👆',
+        title: l10n.dragAndDrop,
+        description: l10n.dragItemsDescription,
+      ),
+      TutorialStep(
+        emoji: '🔄',
+        title: l10n.shiftAndSwap,
+        description: l10n.shiftAndSwapDescription,
+      ),
+      TutorialStep(
+        emoji: '✅',
+        title: l10n.checkAnswer,
+        description: l10n.checkAnswerDescription,
+      ),
+    ];
+  }
 
-  void _nextStep() {
-    if (_currentStep < _steps.length - 1) {
+  void _nextStep(int stepsLength) {
+    if (_currentStep < stepsLength - 1) {
       setState(() => _currentStep++);
     } else {
       widget.onComplete();
@@ -49,7 +53,9 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final step = _steps[_currentStep];
+    final steps = _getSteps(context);
+    final step = steps[_currentStep];
+    final l10n = AppLocalizations.of(context)!;
     
     return Container(
       color: AppTheme.backgroundDark, // Fully opaque to hide game content
@@ -64,7 +70,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
                 child: TextButton(
                   onPressed: _skip,
                   child: Text(
-                    'Skip',
+                    l10n.skip,
                     style: TextStyle(
                       color: AppTheme.textMuted,
                       fontSize: 16,
@@ -149,7 +155,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
               // Progress dots
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_steps.length, (index) {
+                children: List.generate(steps.length, (index) {
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     width: _currentStep == index ? 24 : 8,
@@ -168,7 +174,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
               
               // Next button
               GestureDetector(
-                onTap: _nextStep,
+                onTap: () => _nextStep(steps.length),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 18),
@@ -184,7 +190,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
                     ],
                   ),
                   child: Text(
-                    _currentStep == _steps.length - 1 ? 'START PLAYING' : 'NEXT',
+                    _currentStep == steps.length - 1 ? l10n.startPlaying : l10n.next,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

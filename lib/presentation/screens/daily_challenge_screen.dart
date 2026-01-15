@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/daily_challenge_provider.dart';
 import 'game_screen.dart';
 
@@ -38,7 +39,7 @@ class DailyChallengeScreen extends ConsumerWidget {
                     children: [
                       _buildDateCard(dailyChallenge),
                       const SizedBox(height: 16),
-                      _buildStreakCard(streak),
+                      _buildStreakCard(context, streak),
                       const SizedBox(height: 16),
                       _buildChallengeCard(context, ref, dailyChallenge),
                       const SizedBox(height: 16),
@@ -70,11 +71,11 @@ class DailyChallengeScreen extends ConsumerWidget {
             onPressed: () => context.go('/'),
             icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Daily Challenge',
+              AppLocalizations.of(context)!.dailyChallenge,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
@@ -140,7 +141,7 @@ class DailyChallengeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStreakCard(int streak) {
+  Widget _buildStreakCard(BuildContext context, int streak) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -158,16 +159,16 @@ class DailyChallengeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$streak ${streak == 1 ? 'Day' : 'Days'}',
+                '$streak ${streak == 1 ? AppLocalizations.of(context)!.day : AppLocalizations.of(context)!.days}',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.warningColor,
                 ),
               ),
-              const Text(
-                'Daily Streak',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.dailyStreak,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.textSecondary,
                 ),
@@ -321,7 +322,7 @@ class DailyChallengeScreen extends ConsumerWidget {
                     const SizedBox(width: 10),
                   ],
                   Text(
-                    challenge.isCompletedToday ? 'Play Again' : 'START CHALLENGE',
+                    challenge.isCompletedToday ? AppLocalizations.of(context)!.playAgain : AppLocalizations.of(context)!.startChallenge,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -407,14 +408,14 @@ class DailyChallengeScreen extends ConsumerWidget {
               ),
             ],
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.share_rounded, color: Colors.white, size: 22),
-              SizedBox(width: 10),
+              const Icon(Icons.share_rounded, color: Colors.white, size: 22),
+              const SizedBox(width: 10),
               Text(
-                'Share Result 🎯',
-                style: TextStyle(
+                '${AppLocalizations.of(context)!.shareResult} 🎯',
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
