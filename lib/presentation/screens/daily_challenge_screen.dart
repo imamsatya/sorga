@@ -274,29 +274,57 @@ class DailyChallengeScreen extends ConsumerWidget {
             const SizedBox(height: 16),
           ],
           
-          // Play Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-            context.go('/daily/play', extra: challenge.level);
-          },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: challenge.isCompletedToday
-                    ? AppTheme.surfaceColor
-                    : AppTheme.primaryColor,
-                foregroundColor: AppTheme.textPrimary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+          // Play Button - Outlined style for "Play Again", Gradient for "Start Challenge"
+          GestureDetector(
+            onTap: () {
+              context.go('/daily/play', extra: challenge.level);
+            },
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: challenge.isCompletedToday
+                    ? Colors.transparent
+                    : null,
+                gradient: challenge.isCompletedToday
+                    ? null
+                    : AppTheme.primaryGradient,
+                borderRadius: BorderRadius.circular(16),
+                border: challenge.isCompletedToday
+                    ? Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.5), width: 2)
+                    : null,
+                boxShadow: challenge.isCompletedToday
+                    ? null
+                    : [
+                        BoxShadow(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.4),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
               ),
-              child: Text(
-                challenge.isCompletedToday ? 'PLAY AGAIN' : 'START CHALLENGE',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (challenge.isCompletedToday) ...[
+                    Icon(
+                      Icons.replay_rounded,
+                      color: AppTheme.textSecondary,
+                      size: 22,
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  Text(
+                    challenge.isCompletedToday ? 'Play Again' : 'START CHALLENGE',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: challenge.isCompletedToday
+                          ? AppTheme.textSecondary
+                          : Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
