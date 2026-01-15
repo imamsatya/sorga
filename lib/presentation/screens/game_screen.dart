@@ -709,11 +709,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _hapticService.errorVibrate();
                 }
                 
-                // Wait for state update to propagate through Riverpod before navigation
-                await Future.microtask(() {});
+                // Debug: verify state before navigation
+                final verifyState = ref.read(gameStateProvider);
+                debugPrint('Before navigation - isCompleted: ${verifyState?.isCompleted}, isCorrect: ${verifyState?.isCorrect}');
                 
-                // Navigate to result screen
-                if (mounted) context.go('/result');
+                // Use pushReplacement for reliable route replacement
+                if (mounted) {
+                  debugPrint('Navigating to /result using pushReplacement');
+                  context.pushReplacement('/result');
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
