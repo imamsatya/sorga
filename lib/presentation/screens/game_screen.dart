@@ -59,13 +59,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       // Start new game if:
       // - No existing state
       // - Different level
-      // - Game was completed (not continuing)
+      // - Game was completed AND not currently running (i.e., not Continuing)
+      // Note: Do NOT restart if isRunning is true - that means Continue was clicked
       final shouldStartNewGame = currentState == null || 
           currentState.level.id != widget.levelId ||
-          (currentState.isCompleted && !currentState.isRunning) ||
-          // For daily challenges, force restart if we are initializing a new screen
-          // This handles the "Retry" scenario where we push a replacement route
-          (widget.isDailyChallenge && currentState.level.id == widget.levelId);
+          (currentState.isCompleted && !currentState.isRunning);
       
       if (shouldStartNewGame) {
         if (widget.isDailyChallenge && widget.dailyLevel != null) {
