@@ -319,4 +319,34 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get startSorting => 'Mulai mengurutkan dan kalahkan waktu terbaikmu!';
+
+  @override
+  String get bestTime => 'Waktu Terbaik';
+
+  @override
+  String get attempts => 'Percobaan';
+
+  @override
+  String get iCompletedLevel =>
+      'Saya baru saja menyelesaikan level ini di Sorga! Bisakah kamu mengalahkan waktuku?';
+
+  @override
+  String get dailyChallengeShare => '🎯 Sorga Tantangan Harian';
+
+  @override
+  String get shiftAndSwap => 'Geser & Tukar';
+
+  @override
+  String get shiftAndSwapDescription =>
+      'Gunakan mode GESER untuk memindahkan item selangkah demi selangkah, atau TUKAR untuk menukar posisi';
+
+  @override
+  String get checkAnswer => 'Cek Jawaban';
+
+  @override
+  String get checkAnswerDescription =>
+      'Jika siap, ketuk CEK untuk memverifikasi jawaban Anda. Semoga berhasil!';
+
+  @override
+  String get startPlaying => 'MULAI BERMAIN';
 }

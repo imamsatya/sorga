@@ -103,5 +103,14 @@
   "useDragMode": "Use Shift or Swap mode",
   "shiftModeDescription": "Shift mode slides items. Swap mode exchanges positions.",
   "youreReady": "You're Ready!",
-  "startSorting": "Start sorting and beat your best time!"
+  "startSorting": "Start sorting and beat your best time!",
+  "bestTime": "Best Time",
+  "attempts": "Attempts",
+  "iCompletedLevel": "I just completed this level in Sorga! Can you beat my time?",
+  "dailyChallengeShare": "🎯 Sorga Daily Challenge",
+  "shiftAndSwap": "Shift & Swap",
+  "shiftAndSwapDescription": "Use SHIFT mode to move items step by step, or SWAP to exchange positions",
+  "checkAnswer": "Check Answer",
+  "checkAnswerDescription": "When ready, tap CHECK to verify your answer. Good luck!",
+  "startPlaying": "START PLAYING"
 }

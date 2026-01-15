@@ -316,4 +316,31 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get startSorting => '정렬을 시작하고 최고 기록을 경신하세요!';
+
+  @override
+  String get bestTime => '최고 기록';
+
+  @override
+  String get attempts => '시도 횟수';
+
+  @override
+  String get iCompletedLevel => 'Sorga에서 이 레벨을 클리어했어요! 내 기록을 깰 수 있을까요?';
+
+  @override
+  String get dailyChallengeShare => '🎯 Sorga 일일 챌린지';
+
+  @override
+  String get shiftAndSwap => '이동 & 교환';
+
+  @override
+  String get shiftAndSwapDescription => '이동 모드로 한 단계씩 이동하거나, 교환으로 위치를 바꾸세요';
+
+  @override
+  String get checkAnswer => '정답 확인';
+
+  @override
+  String get checkAnswerDescription => '준비되면 확인을 탭하여 정답을 확인하세요. 행운을 빕니다!';
+
+  @override
+  String get startPlaying => '플레이 시작';
 }

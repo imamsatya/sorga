@@ -102,5 +102,14 @@
   "useDragMode": "Verwende Verschieben oder Tauschen",
   "shiftModeDescription": "Verschieben schiebt Elemente. Tauschen tauscht Positionen.",
   "youreReady": "Du bist bereit!",
-  "startSorting": "Starte das Sortieren und schlage deine Bestzeit!"
+  "startSorting": "Starte das Sortieren und schlage deine Bestzeit!",
+  "bestTime": "Bestzeit",
+  "attempts": "Versuche",
+  "iCompletedLevel": "Ich habe gerade dieses Level in Sorga geschafft! Kannst du meine Zeit schlagen?",
+  "dailyChallengeShare": "🎯 Sorga Tägliche Herausforderung",
+  "shiftAndSwap": "Verschieben & Tauschen",
+  "shiftAndSwapDescription": "Verwende den VERSCHIEBEN-Modus um Elemente schrittweise zu bewegen, oder TAUSCHEN um Positionen zu wechseln",
+  "checkAnswer": "Antwort Prüfen",
+  "checkAnswerDescription": "Wenn du bereit bist, tippe auf PRÜFEN um deine Antwort zu überprüfen. Viel Glück!",
+  "startPlaying": "SPIELEN STARTEN"
 }

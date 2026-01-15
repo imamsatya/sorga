@@ -102,5 +102,14 @@
   "useDragMode": "シフトまたはスワップモードを使用",
   "shiftModeDescription": "シフトモードはアイテムをスライド。スワップモードは位置を交換。",
   "youreReady": "準備完了！",
-  "startSorting": "ソートを開始して自己ベストを更新しよう！"
+  "startSorting": "ソートを開始して自己ベストを更新しよう！",
+  "bestTime": "ベストタイム",
+  "attempts": "試行回数",
+  "iCompletedLevel": "Sorgaでこのレベルをクリアしました！私の記録を破れるかな？",
+  "dailyChallengeShare": "🎯 Sorga デイリーチャレンジ",
+  "shiftAndSwap": "シフト & スワップ",
+  "shiftAndSwapDescription": "シフトモードで段階的に移動、またはスワップで位置を交換",
+  "checkAnswer": "回答を確認",
+  "checkAnswerDescription": "準備ができたら、チェックをタップして回答を確認。頑張って！",
+  "startPlaying": "プレイ開始"
 }

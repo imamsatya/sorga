@@ -641,14 +641,14 @@ Can you beat my time? 💪
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 18),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
-                  SizedBox(width: 8),
+                  const Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
+                  const SizedBox(width: 8),
                   Text(
-                    'RETRY LEVEL',
-                    style: TextStyle(
+                    AppLocalizations.of(context)!.retryLevel,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.textPrimary,

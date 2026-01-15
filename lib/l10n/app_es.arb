@@ -102,5 +102,14 @@
   "useDragMode": "Usa modo Desplazar o Intercambiar",
   "shiftModeDescription": "El modo Desplazar desliza elementos. El modo Intercambiar cambia posiciones.",
   "youreReady": "¡Estás listo!",
-  "startSorting": "¡Comienza a ordenar y supera tu mejor tiempo!"
+  "startSorting": "¡Comienza a ordenar y supera tu mejor tiempo!",
+  "bestTime": "Mejor Tiempo",
+  "attempts": "Intentos",
+  "iCompletedLevel": "¡Acabo de completar este nivel en Sorga! ¿Puedes superar mi tiempo?",
+  "dailyChallengeShare": "🎯 Sorga Desafío Diario",
+  "shiftAndSwap": "Desplazar & Intercambiar",
+  "shiftAndSwapDescription": "Usa el modo DESPLAZAR para mover elementos paso a paso, o INTERCAMBIAR para cambiar posiciones",
+  "checkAnswer": "Verificar Respuesta",
+  "checkAnswerDescription": "Cuando estés listo, toca VERIFICAR para comprobar tu respuesta. ¡Buena suerte!",
+  "startPlaying": "COMENZAR A JUGAR"
 }

@@ -102,5 +102,14 @@
   "useDragMode": "이동 또는 교환 모드 사용",
   "shiftModeDescription": "이동 모드는 아이템을 밀어요. 교환 모드는 위치를 바꿔요.",
   "youreReady": "준비됐어요!",
-  "startSorting": "정렬을 시작하고 최고 기록을 경신하세요!"
+  "startSorting": "정렬을 시작하고 최고 기록을 경신하세요!",
+  "bestTime": "최고 기록",
+  "attempts": "시도 횟수",
+  "iCompletedLevel": "Sorga에서 이 레벨을 클리어했어요! 내 기록을 깰 수 있을까요?",
+  "dailyChallengeShare": "🎯 Sorga 일일 챌린지",
+  "shiftAndSwap": "이동 & 교환",
+  "shiftAndSwapDescription": "이동 모드로 한 단계씩 이동하거나, 교환으로 위치를 바꾸세요",
+  "checkAnswer": "정답 확인",
+  "checkAnswerDescription": "준비되면 확인을 탭하여 정답을 확인하세요. 행운을 빕니다!",
+  "startPlaying": "플레이 시작"
 }

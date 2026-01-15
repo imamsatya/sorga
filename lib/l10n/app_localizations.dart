@@ -715,6 +715,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start sorting and beat your best time!'**
   String get startSorting;
+
+  /// No description provided for @bestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Time'**
+  String get bestTime;
+
+  /// No description provided for @attempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempts'**
+  String get attempts;
+
+  /// No description provided for @iCompletedLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'I just completed this level in Sorga! Can you beat my time?'**
+  String get iCompletedLevel;
+
+  /// No description provided for @dailyChallengeShare.
+  ///
+  /// In en, this message translates to:
+  /// **'🎯 Sorga Daily Challenge'**
+  String get dailyChallengeShare;
+
+  /// No description provided for @shiftAndSwap.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift & Swap'**
+  String get shiftAndSwap;
+
+  /// No description provided for @shiftAndSwapDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Use SHIFT mode to move items step by step, or SWAP to exchange positions'**
+  String get shiftAndSwapDescription;
+
+  /// No description provided for @checkAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Answer'**
+  String get checkAnswer;
+
+  /// No description provided for @checkAnswerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'When ready, tap CHECK to verify your answer. Good luck!'**
+  String get checkAnswerDescription;
+
+  /// No description provided for @startPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'START PLAYING'**
+  String get startPlaying;
 }
 
 class _AppLocalizationsDelegate

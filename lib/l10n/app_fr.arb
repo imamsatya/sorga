@@ -102,5 +102,14 @@
   "useDragMode": "Utilisez le mode Décaler ou Échanger",
   "shiftModeDescription": "Le mode Décaler fait glisser les éléments. Le mode Échanger échange les positions.",
   "youreReady": "Vous êtes prêt!",
-  "startSorting": "Commencez à trier et battez votre meilleur temps!"
+  "startSorting": "Commencez à trier et battez votre meilleur temps!",
+  "bestTime": "Meilleur Temps",
+  "attempts": "Tentatives",
+  "iCompletedLevel": "Je viens de terminer ce niveau dans Sorga ! Pouvez-vous battre mon temps ?",
+  "dailyChallengeShare": "🎯 Sorga Défi Quotidien",
+  "shiftAndSwap": "Décaler & Échanger",
+  "shiftAndSwapDescription": "Utilisez le mode DÉCALER pour déplacer les éléments étape par étape, ou ÉCHANGER pour changer les positions",
+  "checkAnswer": "Vérifier la Réponse",
+  "checkAnswerDescription": "Quand vous êtes prêt, appuyez sur VÉRIFIER pour confirmer votre réponse. Bonne chance !",
+  "startPlaying": "COMMENCER À JOUER"
 }

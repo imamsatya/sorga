@@ -353,7 +353,7 @@ class LevelSelectScreen extends ConsumerWidget {
                           Text(_getCategoryEmoji(level.category), style: const TextStyle(fontSize: 16)),
                           const SizedBox(width: 6),
                           Text(
-                            level.category.displayName,
+                            _getCategoryTitle(context, level.category),
                             style: TextStyle(
                               color: categoryColor,
                               fontWeight: FontWeight.bold,
@@ -365,7 +365,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Level ${level.localId}',
+                      '${AppLocalizations.of(context)!.level} ${level.localId}',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -392,16 +392,16 @@ class LevelSelectScreen extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildStatColumn('⏱️', progress.bestTimeFormatted, 'Best Time'),
+                          _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, AppLocalizations.of(context)!.bestTime),
                           Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
-                          _buildStatColumn('🔄', '${progress.attempts}x', 'Attempts'),
+                          _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
                         ],
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Can you beat my time?',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.canYouBeatMyTime,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppTheme.textMuted,
                         fontStyle: FontStyle.italic,
@@ -417,7 +417,7 @@ class LevelSelectScreen extends ConsumerWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () async {
-                      await _captureAndShare(shareKey, level, progress);
+                      await _captureAndShare(context, shareKey, level, progress);
                       if (context.mounted) Navigator.pop(context);
                     },
                     child: Container(
@@ -426,14 +426,14 @@ class LevelSelectScreen extends ConsumerWidget {
                         color: AppTheme.primaryColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.share, color: Colors.white, size: 20),
-                          SizedBox(width: 8),
+                          const Icon(Icons.share, color: Colors.white, size: 20),
+                          const SizedBox(width: 8),
                           Text(
-                            'Share',
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.share,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -454,9 +454,9 @@ class LevelSelectScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
                       ),
-                      child: const Text(
-                        'Close',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.close,
+                        style: const TextStyle(
                           color: AppTheme.textSecondary,
                           fontWeight: FontWeight.bold,
                         ),
@@ -474,7 +474,7 @@ class LevelSelectScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _captureAndShare(GlobalKey key, Level level, dynamic progress) async {
+  Future<void> _captureAndShare(BuildContext context, GlobalKey key, Level level, dynamic progress) async {
     try {
       final boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) return;
@@ -489,13 +489,8 @@ class LevelSelectScreen extends ConsumerWidget {
         name: 'sorga_level_${level.id}.png',
       );
 
-      final message = '''🎮 Sorga - ${level.category.displayName} Level ${level.localId} Completed!
-
-📝 ${level.description}
-⏱️ Best Time: ${progress.bestTimeFormatted}
-🔄 Attempts: ${progress.attempts}x
-
-Can you beat my time? Download Sorga now!''';
+      final l10n = AppLocalizations.of(context)!;
+      final message = l10n.iCompletedLevel;
 
       await Share.shareXFiles(
         [xFile],
@@ -506,7 +501,7 @@ Can you beat my time? Download Sorga now!''';
     }
   }
 
-  Widget _buildStatColumn(String emoji, String value, String label) {
+  Widget _buildStatColumn(BuildContext context, String emoji, String value, String label) {
     return Column(
       children: [
         Text(emoji, style: const TextStyle(fontSize: 24)),

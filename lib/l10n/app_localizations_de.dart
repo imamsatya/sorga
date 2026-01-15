@@ -320,4 +320,34 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get startSorting => 'Starte das Sortieren und schlage deine Bestzeit!';
+
+  @override
+  String get bestTime => 'Bestzeit';
+
+  @override
+  String get attempts => 'Versuche';
+
+  @override
+  String get iCompletedLevel =>
+      'Ich habe gerade dieses Level in Sorga geschafft! Kannst du meine Zeit schlagen?';
+
+  @override
+  String get dailyChallengeShare => '🎯 Sorga Tägliche Herausforderung';
+
+  @override
+  String get shiftAndSwap => 'Verschieben & Tauschen';
+
+  @override
+  String get shiftAndSwapDescription =>
+      'Verwende den VERSCHIEBEN-Modus um Elemente schrittweise zu bewegen, oder TAUSCHEN um Positionen zu wechseln';
+
+  @override
+  String get checkAnswer => 'Antwort Prüfen';
+
+  @override
+  String get checkAnswerDescription =>
+      'Wenn du bereit bist, tippe auf PRÜFEN um deine Antwort zu überprüfen. Viel Glück!';
+
+  @override
+  String get startPlaying => 'SPIELEN STARTEN';
 }
