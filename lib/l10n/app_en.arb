@@ -112,5 +112,17 @@
   "shiftAndSwapDescription": "Use SHIFT mode to move items step by step, or SWAP to exchange positions",
   "checkAnswer": "Check Answer",
   "checkAnswerDescription": "When ready, tap CHECK to verify your answer. Good luck!",
-  "startPlaying": "START PLAYING"
+  "startPlaying": "START PLAYING",
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December"
 }

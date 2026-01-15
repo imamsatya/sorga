@@ -350,4 +350,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get startPlaying => 'SPIELEN STARTEN';
+
+  @override
+  String get january => 'Januar';
+
+  @override
+  String get february => 'Februar';
+
+  @override
+  String get march => 'März';
+
+  @override
+  String get april => 'April';
+
+  @override
+  String get may => 'Mai';
+
+  @override
+  String get june => 'Juni';
+
+  @override
+  String get july => 'Juli';
+
+  @override
+  String get august => 'August';
+
+  @override
+  String get september => 'September';
+
+  @override
+  String get october => 'Oktober';
+
+  @override
+  String get november => 'November';
+
+  @override
+  String get december => 'Dezember';
 }

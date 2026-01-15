@@ -343,4 +343,40 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get startPlaying => '플레이 시작';
+
+  @override
+  String get january => '1월';
+
+  @override
+  String get february => '2월';
+
+  @override
+  String get march => '3월';
+
+  @override
+  String get april => '4월';
+
+  @override
+  String get may => '5월';
+
+  @override
+  String get june => '6월';
+
+  @override
+  String get july => '7월';
+
+  @override
+  String get august => '8월';
+
+  @override
+  String get september => '9월';
+
+  @override
+  String get october => '10월';
+
+  @override
+  String get november => '11월';
+
+  @override
+  String get december => '12월';
 }

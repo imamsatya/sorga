@@ -37,14 +37,14 @@ class DailyChallengeScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                   child: Column(
                     children: [
-                      _buildDateCard(dailyChallenge),
+                      _buildDateCard(context, dailyChallenge),
                       const SizedBox(height: 16),
                       _buildStreakCard(context, streak),
                       const SizedBox(height: 16),
                       _buildChallengeCard(context, ref, dailyChallenge),
                       const SizedBox(height: 16),
                       if (dailyChallenge.isCompletedToday)
-                        _buildCompletedBadge(dailyChallenge),
+                        _buildCompletedBadge(context, dailyChallenge),
                     ],
                   ),
                 ),
@@ -88,10 +88,11 @@ class DailyChallengeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDateCard(DailyChallengeState challenge) {
-    final months = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    final weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  Widget _buildDateCard(BuildContext context, DailyChallengeState challenge) {
+    final l10n = AppLocalizations.of(context)!;
+    final months = [l10n.january, l10n.february, l10n.march, l10n.april, l10n.may, l10n.june,
+                    l10n.july, l10n.august, l10n.september, l10n.october, l10n.november, l10n.december];
+    final weekdays = [l10n.monday, l10n.tuesday, l10n.wednesday, l10n.thursday, l10n.friday, l10n.saturday, l10n.sunday];
     
     return Container(
       width: double.infinity,
@@ -182,7 +183,7 @@ class DailyChallengeScreen extends ConsumerWidget {
 
   Widget _buildChallengeCard(BuildContext context, WidgetRef ref, DailyChallengeState challenge) {
     final categoryEmoji = _getCategoryEmoji(challenge.level.category);
-    final categoryName = challenge.level.category.displayName;
+    final categoryName = _getCategoryTitle(context, challenge.level.category);
     
     return Container(
       width: double.infinity,
@@ -240,7 +241,7 @@ class DailyChallengeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  challenge.level.sortOrder.shortName,
+                  challenge.level.sortOrder == SortOrder.ascending ? AppLocalizations.of(context)!.asc : AppLocalizations.of(context)!.desc,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -268,7 +269,7 @@ class DailyChallengeScreen extends ConsumerWidget {
                   const Icon(Icons.emoji_events, color: AppTheme.primaryColor, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    'Best: ${_formatTime(challenge.bestTimeMs!)}',
+                    '${AppLocalizations.of(context)!.best}: ${_formatTime(challenge.bestTimeMs!)}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -340,7 +341,7 @@ class DailyChallengeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCompletedBadge(DailyChallengeState challenge) {
+  Widget _buildCompletedBadge(BuildContext context, DailyChallengeState challenge) {
     return Column(
       children: [
         // Completed status
@@ -361,16 +362,16 @@ class DailyChallengeScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Completed Today!',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.completedToday,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.successColor,
                       ),
                     ),
                     Text(
-                      'Come back tomorrow for a new challenge',
+                      AppLocalizations.of(context)!.comeBackTomorrow,
                       style: TextStyle(
                         fontSize: 12,
                         color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -475,6 +476,24 @@ Can you beat my time? 💪
         return '🎲';
       case LevelCategory.knowledge:
         return '🧠';
+    }
+  }
+
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
     }
   }
 

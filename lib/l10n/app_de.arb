@@ -111,5 +111,17 @@
   "shiftAndSwapDescription": "Verwende den VERSCHIEBEN-Modus um Elemente schrittweise zu bewegen, oder TAUSCHEN um Positionen zu wechseln",
   "checkAnswer": "Antwort Prüfen",
   "checkAnswerDescription": "Wenn du bereit bist, tippe auf PRÜFEN um deine Antwort zu überprüfen. Viel Glück!",
-  "startPlaying": "SPIELEN STARTEN"
+  "startPlaying": "SPIELEN STARTEN",
+  "january": "Januar",
+  "february": "Februar",
+  "march": "März",
+  "april": "April",
+  "may": "Mai",
+  "june": "Juni",
+  "july": "Juli",
+  "august": "August",
+  "september": "September",
+  "october": "Oktober",
+  "november": "November",
+  "december": "Dezember"
 }

@@ -111,5 +111,17 @@
   "shiftAndSwapDescription": "Gunakan mode GESER untuk memindahkan item selangkah demi selangkah, atau TUKAR untuk menukar posisi",
   "checkAnswer": "Cek Jawaban",
   "checkAnswerDescription": "Jika siap, ketuk CEK untuk memverifikasi jawaban Anda. Semoga berhasil!",
-  "startPlaying": "MULAI BERMAIN"
+  "startPlaying": "MULAI BERMAIN",
+  "january": "Januari",
+  "february": "Februari",
+  "march": "Maret",
+  "april": "April",
+  "may": "Mei",
+  "june": "Juni",
+  "july": "Juli",
+  "august": "Agustus",
+  "september": "September",
+  "october": "Oktober",
+  "november": "November",
+  "december": "Desember"
 }

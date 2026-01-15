@@ -111,5 +111,17 @@
   "shiftAndSwapDescription": "Usa el modo DESPLAZAR para mover elementos paso a paso, o INTERCAMBIAR para cambiar posiciones",
   "checkAnswer": "Verificar Respuesta",
   "checkAnswerDescription": "Cuando estés listo, toca VERIFICAR para comprobar tu respuesta. ¡Buena suerte!",
-  "startPlaying": "COMENZAR A JUGAR"
+  "startPlaying": "COMENZAR A JUGAR",
+  "january": "Enero",
+  "february": "Febrero",
+  "march": "Marzo",
+  "april": "Abril",
+  "may": "Mayo",
+  "june": "Junio",
+  "july": "Julio",
+  "august": "Agosto",
+  "september": "Septiembre",
+  "october": "Octubre",
+  "november": "Noviembre",
+  "december": "Diciembre"
 }

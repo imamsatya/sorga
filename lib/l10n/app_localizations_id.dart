@@ -349,4 +349,40 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get startPlaying => 'MULAI BERMAIN';
+
+  @override
+  String get january => 'Januari';
+
+  @override
+  String get february => 'Februari';
+
+  @override
+  String get march => 'Maret';
+
+  @override
+  String get april => 'April';
+
+  @override
+  String get may => 'Mei';
+
+  @override
+  String get june => 'Juni';
+
+  @override
+  String get july => 'Juli';
+
+  @override
+  String get august => 'Agustus';
+
+  @override
+  String get september => 'September';
+
+  @override
+  String get october => 'Oktober';
+
+  @override
+  String get november => 'November';
+
+  @override
+  String get december => 'Desember';
 }

@@ -111,5 +111,17 @@
   "shiftAndSwapDescription": "シフトモードで段階的に移動、またはスワップで位置を交換",
   "checkAnswer": "回答を確認",
   "checkAnswerDescription": "準備ができたら、チェックをタップして回答を確認。頑張って！",
-  "startPlaying": "プレイ開始"
+  "startPlaying": "プレイ開始",
+  "january": "1月",
+  "february": "2月",
+  "march": "3月",
+  "april": "4月",
+  "may": "5月",
+  "june": "6月",
+  "july": "7月",
+  "august": "8月",
+  "september": "9月",
+  "october": "10月",
+  "november": "11月",
+  "december": "12月"
 }

@@ -343,4 +343,40 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get startPlaying => 'プレイ開始';
+
+  @override
+  String get january => '1月';
+
+  @override
+  String get february => '2月';
+
+  @override
+  String get march => '3月';
+
+  @override
+  String get april => '4月';
+
+  @override
+  String get may => '5月';
+
+  @override
+  String get june => '6月';
+
+  @override
+  String get july => '7月';
+
+  @override
+  String get august => '8月';
+
+  @override
+  String get september => '9月';
+
+  @override
+  String get october => '10月';
+
+  @override
+  String get november => '11月';
+
+  @override
+  String get december => '12月';
 }
