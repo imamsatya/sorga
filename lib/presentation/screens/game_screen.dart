@@ -700,27 +700,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 }
                 
                 if (isCorrect) {
-                  _confettiController.play();
+                  // No confetti here - ResultScreen handles it
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
                   
-                  // Wait for confetti to pop and async operations to settle
-                  await Future.delayed(const Duration(seconds: 1));
-                  
-                  // Go directly to result for success
-                  if (mounted) {
-                    debugPrint('Navigating to result screen (success)');
-                    context.go('/result');
-                  }
+                  // Go immediatey to result
+                  if (mounted) context.go('/result');
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                   
-                  // Go directly to result screen for failure too (no overlay)
-                  if (mounted) {
-                    debugPrint('Navigating to result screen (failure)');
-                    context.go('/result');
-                  }
+                  // Go immediately to result
+                  if (mounted) context.go('/result');
                 }
               },
               child: Container(
