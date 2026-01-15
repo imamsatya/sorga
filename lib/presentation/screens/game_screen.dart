@@ -713,10 +713,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 final verifyState = ref.read(gameStateProvider);
                 debugPrint('Before navigation - isCompleted: ${verifyState?.isCompleted}, isCorrect: ${verifyState?.isCorrect}');
                 
-                // Use pushReplacement for reliable route replacement
+                // Navigate to result screen
                 if (mounted) {
-                  debugPrint('Navigating to /result using pushReplacement');
-                  context.pushReplacement('/result');
+                  // For daily challenges, use Navigator directly to bypass GoRouter issues
+                  if (widget.isDailyChallenge) {
+                    debugPrint('Daily Challenge: Using Navigator.pushReplacement');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const ResultScreen()),
+                    );
+                  } else {
+                    context.go('/result');
+                  }
                 }
               },
               child: Container(
