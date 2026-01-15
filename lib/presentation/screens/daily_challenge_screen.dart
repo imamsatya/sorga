@@ -278,16 +278,8 @@ class DailyChallengeScreen extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => GameScreen(
-                      levelId: challenge.level.id,
-                      isDailyChallenge: true,
-                      dailyLevel: challenge.level,
-                    ),
-                  ),
-                );
-              },
+            context.go('/daily/play', extra: challenge.level);
+          },
               style: ElevatedButton.styleFrom(
                 backgroundColor: challenge.isCompletedToday
                     ? AppTheme.surfaceColor

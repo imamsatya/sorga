@@ -88,5 +88,16 @@ final appRouter = GoRouter(
       path: AppRoutes.dailyChallenge,
       builder: (context, state) => const DailyChallengeScreen(),
     ),
+    GoRoute(
+      path: '/daily/play',
+      builder: (context, state) {
+        final level = state.extra as Level;
+        return GameScreen(
+          levelId: level.id,
+          isDailyChallenge: true,
+          dailyLevel: level,
+        );
+      },
+    ),
   ],
 );

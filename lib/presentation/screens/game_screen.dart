@@ -34,8 +34,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
   DragMode _dragMode = DragMode.shift; // Default to shift mode
   bool _showTutorial = false;
-  bool _showResultFeedback = false;
-  bool _isResultCorrect = false;
   
   // Services
   final AudioService _audioService = AudioService();
@@ -754,17 +752,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                   
-                  // Show TRY AGAIN feedback overlay only for wrong answers
-                  if (mounted) {
-                    setState(() {
-                      _showResultFeedback = true;
-                      _isResultCorrect = false;
-                    });
-                    
-                    // Wait for feedback to display, then navigate
-                    await Future.delayed(const Duration(milliseconds: 800));
-                    if (mounted) context.go('/result');
-                  }
+                  // Go directly to result screen for failure too (no overlay)
+                  if (mounted) context.go('/result');
                 }
               },
               child: Container(
