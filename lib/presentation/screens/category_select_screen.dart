@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 
 class CategorySelectScreen extends ConsumerWidget {
@@ -39,10 +40,10 @@ class CategorySelectScreen extends ConsumerWidget {
             onPressed: () => context.go('/'),
             icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary, size: 28),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Choose Category',
-              style: TextStyle(
+              AppLocalizations.of(context)!.chooseCategory,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,

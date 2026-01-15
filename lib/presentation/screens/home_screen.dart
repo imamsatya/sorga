@@ -138,7 +138,7 @@ class HomeScreen extends ConsumerWidget {
                         
                         // Stats Card
                         statsAsync.when(
-                          data: (stats) => _buildStatsCard(stats, scaleFactor),
+                          data: (stats) => _buildStatsCard(context, stats, scaleFactor),
                           loading: () => const SizedBox(height: 100),
                           error: (_, __) => const SizedBox(height: 100),
                         ),
@@ -229,7 +229,8 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildStatsCard(GameStats stats, double scale) {
+  Widget _buildStatsCard(BuildContext context, GameStats stats, double scale) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 40 * scale),
       padding: EdgeInsets.all(20 * scale),
@@ -249,7 +250,7 @@ class HomeScreen extends ConsumerWidget {
               Expanded(
                 child: _buildStatItem(
                   '${stats.completedLevels}',
-                  'Done',
+                  l10n.done,
                   Icons.check_circle_outline,
                   scale,
                 ),
@@ -262,7 +263,7 @@ class HomeScreen extends ConsumerWidget {
               Expanded(
                 child: _buildStatItem(
                   '${stats.completionPercentage.toStringAsFixed(0)}%',
-                  'Progress',
+                  l10n.progress,
                   Icons.trending_up,
                   scale,
                 ),
@@ -275,7 +276,7 @@ class HomeScreen extends ConsumerWidget {
               Expanded(
                 child: _buildStatItem(
                   stats.formattedPlayTime,
-                  'Time',
+                  l10n.time,
                   Icons.timer_outlined,
                   scale,
                 ),
