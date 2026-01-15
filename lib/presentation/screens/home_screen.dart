@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 import '../providers/feedback_settings_provider.dart';
 import '../providers/game_stats_provider.dart';
@@ -132,7 +133,7 @@ class HomeScreen extends ConsumerWidget {
                         SizedBox(height: 16 * scaleFactor),
                         _buildTitle(scaleFactor),
                         SizedBox(height: 8 * scaleFactor),
-                        _buildSubtitle(scaleFactor),
+                        _buildSubtitle(context, scaleFactor),
                         const Spacer(flex: 1),
                         
                         // Stats Card
@@ -217,9 +218,10 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildSubtitle(double scale) {
+  Widget _buildSubtitle(BuildContext context, double scale) {
+    final l10n = AppLocalizations.of(context)!;
     return Text(
-      'Your Sorting Paradise',
+      l10n.yourSortingParadise,
       style: TextStyle(
         fontSize: 16 * scale,
         color: AppTheme.textSecondary.withOpacity(0.8),
@@ -346,7 +348,7 @@ class HomeScreen extends ConsumerWidget {
               Icon(Icons.play_arrow_rounded, size: 32 * scale, color: Colors.white),
               SizedBox(width: 8 * scale),
               Text(
-                'PLAY',
+                AppLocalizations.of(context)!.play.toUpperCase(),
                 style: TextStyle(
                   fontSize: 24 * scale,
                   fontWeight: FontWeight.bold,
@@ -386,11 +388,13 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 4),
-          Text(
-            streak == 1 ? 'day' : 'days',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppTheme.warningColor.withOpacity(0.8),
+          Builder(
+            builder: (context) => Text(
+              streak == 1 ? AppLocalizations.of(context)!.day : AppLocalizations.of(context)!.days,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppTheme.warningColor.withOpacity(0.8),
+              ),
             ),
           ),
         ],
@@ -423,7 +427,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             SizedBox(width: 10 * scale),
             Text(
-              'Daily Challenge',
+              AppLocalizations.of(context)!.dailyChallenge,
               style: TextStyle(
                 fontSize: 16 * scale,
                 fontWeight: FontWeight.w600,

@@ -105,4 +105,109 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get retryLevel => 'ULANGI LEVEL';
+
+  @override
+  String get yourSortingParadise => 'Surga Pengurutan Anda';
+
+  @override
+  String get done => 'Selesai';
+
+  @override
+  String get progress => 'Progres';
+
+  @override
+  String get time => 'Waktu';
+
+  @override
+  String get day => 'hari';
+
+  @override
+  String get days => 'hari';
+
+  @override
+  String get settings => 'Pengaturan';
+
+  @override
+  String get language => 'Bahasa';
+
+  @override
+  String get systemDefault => 'Default Sistem';
+
+  @override
+  String get soundEffects => 'Efek Suara';
+
+  @override
+  String get vibration => 'Getaran';
+
+  @override
+  String get check => 'Cek';
+
+  @override
+  String get level => 'Level';
+
+  @override
+  String get items => 'item';
+
+  @override
+  String get sortAscending => 'Urutkan ASC';
+
+  @override
+  String get sortDescending => 'Urutkan DESC';
+
+  @override
+  String get best => 'Terbaik';
+
+  @override
+  String get playAgain => 'Main Lagi';
+
+  @override
+  String get startChallenge => 'MULAI TANTANGAN';
+
+  @override
+  String get completedToday => 'Selesai Hari Ini!';
+
+  @override
+  String get comeBackTomorrow => 'Kembali besok untuk tantangan baru';
+
+  @override
+  String get shareResult => 'Bagikan Hasil';
+
+  @override
+  String get shareAchievement => 'Bagikan Pencapaian';
+
+  @override
+  String get canYouBeatMyTime => 'Bisakah kamu kalahkan waktu saya?';
+
+  @override
+  String get dailyStreak => 'Streak Harian';
+
+  @override
+  String get dailyStreakActive => 'Streak Harian Aktif!';
+
+  @override
+  String get categoryProgress => 'Progres Kategori';
+
+  @override
+  String get completedLevels => 'Level Selesai';
+
+  @override
+  String get currentStreak => 'Streak Saat Ini';
+
+  @override
+  String get longestStreak => 'Streak Terpanjang';
+
+  @override
+  String get totalPlayTime => 'Total Waktu Bermain';
+
+  @override
+  String get totalAttempts => 'Total Percobaan';
+
+  @override
+  String get achievementsTitle => 'Pencapaian';
+
+  @override
+  String get statisticsTitle => 'Statistik';
+
+  @override
+  String get selectLevel => 'Pilih Level';
 }

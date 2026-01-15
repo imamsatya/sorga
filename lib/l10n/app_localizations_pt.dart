@@ -105,4 +105,109 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get retryLevel => 'TENTAR NÍVEL';
+
+  @override
+  String get yourSortingParadise => 'Seu Paraíso de Ordenação';
+
+  @override
+  String get done => 'Concluído';
+
+  @override
+  String get progress => 'Progresso';
+
+  @override
+  String get time => 'Tempo';
+
+  @override
+  String get day => 'dia';
+
+  @override
+  String get days => 'dias';
+
+  @override
+  String get settings => 'Configurações';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get systemDefault => 'Padrão do Sistema';
+
+  @override
+  String get soundEffects => 'Efeitos Sonoros';
+
+  @override
+  String get vibration => 'Vibração';
+
+  @override
+  String get check => 'Verificar';
+
+  @override
+  String get level => 'Nível';
+
+  @override
+  String get items => 'itens';
+
+  @override
+  String get sortAscending => 'Ordenar ASC';
+
+  @override
+  String get sortDescending => 'Ordenar DESC';
+
+  @override
+  String get best => 'Melhor';
+
+  @override
+  String get playAgain => 'Jogar Novamente';
+
+  @override
+  String get startChallenge => 'INICIAR DESAFIO';
+
+  @override
+  String get completedToday => 'Concluído Hoje!';
+
+  @override
+  String get comeBackTomorrow => 'Volte amanhã para um novo desafio';
+
+  @override
+  String get shareResult => 'Compartilhar Resultado';
+
+  @override
+  String get shareAchievement => 'Compartilhar Conquista';
+
+  @override
+  String get canYouBeatMyTime => 'Você consegue superar meu tempo?';
+
+  @override
+  String get dailyStreak => 'Sequência Diária';
+
+  @override
+  String get dailyStreakActive => 'Sequência Diária Ativa!';
+
+  @override
+  String get categoryProgress => 'Progresso da Categoria';
+
+  @override
+  String get completedLevels => 'Níveis Concluídos';
+
+  @override
+  String get currentStreak => 'Sequência Atual';
+
+  @override
+  String get longestStreak => 'Maior Sequência';
+
+  @override
+  String get totalPlayTime => 'Tempo Total de Jogo';
+
+  @override
+  String get totalAttempts => 'Tentativas Totais';
+
+  @override
+  String get achievementsTitle => 'Conquistas';
+
+  @override
+  String get statisticsTitle => 'Estatísticas';
+
+  @override
+  String get selectLevel => 'Selecionar Nível';
 }

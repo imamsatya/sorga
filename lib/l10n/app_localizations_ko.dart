@@ -105,4 +105,109 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get retryLevel => '레벨 재시도';
+
+  @override
+  String get yourSortingParadise => '당신의 정렬 천국';
+
+  @override
+  String get done => '완료';
+
+  @override
+  String get progress => '진행';
+
+  @override
+  String get time => '시간';
+
+  @override
+  String get day => '일';
+
+  @override
+  String get days => '일';
+
+  @override
+  String get settings => '설정';
+
+  @override
+  String get language => '언어';
+
+  @override
+  String get systemDefault => '시스템 기본값';
+
+  @override
+  String get soundEffects => '효과음';
+
+  @override
+  String get vibration => '진동';
+
+  @override
+  String get check => '확인';
+
+  @override
+  String get level => '레벨';
+
+  @override
+  String get items => '항목';
+
+  @override
+  String get sortAscending => '오름차순';
+
+  @override
+  String get sortDescending => '내림차순';
+
+  @override
+  String get best => '최고';
+
+  @override
+  String get playAgain => '다시 플레이';
+
+  @override
+  String get startChallenge => '챌린지 시작';
+
+  @override
+  String get completedToday => '오늘 완료!';
+
+  @override
+  String get comeBackTomorrow => '내일 새로운 챌린지를 위해 돌아오세요';
+
+  @override
+  String get shareResult => '결과 공유';
+
+  @override
+  String get shareAchievement => '업적 공유';
+
+  @override
+  String get canYouBeatMyTime => '내 기록을 이길 수 있나요?';
+
+  @override
+  String get dailyStreak => '일일 연속';
+
+  @override
+  String get dailyStreakActive => '일일 연속 진행 중!';
+
+  @override
+  String get categoryProgress => '카테고리 진행';
+
+  @override
+  String get completedLevels => '완료된 레벨';
+
+  @override
+  String get currentStreak => '현재 연속';
+
+  @override
+  String get longestStreak => '최장 연속';
+
+  @override
+  String get totalPlayTime => '총 플레이 시간';
+
+  @override
+  String get totalAttempts => '총 시도 횟수';
+
+  @override
+  String get achievementsTitle => '업적';
+
+  @override
+  String get statisticsTitle => '통계';
+
+  @override
+  String get selectLevel => '레벨 선택';
 }

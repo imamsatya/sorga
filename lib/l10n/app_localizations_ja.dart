@@ -105,4 +105,109 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get retryLevel => 'レベルをやり直す';
+
+  @override
+  String get yourSortingParadise => 'あなたのソートパラダイス';
+
+  @override
+  String get done => '完了';
+
+  @override
+  String get progress => '進捗';
+
+  @override
+  String get time => '時間';
+
+  @override
+  String get day => '日';
+
+  @override
+  String get days => '日';
+
+  @override
+  String get settings => '設定';
+
+  @override
+  String get language => '言語';
+
+  @override
+  String get systemDefault => 'システムデフォルト';
+
+  @override
+  String get soundEffects => '効果音';
+
+  @override
+  String get vibration => 'バイブレーション';
+
+  @override
+  String get check => 'チェック';
+
+  @override
+  String get level => 'レベル';
+
+  @override
+  String get items => 'アイテム';
+
+  @override
+  String get sortAscending => '昇順';
+
+  @override
+  String get sortDescending => '降順';
+
+  @override
+  String get best => 'ベスト';
+
+  @override
+  String get playAgain => 'もう一度プレイ';
+
+  @override
+  String get startChallenge => 'チャレンジ開始';
+
+  @override
+  String get completedToday => '今日完了！';
+
+  @override
+  String get comeBackTomorrow => '明日新しいチャレンジに戻ってきてください';
+
+  @override
+  String get shareResult => '結果をシェア';
+
+  @override
+  String get shareAchievement => '実績をシェア';
+
+  @override
+  String get canYouBeatMyTime => '私のタイムを超えられますか？';
+
+  @override
+  String get dailyStreak => 'デイリーストリーク';
+
+  @override
+  String get dailyStreakActive => 'デイリーストリーク進行中！';
+
+  @override
+  String get categoryProgress => 'カテゴリ進捗';
+
+  @override
+  String get completedLevels => '完了レベル';
+
+  @override
+  String get currentStreak => '現在の連続記録';
+
+  @override
+  String get longestStreak => '最長連続記録';
+
+  @override
+  String get totalPlayTime => '合計プレイ時間';
+
+  @override
+  String get totalAttempts => '合計試行回数';
+
+  @override
+  String get achievementsTitle => '実績';
+
+  @override
+  String get statisticsTitle => '統計';
+
+  @override
+  String get selectLevel => 'レベルを選択';
 }

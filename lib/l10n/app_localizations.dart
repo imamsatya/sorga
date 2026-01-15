@@ -301,6 +301,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'RETRY LEVEL'**
   String get retryLevel;
+
+  /// No description provided for @yourSortingParadise.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Sorting Paradise'**
+  String get yourSortingParadise;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progress;
+
+  /// No description provided for @time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get day;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @systemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'System Default'**
+  String get systemDefault;
+
+  /// No description provided for @soundEffects.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Effects'**
+  String get soundEffects;
+
+  /// No description provided for @vibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get vibration;
+
+  /// No description provided for @check.
+  ///
+  /// In en, this message translates to:
+  /// **'Check'**
+  String get check;
+
+  /// No description provided for @level.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get level;
+
+  /// No description provided for @items.
+  ///
+  /// In en, this message translates to:
+  /// **'items'**
+  String get items;
+
+  /// No description provided for @sortAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort ASC'**
+  String get sortAscending;
+
+  /// No description provided for @sortDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort DESC'**
+  String get sortDescending;
+
+  /// No description provided for @best.
+  ///
+  /// In en, this message translates to:
+  /// **'Best'**
+  String get best;
+
+  /// No description provided for @playAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Play Again'**
+  String get playAgain;
+
+  /// No description provided for @startChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'START CHALLENGE'**
+  String get startChallenge;
+
+  /// No description provided for @completedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Today!'**
+  String get completedToday;
+
+  /// No description provided for @comeBackTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow for a new challenge'**
+  String get comeBackTomorrow;
+
+  /// No description provided for @shareResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResult;
+
+  /// No description provided for @shareAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Achievement'**
+  String get shareAchievement;
+
+  /// No description provided for @canYouBeatMyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Can you beat my time?'**
+  String get canYouBeatMyTime;
+
+  /// No description provided for @dailyStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Streak'**
+  String get dailyStreak;
+
+  /// No description provided for @dailyStreakActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Streak Active!'**
+  String get dailyStreakActive;
+
+  /// No description provided for @categoryProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Progress'**
+  String get categoryProgress;
+
+  /// No description provided for @completedLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Levels'**
+  String get completedLevels;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Streak'**
+  String get currentStreak;
+
+  /// No description provided for @longestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Longest Streak'**
+  String get longestStreak;
+
+  /// No description provided for @totalPlayTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Play Time'**
+  String get totalPlayTime;
+
+  /// No description provided for @totalAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Attempts'**
+  String get totalAttempts;
+
+  /// No description provided for @achievementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievementsTitle;
+
+  /// No description provided for @statisticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statisticsTitle;
+
+  /// No description provided for @selectLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Level'**
+  String get selectLevel;
 }
 
 class _AppLocalizationsDelegate
