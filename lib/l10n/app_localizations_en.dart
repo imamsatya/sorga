@@ -213,4 +213,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get about => 'About';
+
+  @override
+  String get appDescription => 'Sorga - A Sorting Game';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get levelsDescription =>
+      '800 levels across 6 categories. Train your brain with numbers, time, names, and more!';
+
+  @override
+  String get dragAndDrop => 'Drag & Drop';
+
+  @override
+  String get dragItemsDescription =>
+      'Drag items to rearrange them in the correct order';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get next => 'NEXT';
+
+  @override
+  String get shift => 'Shift';
+
+  @override
+  String get swap => 'Swap';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get daily => 'Daily';
+
+  @override
+  String get orderNotRight => 'The order was not quite right.';
+
+  @override
+  String chancesLeft(Object count) {
+    return 'You have $count chance left!';
+  }
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String get asc => 'ASC';
+
+  @override
+  String get desc => 'DESC';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
 }

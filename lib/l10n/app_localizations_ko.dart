@@ -213,4 +213,75 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get about => '정보';
+
+  @override
+  String get appDescription => 'Sorga - 정렬 게임';
+
+  @override
+  String get version => '버전';
+
+  @override
+  String get levelsDescription => '6개 카테고리에 800개 레벨. 숫자, 시간, 이름 등으로 두뇌를 훈련하세요!';
+
+  @override
+  String get dragAndDrop => '드래그 앤 드롭';
+
+  @override
+  String get dragItemsDescription => '아이템을 드래그하여 올바른 순서로 재배열하세요';
+
+  @override
+  String get skip => '건너뛰기';
+
+  @override
+  String get next => '다음';
+
+  @override
+  String get shift => '이동';
+
+  @override
+  String get swap => '교환';
+
+  @override
+  String get reset => '초기화';
+
+  @override
+  String get daily => '일일';
+
+  @override
+  String get orderNotRight => '순서가 맞지 않습니다.';
+
+  @override
+  String chancesLeft(Object count) {
+    return '$count번의 기회가 남았습니다!';
+  }
+
+  @override
+  String get sort => '정렬';
+
+  @override
+  String get asc => '오름차순';
+
+  @override
+  String get desc => '내림차순';
+
+  @override
+  String get thursday => '목요일';
+
+  @override
+  String get friday => '금요일';
+
+  @override
+  String get saturday => '토요일';
+
+  @override
+  String get sunday => '일요일';
+
+  @override
+  String get monday => '월요일';
+
+  @override
+  String get tuesday => '화요일';
+
+  @override
+  String get wednesday => '수요일';
 }

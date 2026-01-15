@@ -211,16 +211,16 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Sorga - A Sorting Game',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.appDescription,
+            style: const TextStyle(
               fontSize: 16,
               color: AppTheme.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            'Version 1.0.0',
+            '${AppLocalizations.of(context)!.version} 1.0.0',
             style: TextStyle(
               fontSize: 14,
               color: AppTheme.textSecondary.withValues(alpha: 0.7),
@@ -228,7 +228,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '800 levels across 6 categories. Train your brain with numbers, time, names, and more!',
+            AppLocalizations.of(context)!.levelsDescription,
             style: TextStyle(
               fontSize: 14,
               color: AppTheme.textSecondary.withValues(alpha: 0.7),

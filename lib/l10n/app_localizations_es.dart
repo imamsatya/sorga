@@ -213,4 +213,77 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get about => 'Acerca de';
+
+  @override
+  String get appDescription => 'Sorga - Un Juego de Ordenar';
+
+  @override
+  String get version => 'Versión';
+
+  @override
+  String get levelsDescription =>
+      '800 niveles en 6 categorías. ¡Entrena tu cerebro con números, tiempo, nombres y más!';
+
+  @override
+  String get dragAndDrop => 'Arrastrar y Soltar';
+
+  @override
+  String get dragItemsDescription =>
+      'Arrastra los elementos para reordenarlos en el orden correcto';
+
+  @override
+  String get skip => 'Omitir';
+
+  @override
+  String get next => 'SIGUIENTE';
+
+  @override
+  String get shift => 'Desplazar';
+
+  @override
+  String get swap => 'Intercambiar';
+
+  @override
+  String get reset => 'Reiniciar';
+
+  @override
+  String get daily => 'Diario';
+
+  @override
+  String get orderNotRight => 'El orden no es correcto.';
+
+  @override
+  String chancesLeft(Object count) {
+    return '¡Te quedan $count oportunidad(es)!';
+  }
+
+  @override
+  String get sort => 'Ordenar';
+
+  @override
+  String get asc => 'ASC';
+
+  @override
+  String get desc => 'DESC';
+
+  @override
+  String get thursday => 'Jueves';
+
+  @override
+  String get friday => 'Viernes';
+
+  @override
+  String get saturday => 'Sábado';
+
+  @override
+  String get sunday => 'Domingo';
+
+  @override
+  String get monday => 'Lunes';
+
+  @override
+  String get tuesday => 'Martes';
+
+  @override
+  String get wednesday => 'Miércoles';
 }

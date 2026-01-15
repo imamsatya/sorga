@@ -8,6 +8,7 @@ import '../../core/services/haptic_service.dart';
 import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_state_provider.dart';
 import '../widgets/tutorial_overlay.dart';
 import 'result_screen.dart';
@@ -179,9 +180,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildModeButton(DragMode.shift, 'Shift', Icons.swap_horiz),
+          _buildModeButton(DragMode.shift, AppLocalizations.of(context)!.shift, Icons.swap_horiz),
           const SizedBox(width: 4),
-          _buildModeButton(DragMode.swap, 'Swap', Icons.swap_calls),
+          _buildModeButton(DragMode.swap, AppLocalizations.of(context)!.swap, Icons.swap_calls),
         ],
       ),
     );
@@ -672,13 +673,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
                 ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.refresh, color: AppTheme.textSecondary),
-                    SizedBox(width: 8),
-                    Text('Reset', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  ],
+                child: Builder(
+                  builder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.refresh, color: AppTheme.textSecondary),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!.reset, style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -740,13 +743,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     ),
                   ],
                 ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.white),
-                    SizedBox(width: 8),
-                    Text('Check', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
+                child: Builder(
+                  builder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!.check, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
               ),
             ),

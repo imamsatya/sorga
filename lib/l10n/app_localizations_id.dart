@@ -213,4 +213,77 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get about => 'Tentang';
+
+  @override
+  String get appDescription => 'Sorga - Game Mengurutkan';
+
+  @override
+  String get version => 'Versi';
+
+  @override
+  String get levelsDescription =>
+      '800 level dalam 6 kategori. Latih otak Anda dengan angka, waktu, nama, dan lainnya!';
+
+  @override
+  String get dragAndDrop => 'Seret & Lepas';
+
+  @override
+  String get dragItemsDescription =>
+      'Seret item untuk menyusun ulang dalam urutan yang benar';
+
+  @override
+  String get skip => 'Lewati';
+
+  @override
+  String get next => 'LANJUT';
+
+  @override
+  String get shift => 'Geser';
+
+  @override
+  String get swap => 'Tukar';
+
+  @override
+  String get reset => 'Ulang';
+
+  @override
+  String get daily => 'Harian';
+
+  @override
+  String get orderNotRight => 'Urutan belum tepat.';
+
+  @override
+  String chancesLeft(Object count) {
+    return 'Anda punya $count kesempatan lagi!';
+  }
+
+  @override
+  String get sort => 'Urutkan';
+
+  @override
+  String get asc => 'ASC';
+
+  @override
+  String get desc => 'DESC';
+
+  @override
+  String get thursday => 'Kamis';
+
+  @override
+  String get friday => 'Jumat';
+
+  @override
+  String get saturday => 'Sabtu';
+
+  @override
+  String get sunday => 'Minggu';
+
+  @override
+  String get monday => 'Senin';
+
+  @override
+  String get tuesday => 'Selasa';
+
+  @override
+  String get wednesday => 'Rabu';
 }

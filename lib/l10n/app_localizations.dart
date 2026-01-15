@@ -517,6 +517,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About'**
   String get about;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorga - A Sorting Game'**
+  String get appDescription;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @levelsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'800 levels across 6 categories. Train your brain with numbers, time, names, and more!'**
+  String get levelsDescription;
+
+  /// No description provided for @dragAndDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag & Drop'**
+  String get dragAndDrop;
+
+  /// No description provided for @dragItemsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag items to rearrange them in the correct order'**
+  String get dragItemsDescription;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT'**
+  String get next;
+
+  /// No description provided for @shift.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift'**
+  String get shift;
+
+  /// No description provided for @swap.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap'**
+  String get swap;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @orderNotRight.
+  ///
+  /// In en, this message translates to:
+  /// **'The order was not quite right.'**
+  String get orderNotRight;
+
+  /// No description provided for @chancesLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'You have {count} chance left!'**
+  String chancesLeft(Object count);
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @asc.
+  ///
+  /// In en, this message translates to:
+  /// **'ASC'**
+  String get asc;
+
+  /// No description provided for @desc.
+  ///
+  /// In en, this message translates to:
+  /// **'DESC'**
+  String get desc;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
 }
 
 class _AppLocalizationsDelegate

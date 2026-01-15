@@ -213,4 +213,75 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get about => 'アプリについて';
+
+  @override
+  String get appDescription => 'Sorga - ソートゲーム';
+
+  @override
+  String get version => 'バージョン';
+
+  @override
+  String get levelsDescription => '6カテゴリ800レベル。数字、時間、名前などで脳を鍛えよう！';
+
+  @override
+  String get dragAndDrop => 'ドラッグ＆ドロップ';
+
+  @override
+  String get dragItemsDescription => 'アイテムをドラッグして正しい順序に並べ替えてください';
+
+  @override
+  String get skip => 'スキップ';
+
+  @override
+  String get next => '次へ';
+
+  @override
+  String get shift => 'シフト';
+
+  @override
+  String get swap => 'スワップ';
+
+  @override
+  String get reset => 'リセット';
+
+  @override
+  String get daily => 'デイリー';
+
+  @override
+  String get orderNotRight => '順序が正しくありません。';
+
+  @override
+  String chancesLeft(Object count) {
+    return '残り$count回のチャンスがあります！';
+  }
+
+  @override
+  String get sort => 'ソート';
+
+  @override
+  String get asc => '昇順';
+
+  @override
+  String get desc => '降順';
+
+  @override
+  String get thursday => '木曜日';
+
+  @override
+  String get friday => '金曜日';
+
+  @override
+  String get saturday => '土曜日';
+
+  @override
+  String get sunday => '日曜日';
+
+  @override
+  String get monday => '月曜日';
+
+  @override
+  String get tuesday => '火曜日';
+
+  @override
+  String get wednesday => '水曜日';
 }
