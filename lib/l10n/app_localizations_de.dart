@@ -400,4 +400,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get names => 'Namen';
+
+  @override
+  String get memorized => 'Auswendig gelernt!';
 }

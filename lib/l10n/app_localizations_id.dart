@@ -399,4 +399,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get names => 'nama';
+
+  @override
+  String get memorized => 'Sudah Dihafal!';
 }

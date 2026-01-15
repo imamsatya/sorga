@@ -116,6 +116,122 @@ class LevelGenerator {
     );
   }
 
+  // ==================== MEMORY MODE (SORGAwy) ====================
+  
+  /// Seed offset for memory levels to generate different questions
+  static const int _memorySeedOffset = 10000;
+  
+  /// Cache for memory levels (separate from regular levels)
+  final Map<int, Level> _memoryLevelCache = {};
+  
+  /// Get a memory mode level by ID (same structure, different values)
+  Level getMemoryLevel(int levelId) {
+    if (levelId < 1 || levelId > AppConstants.totalLevels) {
+      throw ArgumentError('Level ID must be between 1 and ${AppConstants.totalLevels}');
+    }
+    
+    return _memoryLevelCache.putIfAbsent(levelId, () => _generateMemoryLevel(levelId));
+  }
+  
+  /// Get memory levels by category
+  List<Level> getMemoryLevelsByCategory(LevelCategory category) {
+    // Skip knowledge category for memory mode
+    if (category == LevelCategory.knowledge) {
+      return [];
+    }
+    
+    final (start, end) = _getCategoryRange(category);
+    return List.generate(
+      end - start + 1,
+      (index) => getMemoryLevel(start + index),
+    );
+  }
+  
+  /// Generate a memory level (same structure as regular, different seed)
+  Level _generateMemoryLevel(int levelId) {
+    // Get regular level as base for structure
+    final regularLevel = getLevel(levelId);
+    
+    // Skip knowledge levels for memory mode
+    if (regularLevel.category == LevelCategory.knowledge) {
+      return regularLevel;
+    }
+    
+    // Generate new items with different seed
+    final random = Random((levelId + _memorySeedOffset) * 12345);
+    final itemCount = regularLevel.items.length;
+    
+    // Generate new items based on category
+    final newItems = _generateMemoryItems(random, regularLevel.category, itemCount, levelId);
+    
+    return Level(
+      id: levelId,
+      localId: regularLevel.localId,
+      category: regularLevel.category,
+      sortOrder: regularLevel.sortOrder,
+      title: regularLevel.title,
+      description: regularLevel.description,
+      items: newItems,
+      hint: regularLevel.hint,
+      fact: regularLevel.fact,
+      isMemory: true,
+    );
+  }
+  
+  /// Generate items for memory level (different values, same count)
+  List<LevelItem> _generateMemoryItems(Random random, LevelCategory category, int count, int levelId) {
+    switch (category) {
+      case LevelCategory.basic:
+        return _generateBasicItems(random, count);
+      case LevelCategory.formatted:
+        final formatType = (levelId % 5);
+        return _generateFormattedItems(random, count, formatType, levelId + _memorySeedOffset);
+      case LevelCategory.time:
+        return _generateTimeItems(random, count);
+      case LevelCategory.names:
+        return _generateNameItems(random, count);
+      case LevelCategory.mixed:
+        return _generateMixedItems(random, count);
+      case LevelCategory.knowledge:
+        return []; // Should not reach here
+    }
+  }
+  
+  /// Generate basic number items for memory
+  List<LevelItem> _generateBasicItems(Random random, int count) {
+    final values = <int>{};
+    while (values.length < count) {
+      values.add(random.nextInt(999) + 1);
+    }
+    return values.map((v) => LevelItem(
+      id: values.toList().indexOf(v).toString(),
+      displayValue: v.toString(),
+      sortValue: v.toDouble(),
+    )).toList();
+  }
+  
+  /// Generate name items for memory
+  List<LevelItem> _generateNameItems(Random random, int count) {
+    const names = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eva', 'Frank', 'Grace', 'Henry',
+      'Ivy', 'Jack', 'Kate', 'Leo', 'Mia', 'Noah', 'Olivia', 'Peter', 'Quinn', 'Rose',
+      'Sam', 'Tina', 'Uma', 'Victor', 'Wendy', 'Xavier', 'Yara', 'Zack'];
+    final shuffled = List<String>.from(names)..shuffle(random);
+    return shuffled.take(count).map((name) => LevelItem(
+      id: shuffled.indexOf(name).toString(),
+      displayValue: name,
+      sortValue: name.codeUnits.first.toDouble() * 100 + name.codeUnits[1].toDouble(),
+    )).toList();
+  }
+  
+  /// Generate mixed format items for memory
+  List<LevelItem> _generateMixedItems(Random random, int count) {
+    final items = <LevelItem>[];
+    for (var i = 0; i < count; i++) {
+      items.add(_generateMixedItem(random, i, random.nextInt(5)));
+    }
+    return items;
+  }
+
   /// Get category range
   (int, int) _getCategoryRange(LevelCategory category) {
     switch (category) {

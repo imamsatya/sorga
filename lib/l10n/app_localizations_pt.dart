@@ -399,4 +399,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get names => 'nomes';
+
+  @override
+  String get memorized => 'Memorizei!';
 }

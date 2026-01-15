@@ -10,6 +10,15 @@ import 'game_providers.dart';
 import 'game_stats_provider.dart';
 import 'daily_challenge_provider.dart';
 
+/// Phase of gameplay for memory mode
+enum GamePhase {
+  ready,       // Initial state
+  memorizing,  // User is memorizing items (memory mode only)
+  sorting,     // User is sorting items
+  checking,    // Checking answer
+  completed,   // Game completed
+}
+
 /// State for the active game
 class GameState {
   final Level level;
@@ -18,7 +27,12 @@ class GameState {
   final bool isRunning;
   final bool isCompleted;
   final bool isCorrect;
-  final int failedAttempts; // Track failed attempts this session
+  final int failedAttempts;
+  
+  // Memory mode (SORGAwy) fields
+  final GamePhase phase;
+  final bool labelsVisible;       // Show item values or "?"
+  final Duration memorizeTime;    // Time spent memorizing
   
   const GameState({
     required this.level,
@@ -28,10 +42,16 @@ class GameState {
     this.isCompleted = false,
     this.isCorrect = false,
     this.failedAttempts = 0,
+    this.phase = GamePhase.ready,
+    this.labelsVisible = true,
+    this.memorizeTime = Duration.zero,
   });
   
   /// Can continue after failure (only if less than 2 failed attempts)
   bool get canContinue => failedAttempts < 2;
+  
+  /// Is this a memory mode game
+  bool get isMemoryMode => level.isMemory;
   
   GameState copyWith({
     Level? level,
@@ -41,6 +61,9 @@ class GameState {
     bool? isCompleted,
     bool? isCorrect,
     int? failedAttempts,
+    GamePhase? phase,
+    bool? labelsVisible,
+    Duration? memorizeTime,
   }) {
     return GameState(
       level: level ?? this.level,
@@ -50,6 +73,9 @@ class GameState {
       isCompleted: isCompleted ?? this.isCompleted,
       isCorrect: isCorrect ?? this.isCorrect,
       failedAttempts: failedAttempts ?? this.failedAttempts,
+      phase: phase ?? this.phase,
+      labelsVisible: labelsVisible ?? this.labelsVisible,
+      memorizeTime: memorizeTime ?? this.memorizeTime,
     );
   }
   
@@ -58,6 +84,12 @@ class GameState {
     final seconds = elapsedTime.inSeconds % 60;
     final ms = (elapsedTime.inMilliseconds % 1000) ~/ 10;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${ms.toString().padLeft(2, '0')}';
+  }
+  
+  String get formattedMemorizeTime {
+    final seconds = memorizeTime.inSeconds;
+    final ms = (memorizeTime.inMilliseconds % 1000) ~/ 10;
+    return '${seconds.toString()}.${ms.toString().padLeft(2, '0')}s';
   }
 }
 
@@ -100,7 +132,38 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   void startPlaying() {
     if (state == null) return;
     
-    state = state!.copyWith(isRunning: true);
+    // For memory mode, start memorizing phase first
+    if (state!.level.isMemory) {
+      state = state!.copyWith(
+        isRunning: true,
+        phase: GamePhase.memorizing,
+        labelsVisible: true,
+      );
+      _startTimer();
+    } else {
+      state = state!.copyWith(
+        isRunning: true,
+        phase: GamePhase.sorting,
+      );
+      _startTimer();
+    }
+  }
+  
+  /// Finish memorizing and start sorting (memory mode only)
+  void finishMemorizing() {
+    if (state == null || !state!.level.isMemory) return;
+    if (state!.phase != GamePhase.memorizing) return;
+    
+    // Record memorize time and switch to sorting phase
+    state = state!.copyWith(
+      phase: GamePhase.sorting,
+      labelsVisible: false, // Hide labels for sorting
+      memorizeTime: state!.elapsedTime,
+      elapsedTime: Duration.zero, // Reset timer for sorting phase
+    );
+    
+    // Restart timer for sorting phase
+    _stopTimer();
     _startTimer();
   }
   

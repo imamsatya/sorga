@@ -401,4 +401,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get names => 'noms';
+
+  @override
+  String get memorized => 'Mémorisé !';
 }

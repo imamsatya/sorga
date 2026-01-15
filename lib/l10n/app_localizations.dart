@@ -865,6 +865,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'names'**
   String get names;
+
+  /// No description provided for @memorized.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve Memorized!'**
+  String get memorized;
 }
 
 class _AppLocalizationsDelegate

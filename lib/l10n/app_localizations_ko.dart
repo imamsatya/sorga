@@ -393,4 +393,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get names => '이름';
+
+  @override
+  String get memorized => '외웠어요!';
 }

@@ -457,6 +457,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                       cardWidth, 
                       cardHeight, 
                       fontSize,
+                      labelsVisible: gameState.labelsVisible,
                     );
                   }),
                 ),
@@ -477,8 +478,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     Color categoryColor,
     double cardWidth,
     double cardHeight,
-    double fontSize,
-  ) {
+    double fontSize, {
+    bool labelsVisible = true,
+  }) {
     return SizedBox(
       width: cardWidth,
       height: cardHeight,
@@ -488,12 +490,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           color: Colors.transparent,
           child: Opacity(
             opacity: 0.9,
-            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true),
+            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, labelsVisible: labelsVisible),
           ),
         ),
         childWhenDragging: Opacity(
           opacity: 0.3,
-          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false),
+          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, labelsVisible: labelsVisible),
         ),
         onDragStarted: () {
           setState(() => _draggedIndex = index);
@@ -589,8 +591,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     double width, 
     double height, 
     double fontSize,
-    bool isDragging,
-  ) {
+    bool isDragging, {
+    bool labelsVisible = true,
+  }) {
     return Container(
       width: width,
       height: height,
@@ -640,10 +643,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
-              item.displayValue,
+              labelsVisible ? item.displayValue : '?',
               style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: fontSize,
+                color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
+                fontSize: labelsVisible ? fontSize : fontSize * 1.5,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
@@ -657,6 +660,54 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   Widget _buildBottomButtons(GameState gameState) {
+    // Memory mode: Memorizing phase shows "I've Memorized" button
+    if (gameState.phase == GamePhase.memorizing) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: GestureDetector(
+          onTap: () {
+            _hapticService.selectionClick();
+            ref.read(gameStateProvider.notifier).finishMemorizing();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.psychology, color: Colors.white, size: 24),
+                const SizedBox(width: 10),
+                Builder(
+                  builder: (context) => Text(
+                    AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    
+    // Normal mode: Reset and Check buttons
     return Container(
       padding: const EdgeInsets.all(20),
       child: Row(

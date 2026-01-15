@@ -104,6 +104,9 @@ class Level extends Equatable {
   
   /// Interesting fact (optional, for knowledge levels)
   final String? fact;
+  
+  /// Whether this is a memory mode level (SORGAwy)
+  final bool isMemory;
 
   const Level({
     required this.id,
@@ -115,6 +118,7 @@ class Level extends Equatable {
     required this.items,
     this.hint,
     this.fact,
+    this.isMemory = false,
   });
 
   /// Get the correctly sorted items
@@ -157,7 +161,7 @@ class Level extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, localId, category, sortOrder, title, items];
+  List<Object?> get props => [id, localId, category, sortOrder, title, items, isMemory];
   
   @override
   String toString() => 'Level($id: $title)';

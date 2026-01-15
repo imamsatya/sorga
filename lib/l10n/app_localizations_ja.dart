@@ -393,4 +393,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get names => '名前';
+
+  @override
+  String get memorized => '覚えた！';
 }
