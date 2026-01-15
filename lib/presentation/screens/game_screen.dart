@@ -10,6 +10,7 @@ import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../providers/game_state_provider.dart';
 import '../widgets/tutorial_overlay.dart';
+import 'result_screen.dart';
 
 
 enum DragMode { swap, shift }
