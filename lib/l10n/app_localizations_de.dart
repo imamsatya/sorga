@@ -293,4 +293,31 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get attempt => 'Versuch';
+
+  @override
+  String get noMoreChances => 'Keine Versuche mehr. Nochmal versuchen!';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y abgeschlossen';
+  }
+
+  @override
+  String get sortTheItems => 'Sortiere die Elemente';
+
+  @override
+  String get tapCheckWhenDone => 'Tippe auf Prüfen wenn du fertig bist.';
+
+  @override
+  String get useDragMode => 'Verwende Verschieben oder Tauschen';
+
+  @override
+  String get shiftModeDescription =>
+      'Verschieben schiebt Elemente. Tauschen tauscht Positionen.';
+
+  @override
+  String get youreReady => 'Du bist bereit!';
+
+  @override
+  String get startSorting => 'Starte das Sortieren und schlage deine Bestzeit!';
 }

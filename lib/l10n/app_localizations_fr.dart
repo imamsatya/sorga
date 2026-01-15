@@ -292,4 +292,33 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get attempt => 'Tentative';
+
+  @override
+  String get noMoreChances => 'Plus de chances. Réessayez!';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y terminé';
+  }
+
+  @override
+  String get sortTheItems => 'Triez les éléments';
+
+  @override
+  String get tapCheckWhenDone =>
+      'Appuyez sur Vérifier quand vous avez terminé.';
+
+  @override
+  String get useDragMode => 'Utilisez le mode Décaler ou Échanger';
+
+  @override
+  String get shiftModeDescription =>
+      'Le mode Décaler fait glisser les éléments. Le mode Échanger échange les positions.';
+
+  @override
+  String get youreReady => 'Vous êtes prêt!';
+
+  @override
+  String get startSorting =>
+      'Commencez à trier et battez votre meilleur temps!';
 }

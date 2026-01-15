@@ -290,4 +290,30 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get attempt => '試行';
+
+  @override
+  String get noMoreChances => 'チャンスがなくなりました。もう一度！';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y クリア';
+  }
+
+  @override
+  String get sortTheItems => 'アイテムを並べ替える';
+
+  @override
+  String get tapCheckWhenDone => '完了したらチェックをタップ。';
+
+  @override
+  String get useDragMode => 'シフトまたはスワップモードを使用';
+
+  @override
+  String get shiftModeDescription => 'シフトモードはアイテムをスライド。スワップモードは位置を交換。';
+
+  @override
+  String get youreReady => '準備完了！';
+
+  @override
+  String get startSorting => 'ソートを開始して自己ベストを更新しよう！';
 }

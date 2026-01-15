@@ -93,5 +93,14 @@
   "tuesday": "Selasa",
   "wednesday": "Rabu",
   "getReady": "Bersiap!",
-  "attempt": "Percobaan"
+  "attempt": "Percobaan",
+  "noMoreChances": "Tidak ada kesempatan lagi. Coba lagi!",
+  "xOfYCompleted": "{x} / {y} selesai",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "Urutkan item",
+  "tapCheckWhenDone": "Ketuk Cek jika sudah selesai.",
+  "useDragMode": "Gunakan mode Geser atau Tukar",
+  "shiftModeDescription": "Mode Geser menggeser item. Mode Tukar menukar posisi.",
+  "youreReady": "Anda Siap!",
+  "startSorting": "Mulai mengurutkan dan kalahkan waktu terbaikmu!"
 }

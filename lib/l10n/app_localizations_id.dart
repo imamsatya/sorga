@@ -292,4 +292,31 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get attempt => 'Percobaan';
+
+  @override
+  String get noMoreChances => 'Tidak ada kesempatan lagi. Coba lagi!';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y selesai';
+  }
+
+  @override
+  String get sortTheItems => 'Urutkan item';
+
+  @override
+  String get tapCheckWhenDone => 'Ketuk Cek jika sudah selesai.';
+
+  @override
+  String get useDragMode => 'Gunakan mode Geser atau Tukar';
+
+  @override
+  String get shiftModeDescription =>
+      'Mode Geser menggeser item. Mode Tukar menukar posisi.';
+
+  @override
+  String get youreReady => 'Anda Siap!';
+
+  @override
+  String get startSorting => 'Mulai mengurutkan dan kalahkan waktu terbaikmu!';
 }

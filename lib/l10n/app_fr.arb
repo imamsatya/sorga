@@ -93,5 +93,14 @@
   "tuesday": "Mardi",
   "wednesday": "Mercredi",
   "getReady": "Préparez-vous!",
-  "attempt": "Tentative"
+  "attempt": "Tentative",
+  "noMoreChances": "Plus de chances. Réessayez!",
+  "xOfYCompleted": "{x} / {y} terminé",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "Triez les éléments",
+  "tapCheckWhenDone": "Appuyez sur Vérifier quand vous avez terminé.",
+  "useDragMode": "Utilisez le mode Décaler ou Échanger",
+  "shiftModeDescription": "Le mode Décaler fait glisser les éléments. Le mode Échanger échange les positions.",
+  "youreReady": "Vous êtes prêt!",
+  "startSorting": "Commencez à trier et battez votre meilleur temps!"
 }

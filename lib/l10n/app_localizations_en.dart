@@ -292,4 +292,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attempt => 'Attempt';
+
+  @override
+  String get noMoreChances => 'No more chances. Try again!';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y completed';
+  }
+
+  @override
+  String get sortTheItems => 'Sort the items';
+
+  @override
+  String get tapCheckWhenDone => 'Tap Check when you\'re done.';
+
+  @override
+  String get useDragMode => 'Use Shift or Swap mode';
+
+  @override
+  String get shiftModeDescription =>
+      'Shift mode slides items. Swap mode exchanges positions.';
+
+  @override
+  String get youreReady => 'You\'re Ready!';
+
+  @override
+  String get startSorting => 'Start sorting and beat your best time!';
 }

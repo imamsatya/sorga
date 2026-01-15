@@ -290,4 +290,30 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get attempt => '시도';
+
+  @override
+  String get noMoreChances => '기회가 없습니다. 다시 시도하세요!';
+
+  @override
+  String xOfYCompleted(Object x, Object y) {
+    return '$x / $y 완료';
+  }
+
+  @override
+  String get sortTheItems => '아이템 정렬하기';
+
+  @override
+  String get tapCheckWhenDone => '완료되면 확인을 탭하세요.';
+
+  @override
+  String get useDragMode => '이동 또는 교환 모드 사용';
+
+  @override
+  String get shiftModeDescription => '이동 모드는 아이템을 밀어요. 교환 모드는 위치를 바꿔요.';
+
+  @override
+  String get youreReady => '준비됐어요!';
+
+  @override
+  String get startSorting => '정렬을 시작하고 최고 기록을 경신하세요!';
 }

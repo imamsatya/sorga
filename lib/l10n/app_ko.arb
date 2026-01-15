@@ -93,5 +93,14 @@
   "tuesday": "화요일",
   "wednesday": "수요일",
   "getReady": "준비하세요!",
-  "attempt": "시도"
+  "attempt": "시도",
+  "noMoreChances": "기회가 없습니다. 다시 시도하세요!",
+  "xOfYCompleted": "{x} / {y} 완료",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "아이템 정렬하기",
+  "tapCheckWhenDone": "완료되면 확인을 탭하세요.",
+  "useDragMode": "이동 또는 교환 모드 사용",
+  "shiftModeDescription": "이동 모드는 아이템을 밀어요. 교환 모드는 위치를 바꿔요.",
+  "youreReady": "준비됐어요!",
+  "startSorting": "정렬을 시작하고 최고 기록을 경신하세요!"
 }

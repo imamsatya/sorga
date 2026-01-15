@@ -93,5 +93,14 @@
   "tuesday": "Dienstag",
   "wednesday": "Mittwoch",
   "getReady": "Mach dich bereit!",
-  "attempt": "Versuch"
+  "attempt": "Versuch",
+  "noMoreChances": "Keine Versuche mehr. Nochmal versuchen!",
+  "xOfYCompleted": "{x} / {y} abgeschlossen",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "Sortiere die Elemente",
+  "tapCheckWhenDone": "Tippe auf Prüfen wenn du fertig bist.",
+  "useDragMode": "Verwende Verschieben oder Tauschen",
+  "shiftModeDescription": "Verschieben schiebt Elemente. Tauschen tauscht Positionen.",
+  "youreReady": "Du bist bereit!",
+  "startSorting": "Starte das Sortieren und schlage deine Bestzeit!"
 }

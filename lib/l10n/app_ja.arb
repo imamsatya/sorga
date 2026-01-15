@@ -93,5 +93,14 @@
   "tuesday": "火曜日",
   "wednesday": "水曜日",
   "getReady": "準備はいい？",
-  "attempt": "試行"
+  "attempt": "試行",
+  "noMoreChances": "チャンスがなくなりました。もう一度！",
+  "xOfYCompleted": "{x} / {y} クリア",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "アイテムを並べ替える",
+  "tapCheckWhenDone": "完了したらチェックをタップ。",
+  "useDragMode": "シフトまたはスワップモードを使用",
+  "shiftModeDescription": "シフトモードはアイテムをスライド。スワップモードは位置を交換。",
+  "youreReady": "準備完了！",
+  "startSorting": "ソートを開始して自己ベストを更新しよう！"
 }

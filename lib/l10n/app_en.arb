@@ -94,5 +94,14 @@
   "tuesday": "Tuesday",
   "wednesday": "Wednesday",
   "getReady": "Get Ready!",
-  "attempt": "Attempt"
+  "attempt": "Attempt",
+  "noMoreChances": "No more chances. Try again!",
+  "xOfYCompleted": "{x} / {y} completed",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "Sort the items",
+  "tapCheckWhenDone": "Tap Check when you're done.",
+  "useDragMode": "Use Shift or Swap mode",
+  "shiftModeDescription": "Shift mode slides items. Swap mode exchanges positions.",
+  "youreReady": "You're Ready!",
+  "startSorting": "Start sorting and beat your best time!"
 }

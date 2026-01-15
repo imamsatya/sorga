@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 
 class LevelSelectScreen extends ConsumerWidget {
@@ -82,7 +83,7 @@ class LevelSelectScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            category.displayName,
+                            _getCategoryTitle(context, category),
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -94,7 +95,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$completed / ${levels.length} completed',
+                      AppLocalizations.of(context)!.xOfYCompleted(completed.toString(), levels.length.toString()),
                       style: TextStyle(
                         fontSize: 14,
                         color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -142,6 +143,24 @@ class LevelSelectScreen extends ConsumerWidget {
         return AppTheme.mixedColor;
       case LevelCategory.knowledge:
         return AppTheme.knowledgeColor;
+    }
+  }
+
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
     }
   }
 

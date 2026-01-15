@@ -270,8 +270,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
             child: Text(
               widget.isDailyChallenge 
-                  ? '📅 Daily' 
-                  : 'Level ${gameState.level.localId}',
+                  ? '📅 ${AppLocalizations.of(context)!.daily}' 
+                  : '${AppLocalizations.of(context)!.level} ${gameState.level.localId}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -289,21 +289,22 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final isAscending = level.sortOrder == SortOrder.ascending;
     
     // Determine instruction text
+    final l10n = AppLocalizations.of(context)!;
     String instruction;
     if (level.category == LevelCategory.knowledge) {
       instruction = level.description; // Keep full description for knowledge
     } else if (level.category == LevelCategory.names) {
-      instruction = 'Sort Names';
+      instruction = l10n.sortNames;
     } else {
-      instruction = 'Sort Items';
+      instruction = l10n.sortItems;
     }
     
     // Determine sort label
     String sortLabel;
     if (level.category == LevelCategory.names || level.category == LevelCategory.knowledge) {
-      sortLabel = isAscending ? 'A → Z' : 'Z → A';
+      sortLabel = isAscending ? l10n.aToZ : l10n.zToA;
     } else {
-      sortLabel = isAscending ? 'Low → High' : 'High → Low';
+      sortLabel = isAscending ? l10n.lowToHigh : l10n.highToLow;
     }
     
     return Container(
@@ -800,7 +801,7 @@ class _CountdownOverlayState extends State<_CountdownOverlay> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Get Ready!',
+              AppLocalizations.of(context)!.getReady,
               style: TextStyle(
                 fontSize: 24,
                 color: AppTheme.textPrimary.withValues(alpha: 0.7),

@@ -667,6 +667,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Attempt'**
   String get attempt;
+
+  /// No description provided for @noMoreChances.
+  ///
+  /// In en, this message translates to:
+  /// **'No more chances. Try again!'**
+  String get noMoreChances;
+
+  /// No description provided for @xOfYCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{x} / {y} completed'**
+  String xOfYCompleted(Object x, Object y);
+
+  /// No description provided for @sortTheItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort the items'**
+  String get sortTheItems;
+
+  /// No description provided for @tapCheckWhenDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Check when you\'re done.'**
+  String get tapCheckWhenDone;
+
+  /// No description provided for @useDragMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Use Shift or Swap mode'**
+  String get useDragMode;
+
+  /// No description provided for @shiftModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift mode slides items. Swap mode exchanges positions.'**
+  String get shiftModeDescription;
+
+  /// No description provided for @youreReady.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re Ready!'**
+  String get youreReady;
+
+  /// No description provided for @startSorting.
+  ///
+  /// In en, this message translates to:
+  /// **'Start sorting and beat your best time!'**
+  String get startSorting;
 }
 
 class _AppLocalizationsDelegate

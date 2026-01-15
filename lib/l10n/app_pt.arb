@@ -93,5 +93,14 @@
   "tuesday": "Terça-feira",
   "wednesday": "Quarta-feira",
   "getReady": "Preparar!",
-  "attempt": "Tentativa"
+  "attempt": "Tentativa",
+  "noMoreChances": "Não há mais chances. Tente novamente!",
+  "xOfYCompleted": "{x} / {y} concluído",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "Ordene os itens",
+  "tapCheckWhenDone": "Toque em Verificar quando terminar.",
+  "useDragMode": "Use o modo Deslocar ou Trocar",
+  "shiftModeDescription": "O modo Deslocar desliza itens. O modo Trocar troca posições.",
+  "youreReady": "Você está pronto!",
+  "startSorting": "Comece a ordenar e supere seu melhor tempo!"
 }

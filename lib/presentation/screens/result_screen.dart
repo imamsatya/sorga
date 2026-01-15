@@ -313,7 +313,7 @@ Can you beat my time? 💪
               ),
               const SizedBox(width: 6),
               Text(
-                category.displayName,
+                _getCategoryTitle(context, category),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -325,8 +325,8 @@ Can you beat my time? 💪
           const SizedBox(height: 4),
           Text(
             gameState.level.localId == 0 
-                ? 'Daily Challenge completed!' 
-                : 'Level ${gameState.level.localId} completed!',
+                ? '${AppLocalizations.of(context)!.dailyChallenge} ${AppLocalizations.of(context)!.completed}!' 
+                : AppLocalizations.of(context)!.levelCompleted(gameState.level.localId.toString()),
             style: TextStyle(
               fontSize: 16,
               color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -371,7 +371,7 @@ Can you beat my time? 💪
               const Icon(Icons.lightbulb_outline, color: AppTheme.warningColor, size: 16),
               const SizedBox(width: 8),
               Text(
-                'You have $attemptsRemaining chance${attemptsRemaining > 1 ? 's' : ''} left!',
+                AppLocalizations.of(context)!.chancesLeft(attemptsRemaining.toString()),
                 style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.warningColor,
@@ -381,14 +381,14 @@ Can you beat my time? 💪
             ],
           )
         else
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.cancel_outlined, color: AppTheme.errorColor, size: 16),
-              SizedBox(width: 8),
+              const Icon(Icons.cancel_outlined, color: AppTheme.errorColor, size: 16),
+              const SizedBox(width: 8),
               Text(
-                'No more chances. Try again!',
-                style: TextStyle(
+                AppLocalizations.of(context)!.noMoreChances,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.errorColor,
                   fontWeight: FontWeight.w500,
@@ -761,6 +761,24 @@ Can you beat my time? 💪
         return AppTheme.mixedColor;
       case LevelCategory.knowledge:
         return AppTheme.knowledgeColor;
+    }
+  }
+
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
     }
   }
 }
