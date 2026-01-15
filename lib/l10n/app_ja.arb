@@ -49,6 +49,8 @@
   "sortAscending": "昇順",
   "sortDescending": "降順",
   "best": "ベスト",
+  "sortXItems": "{count}個の{type}を{direction}に並べ替え",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "もう一度プレイ",
   "startChallenge": "チャレンジ開始",
   "completedToday": "今日完了！",
@@ -123,5 +125,8 @@
   "september": "9月",
   "october": "10月",
   "november": "11月",
-  "december": "12月"
+  "december": "12月",
+  "numbers": "数字",
+  "times": "時刻",
+  "names": "名前"
 }

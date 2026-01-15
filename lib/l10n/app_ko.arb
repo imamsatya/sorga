@@ -49,6 +49,8 @@
   "sortAscending": "오름차순",
   "sortDescending": "내림차순",
   "best": "최고",
+  "sortXItems": "{count}개의 {type}을 {direction}으로 정렬",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "다시 플레이",
   "startChallenge": "챌린지 시작",
   "completedToday": "오늘 완료!",
@@ -123,5 +125,8 @@
   "september": "9월",
   "october": "10월",
   "november": "11월",
-  "december": "12월"
+  "december": "12월",
+  "numbers": "숫자",
+  "times": "시간",
+  "names": "이름"
 }

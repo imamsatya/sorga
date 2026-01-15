@@ -212,7 +212,7 @@ class DailyChallengeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            challenge.level.description,
+            _getLevelDescription(context, challenge.level),
             style: const TextStyle(
               fontSize: 16,
               color: AppTheme.textSecondary,
@@ -495,6 +495,31 @@ Can you beat my time? 💪
       case LevelCategory.knowledge:
         return l10n.knowledge;
     }
+  }
+
+  String _getLevelDescription(BuildContext context, Level level) {
+    final l10n = AppLocalizations.of(context)!;
+    final count = level.items.length.toString();
+    final direction = level.sortOrder == SortOrder.ascending ? l10n.asc : l10n.desc;
+    
+    String type;
+    switch (level.category) {
+      case LevelCategory.basic:
+      case LevelCategory.formatted:
+      case LevelCategory.mixed:
+        type = l10n.numbers;
+        break;
+      case LevelCategory.time:
+        type = l10n.times;
+        break;
+      case LevelCategory.names:
+        type = l10n.names;
+        break;
+      case LevelCategory.knowledge:
+        return level.description; // Keep original for knowledge levels
+    }
+    
+    return l10n.sortXItems(count, type, direction);
   }
 
   String _formatTime(int milliseconds) {

@@ -49,6 +49,8 @@
   "sortAscending": "Tri ASC",
   "sortDescending": "Tri DESC",
   "best": "Meilleur",
+  "sortXItems": "Trier {count} {type} {direction}",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "Rejouer",
   "startChallenge": "DÉMARRER LE DÉFI",
   "completedToday": "Terminé Aujourd'hui!",
@@ -123,5 +125,8 @@
   "september": "Septembre",
   "october": "Octobre",
   "november": "Novembre",
-  "december": "Décembre"
+  "december": "Décembre",
+  "numbers": "nombres",
+  "times": "heures",
+  "names": "noms"
 }

@@ -49,6 +49,8 @@
   "sortAscending": "Ordenar ASC",
   "sortDescending": "Ordenar DESC",
   "best": "Melhor",
+  "sortXItems": "Ordenar {count} {type} {direction}",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "Jogar Novamente",
   "startChallenge": "INICIAR DESAFIO",
   "completedToday": "Concluído Hoje!",
@@ -123,5 +125,8 @@
   "september": "Setembro",
   "october": "Outubro",
   "november": "Novembro",
-  "december": "Dezembro"
+  "december": "Dezembro",
+  "numbers": "números",
+  "times": "tempos",
+  "names": "nomes"
 }

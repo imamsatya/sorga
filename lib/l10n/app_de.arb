@@ -49,6 +49,8 @@
   "sortAscending": "Aufsteigend",
   "sortDescending": "Absteigend",
   "best": "Beste",
+  "sortXItems": "{count} {type} {direction} sortieren",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "Nochmal Spielen",
   "startChallenge": "HERAUSFORDERUNG STARTEN",
   "completedToday": "Heute Abgeschlossen!",
@@ -123,5 +125,8 @@
   "september": "September",
   "october": "Oktober",
   "november": "November",
-  "december": "Dezember"
+  "december": "Dezember",
+  "numbers": "Zahlen",
+  "times": "Zeiten",
+  "names": "Namen"
 }

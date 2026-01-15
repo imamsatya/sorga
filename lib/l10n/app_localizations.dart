@@ -404,6 +404,12 @@ abstract class AppLocalizations {
   /// **'Best'**
   String get best;
 
+  /// No description provided for @sortXItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort {count} {type} {direction}'**
+  String sortXItems(Object count, Object type, Object direction);
+
   /// No description provided for @playAgain.
   ///
   /// In en, this message translates to:
@@ -841,6 +847,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'December'**
   String get december;
+
+  /// No description provided for @numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'numbers'**
+  String get numbers;
+
+  /// No description provided for @times.
+  ///
+  /// In en, this message translates to:
+  /// **'times'**
+  String get times;
+
+  /// No description provided for @names.
+  ///
+  /// In en, this message translates to:
+  /// **'names'**
+  String get names;
 }
 
 class _AppLocalizationsDelegate

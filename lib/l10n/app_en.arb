@@ -50,6 +50,8 @@
   "sortAscending": "Sort ASC",
   "sortDescending": "Sort DESC",
   "best": "Best",
+  "sortXItems": "Sort {count} {type} {direction}",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "Play Again",
   "startChallenge": "START CHALLENGE",
   "completedToday": "Completed Today!",
@@ -124,5 +126,8 @@
   "september": "September",
   "october": "October",
   "november": "November",
-  "december": "December"
+  "december": "December",
+  "numbers": "numbers",
+  "times": "times",
+  "names": "names"
 }

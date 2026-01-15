@@ -158,6 +158,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get best => '최고';
 
   @override
+  String sortXItems(Object count, Object type, Object direction) {
+    return '$count개의 $type을 $direction으로 정렬';
+  }
+
+  @override
   String get playAgain => '다시 플레이';
 
   @override
@@ -379,4 +384,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get december => '12월';
+
+  @override
+  String get numbers => '숫자';
+
+  @override
+  String get times => '시간';
+
+  @override
+  String get names => '이름';
 }

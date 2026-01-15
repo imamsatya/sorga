@@ -49,6 +49,8 @@
   "sortAscending": "Urutkan ASC",
   "sortDescending": "Urutkan DESC",
   "best": "Terbaik",
+  "sortXItems": "Urutkan {count} {type} {direction}",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
   "playAgain": "Main Lagi",
   "startChallenge": "MULAI TANTANGAN",
   "completedToday": "Selesai Hari Ini!",
@@ -123,5 +125,8 @@
   "september": "September",
   "october": "Oktober",
   "november": "November",
-  "december": "Desember"
+  "december": "Desember",
+  "numbers": "angka",
+  "times": "waktu",
+  "names": "nama"
 }

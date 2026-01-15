@@ -158,6 +158,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get best => 'Best';
 
   @override
+  String sortXItems(Object count, Object type, Object direction) {
+    return 'Sort $count $type $direction';
+  }
+
+  @override
   String get playAgain => 'Play Again';
 
   @override
@@ -385,4 +390,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get december => 'December';
+
+  @override
+  String get numbers => 'numbers';
+
+  @override
+  String get times => 'times';
+
+  @override
+  String get names => 'names';
 }
