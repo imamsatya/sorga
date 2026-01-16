@@ -102,15 +102,15 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                isDNF ? 'DNF' : result.formattedTime, 
+                result.statusText, // Shows 'Gagal', 'Menyerah', or formatted time
                 style: TextStyle(
-                  color: isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), 
-                  fontSize: 20, 
+                  color: result.isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), 
+                  fontSize: result.isDNF ? 16 : 20, 
                   fontWeight: FontWeight.bold, 
-                  fontFamily: isDNF ? null : 'monospace',
+                  fontFamily: result.isDNF ? null : 'monospace',
                 ),
               ),
-              if (!isDNF && timeDiff > 0)
+              if (!result.isDNF && timeDiff > 0)
                 Text('+${_formatTime(timeDiff)}', style: const TextStyle(color: AppTheme.errorColor, fontSize: 12)),
             ],
           ),

@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 import '../../domain/entities/level.dart';
+import '../../domain/entities/multiplayer_session.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:share_plus/share_plus.dart';
@@ -45,6 +46,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   void dispose() {
     _confettiController.dispose();
     super.dispose();
+  }
+  
+  /// Helper to navigate to next player or results in multiplayer
+  void _navigateToNextPlayer(BuildContext context, WidgetRef ref, MultiplayerSession session) {
+    final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
+    if (isLastPlayer) {
+      context.go('/multiplayer/results');
+    } else {
+      ref.read(multiplayerSessionProvider.notifier).nextPlayer();
+      context.go('/multiplayer/transition');
+    }
   }
 
   Future<void> _captureAndShare() async {
@@ -645,116 +657,115 @@ Can you beat my time? 💪
           ] else if (!isSuccess && canContinue) ...[
             // Check if this is a multiplayer game
             if (ref.read(multiplayerSessionProvider) != null) ...[
-              // Multiplayer: Check if player already used their one chance
+              // Multiplayer: Check attempts (same as normal game - 2 attempts allowed)
               Builder(builder: (context) {
                 final gameState = ref.read(gameStateProvider);
                 final session = ref.read(multiplayerSessionProvider);
-                final hasUsedChance = (gameState?.failedAttempts ?? 0) >= 1;
+                final failedAttempts = gameState?.failedAttempts ?? 0;
+                final isOutOfChances = failedAttempts >= 2; // Same as normal game
                 
-                if (hasUsedChance) {
-                  // No more chances - must Give Up (DNF)
-                  return GestureDetector(
-                    onTap: () {
-                      if (session != null && gameState != null) {
-                        // Submit DNF result (max time penalty)
-                        ref.read(multiplayerSessionProvider.notifier).submitResult(
-                          playerId: session.currentPlayer.id,
-                          timeMs: 999999, // DNF penalty
-                          attempts: gameState.failedAttempts + 1,
-                        );
-                        
-                        // Navigate to next player or results
-                        final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
-                        if (isLastPlayer) {
-                          context.go('/multiplayer/results');
-                        } else {
-                          ref.read(multiplayerSessionProvider.notifier).nextPlayer();
-                          context.go('/multiplayer/transition');
-                        }
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.errorColor.withValues(alpha: 0.4),
-                            blurRadius: 15,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.flag, color: Colors.white, size: 28),
-                          SizedBox(width: 8),
-                          Text(
-                            'Failed! Next Player',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 1,
+                return Column(
+                  children: [
+                    if (isOutOfChances) ...[
+                      // Failed completely (used all chances)
+                      GestureDetector(
+                        onTap: () {
+                          if (session != null && gameState != null) {
+                            ref.read(multiplayerSessionProvider.notifier).submitResult(
+                              playerId: session.currentPlayer.id,
+                              timeMs: 999999,
+                              attempts: gameState.failedAttempts + 1,
+                              status: ResultStatus.failed,
+                            );
+                            _navigateToNextPlayer(context, ref, session);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  // First mistake - allow Continue
-                  return GestureDetector(
-                    onTap: () {
-                      if (gameState != null) {
-                        ref.read(gameStateProvider.notifier).continueGame();
-                        context.go('/multiplayer/game');
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppTheme.warningColor, Color(0xFFFFB347)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.close, color: Colors.white, size: 28),
+                              SizedBox(width: 8),
+                              Text('Gagal! Lanjut...', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.warningColor.withValues(alpha: 0.4),
-                            blurRadius: 15,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
                       ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
-                          SizedBox(width: 8),
-                          Text(
-                            'Last Chance!',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              letterSpacing: 2,
+                    ] else ...[
+                      // Still has chances - Continue button
+                      GestureDetector(
+                        onTap: () {
+                          if (gameState != null) {
+                            ref.read(gameStateProvider.notifier).continueGame();
+                            context.go('/multiplayer/game');
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppTheme.warningColor, Color(0xFFFFB347)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                             ),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                              const SizedBox(width: 8),
+                              Text('Continue (${2 - failedAttempts} left)', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                }
+                      const SizedBox(height: 12),
+                      // Give Up button (optional)
+                      GestureDetector(
+                        onTap: () {
+                          if (session != null && gameState != null) {
+                            ref.read(multiplayerSessionProvider.notifier).submitResult(
+                              playerId: session.currentPlayer.id,
+                              timeMs: 999999,
+                              attempts: gameState.failedAttempts + 1,
+                              status: ResultStatus.gaveUp,
+                            );
+                            _navigateToNextPlayer(context, ref, session);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppTheme.errorColor.withValues(alpha: 0.5)),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.flag, color: AppTheme.errorColor, size: 22),
+                              SizedBox(width: 8),
+                              Text('Menyerah', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.errorColor)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                );
               }),
               const SizedBox(height: 16),
             ] else ...[

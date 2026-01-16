@@ -212,6 +212,7 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
     int? memorizeTimeMs,
     int? sortTimeMs,
     required int attempts,
+    ResultStatus status = ResultStatus.success,
   }) {
     if (state == null) return;
     
@@ -222,6 +223,7 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
       sortTimeMs: sortTimeMs,
       attempts: attempts,
       isCompleted: true,
+      status: status,
     );
     
     final newResults = Map<String, PlayerResult>.from(state!.results);

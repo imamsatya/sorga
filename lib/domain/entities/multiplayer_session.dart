@@ -68,6 +68,13 @@ class MultiplayerPlayer {
   });
 }
 
+/// Status of player result
+enum ResultStatus {
+  success,  // Completed successfully
+  failed,   // Ran out of attempts
+  gaveUp,   // Manually gave up
+}
+
 /// Represents the result of a player's turn
 @immutable
 class PlayerResult {
@@ -77,6 +84,7 @@ class PlayerResult {
   final int? sortTimeMs;      // For memory mode
   final int attempts;
   final bool isCompleted;
+  final ResultStatus status;
 
   const PlayerResult({
     required this.playerId,
@@ -85,10 +93,26 @@ class PlayerResult {
     this.sortTimeMs,
     required this.attempts,
     required this.isCompleted,
+    this.status = ResultStatus.success,
   });
   
   /// Total time in seconds for display
   double get timeSeconds => timeMs / 1000.0;
+  
+  /// Check if this is a DNF (did not finish)
+  bool get isDNF => status != ResultStatus.success;
+  
+  /// Get display text for status
+  String get statusText {
+    switch (status) {
+      case ResultStatus.success:
+        return formattedTime;
+      case ResultStatus.failed:
+        return 'Gagal';
+      case ResultStatus.gaveUp:
+        return 'Menyerah';
+    }
+  }
   
   /// Format time as MM:SS.cc
   String get formattedTime {
