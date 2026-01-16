@@ -198,14 +198,32 @@ class LevelSelectScreen extends ConsumerWidget {
   }
 
   Widget _buildLevelCard(BuildContext context, WidgetRef ref, Level level) {
-    final isUnlockedAsync = ref.watch(isLevelUnlockedProvider(level.id));
-    final isUnlocked = AppConstants.isDevMode || (isUnlockedAsync.valueOrNull ?? false);
-    
     // For memory mode, use memory level ID (levelId + 10000) for progress lookup
     final progressId = isMemory ? level.id + 10000 : level.id;
     final progressAsync = ref.watch(levelProgressProvider(progressId));
     final progress = progressAsync.valueOrNull;
     final isCompleted = progress?.completed ?? false;
+    
+    // Determine if level is unlocked
+    bool isUnlocked;
+    if (AppConstants.isDevMode) {
+      isUnlocked = true;
+    } else if (isMemory) {
+      // Memory mode: level 1 always unlocked, others require previous memory level completion
+      if (level.localId == 1) {
+        isUnlocked = true;
+      } else {
+        // Check if previous memory level (localId - 1) is completed
+        final prevMemoryId = level.id - 1 + 10000;  // Previous level's memory progress ID
+        final prevProgressAsync = ref.watch(levelProgressProvider(prevMemoryId));
+        final prevCompleted = prevProgressAsync.valueOrNull?.completed ?? false;
+        isUnlocked = prevCompleted;
+      }
+    } else {
+      // Regular mode: use standard unlock provider
+      final isUnlockedAsync = ref.watch(isLevelUnlockedProvider(level.id));
+      isUnlocked = isUnlockedAsync.valueOrNull ?? false;
+    }
     
     final categoryColor = _getCategoryColor(category);
 
