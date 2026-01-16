@@ -403,4 +403,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get memorized => 'Auswendig gelernt!';
+
+  @override
+  String get memoryMode => 'Gedächtnis';
+
+  @override
+  String get memorizeTime => 'Merken';
+
+  @override
+  String get sortTime => 'Sortieren';
+
+  @override
+  String get totalTime => 'Gesamtzeit';
+
+  @override
+  String completeLevelToUnlock(Object level, Object category) {
+    return 'Level $level in $category abschließen zum Freischalten';
+  }
 }

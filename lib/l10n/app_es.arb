@@ -129,5 +129,11 @@
   "numbers": "números",
   "times": "tiempos",
   "names": "nombres",
-  "memorized": "¡Lo Memoricé!"
+  "memorized": "¡Lo Memoricé!",
+  "memoryMode": "Memoria",
+  "memorizeTime": "Memorizar",
+  "sortTime": "Ordenar",
+  "totalTime": "Tiempo Total",
+  "completeLevelToUnlock": "Completa el Nivel {level} en {category} para desbloquear",
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
 }

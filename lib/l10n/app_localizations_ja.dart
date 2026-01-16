@@ -396,4 +396,21 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get memorized => '覚えた！';
+
+  @override
+  String get memoryMode => '記憶';
+
+  @override
+  String get memorizeTime => '記憶';
+
+  @override
+  String get sortTime => '並び替え';
+
+  @override
+  String get totalTime => '合計時間';
+
+  @override
+  String completeLevelToUnlock(Object level, Object category) {
+    return '$categoryのレベル$levelをクリアして解放';
+  }
 }

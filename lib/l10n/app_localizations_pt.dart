@@ -402,4 +402,21 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get memorized => 'Memorizei!';
+
+  @override
+  String get memoryMode => 'Memória';
+
+  @override
+  String get memorizeTime => 'Memorizar';
+
+  @override
+  String get sortTime => 'Ordenar';
+
+  @override
+  String get totalTime => 'Tempo Total';
+
+  @override
+  String completeLevelToUnlock(Object level, Object category) {
+    return 'Complete o Nível $level em $category para desbloquear';
+  }
 }

@@ -129,5 +129,11 @@
   "numbers": "숫자",
   "times": "시간",
   "names": "이름",
-  "memorized": "외웠어요!"
+  "memorized": "외웠어요!",
+  "memoryMode": "기억",
+  "memorizeTime": "암기",
+  "sortTime": "정렬",
+  "totalTime": "총 시간",
+  "completeLevelToUnlock": "{category}의 레벨 {level}을 완료하여 잠금 해제",
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
 }

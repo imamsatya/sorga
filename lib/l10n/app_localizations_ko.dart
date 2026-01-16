@@ -396,4 +396,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get memorized => '외웠어요!';
+
+  @override
+  String get memoryMode => '기억';
+
+  @override
+  String get memorizeTime => '암기';
+
+  @override
+  String get sortTime => '정렬';
+
+  @override
+  String get totalTime => '총 시간';
+
+  @override
+  String completeLevelToUnlock(Object level, Object category) {
+    return '$category의 레벨 $level을 완료하여 잠금 해제';
+  }
 }

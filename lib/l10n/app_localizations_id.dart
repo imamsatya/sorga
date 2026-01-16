@@ -402,4 +402,21 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get memorized => 'Sudah Dihafal!';
+
+  @override
+  String get memoryMode => 'Memori';
+
+  @override
+  String get memorizeTime => 'Hafalan';
+
+  @override
+  String get sortTime => 'Urutkan';
+
+  @override
+  String get totalTime => 'Total Waktu';
+
+  @override
+  String completeLevelToUnlock(Object level, Object category) {
+    return 'Selesaikan Level $level di $category untuk membuka';
+  }
 }

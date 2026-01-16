@@ -99,7 +99,7 @@ class LevelSelectScreen extends ConsumerWidget {
                           ],
                           Text(
                             isMemory
-                                ? 'Memory: ${_getCategoryTitle(context, category)}'
+                                ? '${AppLocalizations.of(context)!.memoryMode}: ${_getCategoryTitle(context, category)}'
                                 : _getCategoryTitle(context, category),
                             style: const TextStyle(
                               fontSize: 22,
@@ -463,16 +463,16 @@ class LevelSelectScreen extends ConsumerWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    _buildStatColumn(context, '✨', progress.memorizeTimeFormatted, 'Memorize'),
+                                    _buildStatColumn(context, '✨', progress.memorizeTimeFormatted, AppLocalizations.of(context)!.memorizeTime),
                                     Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
-                                    _buildStatColumn(context, '🔀', progress.sortTimeFormatted, 'Sort'),
+                                    _buildStatColumn(context, '🔀', progress.sortTimeFormatted, AppLocalizations.of(context)!.sortTime),
                                   ],
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, 'Total Time'),
+                                    _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, AppLocalizations.of(context)!.totalTime),
                                     Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
                                     _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
                                   ],

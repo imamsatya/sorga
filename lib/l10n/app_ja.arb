@@ -129,5 +129,11 @@
   "numbers": "数字",
   "times": "時刻",
   "names": "名前",
-  "memorized": "覚えた！"
+  "memorized": "覚えた！",
+  "memoryMode": "記憶",
+  "memorizeTime": "記憶",
+  "sortTime": "並び替え",
+  "totalTime": "合計時間",
+  "completeLevelToUnlock": "{category}のレベル{level}をクリアして解放",
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
 }

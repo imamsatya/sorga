@@ -871,6 +871,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I\'ve Memorized!'**
   String get memorized;
+
+  /// No description provided for @memoryMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory'**
+  String get memoryMode;
+
+  /// No description provided for @memorizeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Memorize'**
+  String get memorizeTime;
+
+  /// No description provided for @sortTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sortTime;
+
+  /// No description provided for @totalTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Time'**
+  String get totalTime;
+
+  /// No description provided for @completeLevelToUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Level {level} in {category} to unlock'**
+  String completeLevelToUnlock(Object level, Object category);
 }
 
 class _AppLocalizationsDelegate

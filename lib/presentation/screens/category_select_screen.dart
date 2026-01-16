@@ -231,7 +231,10 @@ class CategorySelectScreen extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Complete Level 30 in ${_getCategoryTitle(context, category)} to unlock',
+                AppLocalizations.of(context)!.completeLevelToUnlock(
+                  AppConstants.memoryUnlockLevel.toString(),
+                  _getCategoryTitle(context, category),
+                ),
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.purple[700],

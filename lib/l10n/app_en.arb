@@ -130,5 +130,11 @@
   "numbers": "numbers",
   "times": "times",
   "names": "names",
-  "memorized": "I've Memorized!"
+  "memorized": "I've Memorized!",
+  "memoryMode": "Memory",
+  "memorizeTime": "Memorize",
+  "sortTime": "Sort",
+  "totalTime": "Total Time",
+  "completeLevelToUnlock": "Complete Level {level} in {category} to unlock",
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
 }
