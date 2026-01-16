@@ -455,6 +455,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   alignment: WrapAlignment.center,
                   children: List.generate(items.length, (index) {
                     final item = items[index];
+                    // Disable drag during memorizing phase
+                    final bool canDrag = gameState.phase != GamePhase.memorizing;
                     return _buildDraggableCard(
                       item, 
                       index, 
@@ -463,6 +465,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                       cardHeight, 
                       fontSize,
                       labelsVisible: gameState.labelsVisible,
+                      canDrag: canDrag,
                     );
                   }),
                 ),
@@ -485,7 +488,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     double cardHeight,
     double fontSize, {
     bool labelsVisible = true,
+    bool canDrag = true,
   }) {
+    // During memorizing phase, show non-draggable card
+    if (!canDrag) {
+      return SizedBox(
+        width: cardWidth,
+        height: cardHeight,
+        child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, labelsVisible: labelsVisible),
+      );
+    }
+    
     return SizedBox(
       width: cardWidth,
       height: cardHeight,
@@ -577,6 +590,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     cardHeight, 
                     fontSize, 
                     false,
+                    labelsVisible: labelsVisible,
                   ),
                 ),
                 if (overlay != null)
