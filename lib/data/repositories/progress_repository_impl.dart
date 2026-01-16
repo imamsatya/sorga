@@ -35,13 +35,19 @@ class ProgressRepositoryImpl implements ProgressRepository {
     // First level is always unlocked
     if (_database.progressBox.isEmpty) return 1;
     
-    // Find the highest completed level
+    // Find the highest completed REGULAR level (exclude memory IDs which are >= 10000)
     int highest = 0;
     for (final progress in _database.progressBox.values) {
+      // Skip memory level progress (IDs >= 10000)
+      if (progress.levelId >= 10000) continue;
+      
       if (progress.completed && progress.levelId > highest) {
         highest = progress.levelId;
       }
     }
+    
+    // If no regular levels completed, only unlock first level
+    if (highest == 0) return 1;
     
     // Unlock the next level
     return highest + 1;
