@@ -206,7 +206,8 @@ class CategorySelectScreen extends ConsumerWidget {
       }
     });
     
-    final bool isUnlocked = completed >= 30;
+    // TEMP: Unlock all for testing (change back to completed >= 30 for production)
+    final bool isUnlocked = true; // completed >= 30;
     final categoryInfo = _getCategoryInfo(category);
     
     return GestureDetector(

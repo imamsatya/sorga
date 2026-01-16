@@ -12,8 +12,13 @@ import '../providers/game_providers.dart';
 
 class LevelSelectScreen extends ConsumerWidget {
   final String categoryName;
+  final bool isMemory;
   
-  const LevelSelectScreen({super.key, required this.categoryName});
+  const LevelSelectScreen({
+    super.key, 
+    required this.categoryName, 
+    this.isMemory = false,
+  });
 
   LevelCategory get category {
     return LevelCategory.values.firstWhere(
@@ -24,7 +29,10 @@ class LevelSelectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final levels = ref.watch(levelsByCategoryProvider(category));
+    // Use memory levels if isMemory is true
+    final levels = isMemory 
+        ? ref.watch(memoryLevelsByCategoryProvider(category))
+        : ref.watch(levelsByCategoryProvider(category));
     
     return Scaffold(
       body: Container(

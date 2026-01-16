@@ -41,7 +41,8 @@ final appRouter = GoRouter(
       path: '/levels/:category',
       builder: (context, state) {
         final category = state.pathParameters['category'] ?? 'basic';
-        return LevelSelectScreen(categoryName: category);
+        final isMemory = state.uri.queryParameters['memory'] == 'true';
+        return LevelSelectScreen(categoryName: category, isMemory: isMemory);
       },
     ),
     GoRoute(
