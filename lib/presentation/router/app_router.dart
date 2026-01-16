@@ -8,6 +8,10 @@ import '../screens/achievements_screen.dart';
 import '../screens/statistics_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/daily_challenge_screen.dart';
+import '../screens/multiplayer_setup_screen.dart';
+import '../screens/multiplayer_transition_screen.dart';
+import '../screens/multiplayer_game_screen.dart';
+import '../screens/multiplayer_results_screen.dart';
 
 import 'package:sorga/domain/entities/level.dart';
 import 'package:sorga/levels/level_generator.dart';
@@ -104,6 +108,23 @@ final appRouter = GoRouter(
           dailyLevel: level,
         );
       },
+    ),
+    // Multiplayer routes
+    GoRoute(
+      path: '/multiplayer/setup',
+      builder: (context, state) => const MultiplayerSetupScreen(),
+    ),
+    GoRoute(
+      path: '/multiplayer/transition',
+      builder: (context, state) => const MultiplayerTransitionScreen(),
+    ),
+    GoRoute(
+      path: '/multiplayer/game',
+      builder: (context, state) => const MultiplayerGameScreen(),
+    ),
+    GoRoute(
+      path: '/multiplayer/results',
+      builder: (context, state) => const MultiplayerResultsScreen(),
     ),
   ],
 );

@@ -151,6 +151,10 @@ class HomeScreen extends ConsumerWidget {
                         
                         // Daily Challenge Button
                         _buildDailyChallengeButton(context, scaleFactor),
+                        SizedBox(height: 12 * scaleFactor),
+                        
+                        // Multiplayer Button
+                        _buildMultiplayerButton(context, scaleFactor),
                         
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                       ],
@@ -427,6 +431,44 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(width: 10 * scale),
             Text(
               AppLocalizations.of(context)!.dailyChallenge,
+              style: TextStyle(
+                fontSize: 16 * scale,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildMultiplayerButton(BuildContext context, double scale) {
+    return GestureDetector(
+      onTap: () => context.push('/multiplayer/setup'),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 24 * scale,
+          vertical: 12 * scale,
+        ),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceColor,
+          borderRadius: BorderRadius.circular(16 * scale),
+          border: Border.all(
+            color: const Color(0xFF9C27B0).withOpacity(0.5), // Purple
+            width: 2,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '👥',
+              style: TextStyle(fontSize: 22 * scale),
+            ),
+            SizedBox(width: 10 * scale),
+            Text(
+              'Multiplayer',
               style: TextStyle(
                 fontSize: 16 * scale,
                 fontWeight: FontWeight.w600,
