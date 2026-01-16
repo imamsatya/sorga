@@ -79,7 +79,7 @@
   "next": "WEITER",
   "shift": "Verschieben",
   "swap": "Tauschen",
-  "reset": "Zurücksetzen",
+  "reset": "Reset",
   "daily": "Täglich",
   "orderNotRight": "Die Reihenfolge ist nicht ganz richtig.",
   "chancesLeft": "Du hast noch {count} Versuch(e)!",

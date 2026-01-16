@@ -250,7 +250,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get swap => 'Tauschen';
 
   @override
-  String get reset => 'Zurücksetzen';
+  String get reset => 'Reset';
 
   @override
   String get daily => 'Täglich';
