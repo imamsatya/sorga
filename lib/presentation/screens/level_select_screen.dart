@@ -355,6 +355,32 @@ class LevelSelectScreen extends ConsumerWidget {
                         letterSpacing: 4,
                       ),
                     ),
+                    // Memory mode badge
+                    if (isMemory) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('✨', style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 4),
+                            Text(
+                              'SORGAwy',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.purpleAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 16),
                     // Category badge
                     Container(
@@ -409,7 +435,12 @@ class LevelSelectScreen extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, AppLocalizations.of(context)!.bestTime),
+                          _buildStatColumn(
+                            context, 
+                            '⏱️', 
+                            progress.bestTimeFormatted, 
+                            isMemory ? 'Total Time' : AppLocalizations.of(context)!.bestTime,
+                          ),
                           Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
                           _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
                         ],
