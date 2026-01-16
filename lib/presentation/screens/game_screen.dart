@@ -457,6 +457,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     final item = items[index];
                     // Disable drag during memorizing phase
                     final bool canDrag = gameState.phase != GamePhase.memorizing;
+                    // Get original position for display (memory mode: card number moves with card)
+                    final int displayIndex = gameState.getOriginalIndex(item);
                     return _buildDraggableCard(
                       item, 
                       index, 
@@ -466,6 +468,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                       fontSize,
                       labelsVisible: gameState.labelsVisible,
                       canDrag: canDrag,
+                      displayIndex: displayIndex,
                     );
                   }),
                 ),
@@ -489,13 +492,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     double fontSize, {
     bool labelsVisible = true,
     bool canDrag = true,
+    int? displayIndex,
   }) {
     // During memorizing phase, show non-draggable card
     if (!canDrag) {
       return SizedBox(
         width: cardWidth,
         height: cardHeight,
-        child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, labelsVisible: labelsVisible),
+        child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
+            labelsVisible: labelsVisible, displayIndex: displayIndex),
       );
     }
     
@@ -508,12 +513,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           color: Colors.transparent,
           child: Opacity(
             opacity: 0.9,
-            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, labelsVisible: labelsVisible),
+            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, 
+                labelsVisible: labelsVisible, displayIndex: displayIndex),
           ),
         ),
         childWhenDragging: Opacity(
           opacity: 0.3,
-          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, labelsVisible: labelsVisible),
+          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
+              labelsVisible: labelsVisible, displayIndex: displayIndex),
         ),
         onDragStarted: () {
           setState(() => _draggedIndex = index);
@@ -591,6 +598,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     fontSize, 
                     false,
                     labelsVisible: labelsVisible,
+                    displayIndex: displayIndex,
                   ),
                 ),
                 if (overlay != null)
@@ -612,7 +620,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     double fontSize,
     bool isDragging, {
     bool labelsVisible = true,
+    int? displayIndex, // If null, use index+1; if set, use this value (for memory mode)
   }) {
+    final cardNumber = displayIndex ?? (index + 1);
+    
     return Container(
       width: width,
       height: height,
@@ -650,7 +661,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              '${index + 1}',
+              '$cardNumber',
               style: TextStyle(
                 color: categoryColor,
                 fontSize: 10,

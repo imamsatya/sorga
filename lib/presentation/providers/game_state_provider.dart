@@ -33,6 +33,7 @@ class GameState {
   final GamePhase phase;
   final bool labelsVisible;       // Show item values or "?"
   final Duration memorizeTime;    // Time spent memorizing
+  final Map<String, int> originalIndices; // Track original position of each item
   
   const GameState({
     required this.level,
@@ -45,6 +46,7 @@ class GameState {
     this.phase = GamePhase.ready,
     this.labelsVisible = true,
     this.memorizeTime = Duration.zero,
+    this.originalIndices = const {},
   });
   
   /// Can continue after failure (only if less than 2 failed attempts)
@@ -52,6 +54,11 @@ class GameState {
   
   /// Is this a memory mode game
   bool get isMemoryMode => level.isMemory;
+  
+  /// Get original index for an item (1-based for display)
+  int getOriginalIndex(LevelItem item) {
+    return (originalIndices[item.id] ?? 0) + 1;
+  }
   
   GameState copyWith({
     Level? level,
@@ -64,6 +71,7 @@ class GameState {
     GamePhase? phase,
     bool? labelsVisible,
     Duration? memorizeTime,
+    Map<String, int>? originalIndices,
   }) {
     return GameState(
       level: level ?? this.level,
@@ -76,6 +84,7 @@ class GameState {
       phase: phase ?? this.phase,
       labelsVisible: labelsVisible ?? this.labelsVisible,
       memorizeTime: memorizeTime ?? this.memorizeTime,
+      originalIndices: originalIndices ?? this.originalIndices,
     );
   }
   
@@ -126,13 +135,20 @@ class GameStateNotifier extends StateNotifier<GameState?> {
 
   /// Initialize game state with a level
   void _initializeGameWithLevel(Level level) {
-    // Shuffle items for initial display
+    // Store original indices before any reordering (for memory mode display)
+    final Map<String, int> originalIndices = {};
+    for (int i = 0; i < level.items.length; i++) {
+      originalIndices[level.items[i].id] = i;
+    }
+    
+    // Items start in original order (will be shuffled by user or for display)
     final shuffled = List<LevelItem>.from(level.items);
     
     state = GameState(
       level: level,
       currentOrder: shuffled,
       isRunning: false, // Start paused for countdown
+      originalIndices: originalIndices,
     );
     
     // Timer will be started by startPlaying() after countdown
