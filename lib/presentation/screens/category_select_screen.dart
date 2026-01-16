@@ -61,6 +61,7 @@ class CategorySelectScreen extends ConsumerWidget {
     final categories = LevelCategory.values;
     
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
