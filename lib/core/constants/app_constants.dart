@@ -6,10 +6,13 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
-  static const bool isDevMode = true;
+  static const bool isDevMode = false;
   
   // Level Constants
   static const int totalLevels = 800;
+  
+  // Memory Mode - unlock requirement (complete this many regular levels)
+  static const int memoryUnlockLevel = 35;
   
   // Level Ranges per Category (100 levels each for non-knowledge)
   static const int basicNumbersStart = 1;

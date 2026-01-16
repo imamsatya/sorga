@@ -762,9 +762,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   builder: (context) => Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.refresh, color: AppTheme.textSecondary),
-                      const SizedBox(width: 8),
-                      Text(AppLocalizations.of(context)!.reset, style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                      const Icon(Icons.refresh, color: AppTheme.textSecondary, size: 18),
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          AppLocalizations.of(context)!.reset, 
+                          style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 13),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),

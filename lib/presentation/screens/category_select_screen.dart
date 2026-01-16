@@ -217,7 +217,7 @@ class CategorySelectScreen extends ConsumerWidget {
     });
     
     // DevMode: unlock all memory levels; Production: unlock when level 30 completed
-    final bool isUnlocked = AppConstants.isDevMode || regularCompleted >= 30;
+    final bool isUnlocked = AppConstants.isDevMode || regularCompleted >= AppConstants.memoryUnlockLevel;
     final categoryInfo = _getCategoryInfo(category);
     final double progress = levels.isEmpty ? 0.0 : memoryCompleted / levels.length;
     
