@@ -470,7 +470,7 @@ Can you beat my time? 💪
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('🧠', style: TextStyle(fontSize: 14)),
+                  Text('✨', style: TextStyle(fontSize: 14)),
                   SizedBox(width: 4),
                   Text(
                     'SORGAwy',
@@ -523,7 +523,7 @@ Can you beat my time? 💪
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildTimeBreakdown(
-                  '🧠',
+                  '✨',
                   'Memorize',
                   gameState.formattedMemorizeTime,
                 ),
@@ -840,7 +840,7 @@ Can you beat my time? 💪
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 

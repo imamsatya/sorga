@@ -91,7 +91,7 @@ class LevelSelectScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           if (isMemory) ...[
-                            const Text('🧠', style: TextStyle(fontSize: 20)),
+                            const Text('✨', style: TextStyle(fontSize: 20)),
                             const SizedBox(width: 4),
                           ],
                           Text(
@@ -139,7 +139,7 @@ class LevelSelectScreen extends ConsumerWidget {
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 

@@ -178,7 +178,7 @@ class Achievement extends Equatable {
       type: AchievementType.knowledgeMaster,
       name: 'Knowledge King',
       description: 'Complete all knowledge levels',
-      emoji: '🧠',
+      emoji: '✨',
       color: Color(0xFFFD79A8),
     ),
     

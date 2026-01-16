@@ -240,7 +240,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           IconButton(
             onPressed: () {
               ref.read(gameStateProvider.notifier).endGame();
-              context.go('/levels/${gameState.level.category.name}');
+              // Preserve memory mode when going back to level selection
+              final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+              context.go('/levels/${gameState.level.category.name}$memoryParam');
             },
             icon: const Icon(Icons.close, color: AppTheme.textPrimary, size: 28),
           ),

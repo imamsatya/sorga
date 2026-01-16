@@ -139,7 +139,7 @@ class CategorySelectScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('🧠', style: TextStyle(fontSize: 32)),
+              const Text('✨', style: TextStyle(fontSize: 32)),
               const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,34 +256,81 @@ class CategorySelectScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  emoji,
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: isUnlocked ? null : Colors.grey,
-                  ),
+                // Icon (Emoji with sparkle overlay)
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: (isUnlocked ? categoryInfo.color : Colors.grey).withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          emoji,
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: isUnlocked ? null : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -2,
+                      right: -2,
+                      child: Text('✨', style: TextStyle(fontSize: 12)),
+                    ),
+                  ],
                 ),
-                Text(
-                  '🧠',
-                  style: TextStyle(fontSize: 10),
-                ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
+                // Title
                 Text(
                   _getCategoryTitle(context, category),
                   style: TextStyle(
-                    fontSize: 9,
-                    color: isUnlocked ? categoryInfo.color : AppTheme.textMuted,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isUnlocked ? AppTheme.textPrimary : AppTheme.textMuted,
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                const SizedBox(height: 1),
+                // Level count
                 Text(
-                  '$completed/30',
+                  '100 ${AppLocalizations.of(context)!.levels}',
                   style: TextStyle(
-                    fontSize: 8,
-                    color: AppTheme.textMuted,
+                    fontSize: 9,
+                    color: AppTheme.textSecondary.withOpacity(0.7),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Progress bar + counter (TODO: track memory level progress separately)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(3),
+                        child: LinearProgressIndicator(
+                          value: 0.0, // TODO: Calculate from memory level progress
+                          minHeight: 4,
+                          backgroundColor: AppTheme.backgroundDark.withOpacity(0.5),
+                          valueColor: AlwaysStoppedAnimation(categoryInfo.color),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '0/100', // TODO: Get from memory level progress
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: categoryInfo.color,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -439,7 +486,7 @@ class CategorySelectScreen extends ConsumerWidget {
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 

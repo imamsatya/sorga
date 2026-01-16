@@ -27,7 +27,7 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
     if (widget.isMemory) {
       return [
         TutorialStep(
-          emoji: '🧠',
+          emoji: '✨',
           title: 'Memory Mode',
           description: 'In this mode, you must MEMORIZE the numbers first, then sort them from memory!',
         ),

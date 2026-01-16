@@ -475,7 +475,7 @@ Can you beat my time? 💪
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 
