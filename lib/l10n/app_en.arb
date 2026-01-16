@@ -160,5 +160,14 @@
   "@continueLeft": { "placeholders": { "count": {} } },
   "draw": "Draw!",
   "everyoneGaveUp": "Everyone gave up!",
-  "leaderboard": "Leaderboard"
+  "everyoneFailed": "Everyone failed!",
+  "noOneCompleted": "No one completed!",
+  "leaderboard": "Leaderboard",
+  "localMultiplayer": "Local Multiplayer",
+  "players": "Players",
+  "addPlayer": "Add Player",
+  "removePlayer": "Remove",
+  "category": "Category",
+  "ready": "Ready?",
+  "go": "GO!"
 }

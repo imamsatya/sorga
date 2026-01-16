@@ -811,27 +811,45 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () {
+              onTap: widget.isMultiplayer ? null : () {
                 _hapticService.selectionClick();
                 ref.read(gameStateProvider.notifier).retry();
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: AppTheme.surfaceColor,
+                  color: widget.isMultiplayer 
+                      ? AppTheme.surfaceColor.withOpacity(0.3) 
+                      : AppTheme.surfaceColor,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: widget.isMultiplayer 
+                        ? AppTheme.textMuted.withValues(alpha: 0.1) 
+                        : AppTheme.textMuted.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Builder(
                   builder: (context) => Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.refresh, color: AppTheme.textSecondary, size: 18),
+                      Icon(
+                        Icons.refresh, 
+                        color: widget.isMultiplayer 
+                            ? AppTheme.textMuted.withOpacity(0.3) 
+                            : AppTheme.textSecondary, 
+                        size: 18,
+                      ),
                       const SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           AppLocalizations.of(context)!.reset, 
-                          style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 13),
+                          style: TextStyle(
+                            color: widget.isMultiplayer 
+                                ? AppTheme.textMuted.withOpacity(0.3) 
+                                : AppTheme.textSecondary, 
+                            fontWeight: FontWeight.w600, 
+                            fontSize: 13,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

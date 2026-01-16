@@ -159,5 +159,14 @@
   "@continueLeft": { "placeholders": { "count": {} } },
   "draw": "Seri!",
   "everyoneGaveUp": "Semua menyerah!",
-  "leaderboard": "Papan Peringkat"
+  "everyoneFailed": "Semua gagal!",
+  "noOneCompleted": "Tidak ada yang selesai!",
+  "leaderboard": "Papan Peringkat",
+  "localMultiplayer": "Multiplayer Lokal",
+  "players": "Pemain",
+  "addPlayer": "Tambah Pemain",
+  "removePlayer": "Hapus",
+  "category": "Kategori",
+  "ready": "Siap?",
+  "go": "MULAI!"
 }

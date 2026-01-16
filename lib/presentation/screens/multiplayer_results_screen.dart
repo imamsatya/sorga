@@ -19,6 +19,15 @@ class MultiplayerResultsScreen extends ConsumerWidget {
     final leaderboard = ref.read(multiplayerSessionProvider.notifier).getLeaderboard();
     final winnerTime = leaderboard.isNotEmpty ? leaderboard.first.timeMs : 0;
     final isDraw = winnerTime >= 999999; // All players DNF
+    
+    // Determine Draw subtitle based on result statuses
+    String getDrawSubtitle() {
+      final allFailed = leaderboard.every((r) => r.status == ResultStatus.failed);
+      final allGaveUp = leaderboard.every((r) => r.status == ResultStatus.gaveUp);
+      if (allFailed) return AppLocalizations.of(context)!.everyoneFailed;
+      if (allGaveUp) return AppLocalizations.of(context)!.everyoneGaveUp;
+      return AppLocalizations.of(context)!.noOneCompleted; // Mixed
+    }
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
@@ -30,7 +39,7 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             if (isDraw) ...[
               Text('🤝 ${AppLocalizations.of(context)!.draw}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.everyoneGaveUp, style: const TextStyle(color: AppTheme.warningColor, fontSize: 16)),
+              Text(getDrawSubtitle(), style: const TextStyle(color: AppTheme.warningColor, fontSize: 16)),
             ] else ...[
               Text('🏆 ${AppLocalizations.of(context)!.leaderboard}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),

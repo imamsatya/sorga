@@ -1016,11 +1016,65 @@ abstract class AppLocalizations {
   /// **'Everyone gave up!'**
   String get everyoneGaveUp;
 
+  /// No description provided for @everyoneFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone failed!'**
+  String get everyoneFailed;
+
+  /// No description provided for @noOneCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'No one completed!'**
+  String get noOneCompleted;
+
   /// No description provided for @leaderboard.
   ///
   /// In en, this message translates to:
   /// **'Leaderboard'**
   String get leaderboard;
+
+  /// No description provided for @localMultiplayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Multiplayer'**
+  String get localMultiplayer;
+
+  /// No description provided for @players.
+  ///
+  /// In en, this message translates to:
+  /// **'Players'**
+  String get players;
+
+  /// No description provided for @addPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Player'**
+  String get addPlayer;
+
+  /// No description provided for @removePlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removePlayer;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready?'**
+  String get ready;
+
+  /// No description provided for @go.
+  ///
+  /// In en, this message translates to:
+  /// **'GO!'**
+  String get go;
 }
 
 class _AppLocalizationsDelegate

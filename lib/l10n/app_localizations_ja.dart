@@ -480,5 +480,32 @@ class AppLocalizationsJa extends AppLocalizations {
   String get everyoneGaveUp => 'Everyone gave up!';
 
   @override
+  String get everyoneFailed => 'Everyone failed!';
+
+  @override
+  String get noOneCompleted => 'No one completed!';
+
+  @override
   String get leaderboard => 'Leaderboard';
+
+  @override
+  String get localMultiplayer => 'Local Multiplayer';
+
+  @override
+  String get players => 'Players';
+
+  @override
+  String get addPlayer => 'Add Player';
+
+  @override
+  String get removePlayer => 'Remove';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get ready => 'Ready?';
+
+  @override
+  String get go => 'GO!';
 }

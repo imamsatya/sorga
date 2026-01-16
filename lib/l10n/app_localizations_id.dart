@@ -486,5 +486,32 @@ class AppLocalizationsId extends AppLocalizations {
   String get everyoneGaveUp => 'Semua menyerah!';
 
   @override
+  String get everyoneFailed => 'Semua gagal!';
+
+  @override
+  String get noOneCompleted => 'Tidak ada yang selesai!';
+
+  @override
   String get leaderboard => 'Papan Peringkat';
+
+  @override
+  String get localMultiplayer => 'Multiplayer Lokal';
+
+  @override
+  String get players => 'Pemain';
+
+  @override
+  String get addPlayer => 'Tambah Pemain';
+
+  @override
+  String get removePlayer => 'Hapus';
+
+  @override
+  String get category => 'Kategori';
+
+  @override
+  String get ready => 'Siap?';
+
+  @override
+  String get go => 'MULAI!';
 }
