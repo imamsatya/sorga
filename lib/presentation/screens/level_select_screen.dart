@@ -432,19 +432,43 @@ class LevelSelectScreen extends ConsumerWidget {
                         color: AppTheme.surfaceColor.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatColumn(
-                            context, 
-                            '⏱️', 
-                            progress.bestTimeFormatted, 
-                            isMemory ? 'Total Time' : AppLocalizations.of(context)!.bestTime,
-                          ),
-                          Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
-                          _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
-                        ],
-                      ),
+                      child: isMemory && progress.isMemoryProgress
+                          // Memory mode: show breakdown
+                          ? Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildStatColumn(context, '✨', progress.memorizeTimeFormatted, 'Memorize'),
+                                    Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                    _buildStatColumn(context, '🔀', progress.sortTimeFormatted, 'Sort'),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, 'Total Time'),
+                                    Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                    _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
+                                  ],
+                                ),
+                              ],
+                            )
+                          // Regular mode: show best time and attempts
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildStatColumn(
+                                  context, 
+                                  '⏱️', 
+                                  progress.bestTimeFormatted, 
+                                  isMemory ? 'Total Time' : AppLocalizations.of(context)!.bestTime,
+                                ),
+                                Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
+                              ],
+                            ),
                     ),
                     const SizedBox(height: 16),
                     Text(

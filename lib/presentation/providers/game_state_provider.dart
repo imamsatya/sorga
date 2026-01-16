@@ -299,19 +299,30 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     
     final existingProgress = await repository.getProgress(progressId);
     
+    // For memory mode, calculate total time (memorize + sort)
+    final Duration totalTime = state!.level.isMemory 
+        ? state!.memorizeTime + state!.elapsedTime  // memorize + sort
+        : state!.elapsedTime;
+    
     UserProgress newProgress;
     if (existingProgress != null) {
       newProgress = existingProgress.withNewAttempt(
-        state!.elapsedTime,
+        totalTime,
         success: success,
+        memorizeTime: state!.level.isMemory ? state!.memorizeTime : null,
+        sortTime: state!.level.isMemory ? state!.elapsedTime : null,
       );
     } else {
       newProgress = UserProgress(
         levelId: progressId,
         completed: success,
-        bestTimeMs: success ? state!.elapsedTime.inMilliseconds : null,
+        bestTimeMs: success ? totalTime.inMilliseconds : null,
         completedAt: success ? DateTime.now() : null,
         attempts: 1,
+        memorizeTimeMs: success && state!.level.isMemory 
+            ? state!.memorizeTime.inMilliseconds : null,
+        sortTimeMs: success && state!.level.isMemory 
+            ? state!.elapsedTime.inMilliseconds : null,
       );
     }
     
