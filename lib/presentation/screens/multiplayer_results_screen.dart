@@ -17,6 +17,7 @@ class MultiplayerResultsScreen extends ConsumerWidget {
 
     final leaderboard = ref.read(multiplayerSessionProvider.notifier).getLeaderboard();
     final winnerTime = leaderboard.isNotEmpty ? leaderboard.first.timeMs : 0;
+    final isDraw = winnerTime >= 999999; // All players DNF
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
@@ -24,9 +25,16 @@ class MultiplayerResultsScreen extends ConsumerWidget {
         child: Column(
           children: [
             const SizedBox(height: 24),
-            const Text('🏆 Leaderboard', style: TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text(session.isMemoryMode ? '✨ Memory Mode' : '${session.itemCount} items', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+            // Show different title for draw
+            if (isDraw) ...[
+              const Text('🤝 Draw!', style: TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text('Everyone gave up!', style: TextStyle(color: AppTheme.warningColor, fontSize: 16)),
+            ] else ...[
+              const Text('🏆 Leaderboard', style: TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(session.isMemoryMode ? '✨ Memory Mode' : '${session.itemCount} items', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+            ],
             const SizedBox(height: 32),
             Expanded(
               child: ListView.builder(
@@ -36,7 +44,8 @@ class MultiplayerResultsScreen extends ConsumerWidget {
                   final result = leaderboard[index];
                   final playerName = ref.read(multiplayerSessionProvider.notifier).getPlayerName(result.playerId);
                   final timeDiff = result.timeMs - winnerTime;
-                  return _buildLeaderboardItem(context, rank: index + 1, playerName: playerName, result: result, timeDiff: timeDiff, isWinner: index == 0, session: session);
+                  final isDNF = result.timeMs >= 999999;
+                  return _buildLeaderboardItem(context, rank: index + 1, playerName: playerName, result: result, timeDiff: timeDiff, isWinner: index == 0 && !isDraw, isDNF: isDNF, session: session);
                 },
               ),
             ),
@@ -47,28 +56,30 @@ class MultiplayerResultsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLeaderboardItem(BuildContext context, {required int rank, required String playerName, required PlayerResult result, required int timeDiff, required bool isWinner, required MultiplayerSession session}) {
+  Widget _buildLeaderboardItem(BuildContext context, {required int rank, required String playerName, required PlayerResult result, required int timeDiff, required bool isWinner, required bool isDNF, required MultiplayerSession session}) {
     final rankColors = {1: const Color(0xFFFFD700), 2: const Color(0xFFC0C0C0), 3: const Color(0xFFCD7F32)};
-    final rankColor = rankColors[rank] ?? AppTheme.textSecondary;
+    final rankColor = isDNF ? AppTheme.errorColor : (rankColors[rank] ?? AppTheme.textSecondary);
     final playerColor = _getPlayerColor(session.players.indexWhere((p) => p.id == result.playerId));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isWinner ? rankColor.withOpacity(0.15) : AppTheme.surfaceColor,
+        color: isDNF ? AppTheme.errorColor.withOpacity(0.1) : (isWinner ? rankColor.withOpacity(0.15) : AppTheme.surfaceColor),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isWinner ? rankColor : AppTheme.primaryColor.withOpacity(0.3), width: isWinner ? 2 : 1),
+        border: Border.all(color: isDNF ? AppTheme.errorColor.withOpacity(0.5) : (isWinner ? rankColor : AppTheme.primaryColor.withOpacity(0.3)), width: isWinner ? 2 : 1),
       ),
       child: Row(
         children: [
           Container(
             width: 50, height: 50,
-            decoration: BoxDecoration(color: rankColor.withOpacity(isWinner ? 1 : 0.2), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: rankColor.withOpacity(isDNF ? 0.3 : (isWinner ? 1 : 0.2)), borderRadius: BorderRadius.circular(12)),
             child: Center(
-              child: isWinner && rank == 1
-                  ? const Text('👑', style: TextStyle(fontSize: 24))
-                  : Text('#$rank', style: TextStyle(color: isWinner ? Colors.black : rankColor, fontSize: 20, fontWeight: FontWeight.bold)),
+              child: isDNF
+                  ? const Text('🚫', style: TextStyle(fontSize: 24))
+                  : isWinner && rank == 1
+                      ? const Text('👑', style: TextStyle(fontSize: 24))
+                      : Text('#$rank', style: TextStyle(color: isWinner ? Colors.black : rankColor, fontSize: 20, fontWeight: FontWeight.bold)),
             ),
           ),
           const SizedBox(width: 16),
@@ -79,10 +90,10 @@ class MultiplayerResultsScreen extends ConsumerWidget {
                 Row(children: [
                   Container(width: 10, height: 10, decoration: BoxDecoration(color: playerColor, shape: BoxShape.circle)),
                   const SizedBox(width: 8),
-                  Text(playerName, style: TextStyle(color: isWinner ? rankColor : AppTheme.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(playerName, style: TextStyle(color: isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), fontSize: 18, fontWeight: FontWeight.bold)),
                 ]),
                 const SizedBox(height: 4),
-                if (session.isMemoryMode && result.memorizeTimeMs != null)
+                if (!isDNF && session.isMemoryMode && result.memorizeTimeMs != null)
                   Text('Memorize: ${_formatTime(result.memorizeTimeMs!)} • Sort: ${_formatTime(result.sortTimeMs ?? 0)}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
               ],
             ),
@@ -90,8 +101,16 @@ class MultiplayerResultsScreen extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(result.formattedTime, style: TextStyle(color: isWinner ? rankColor : AppTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
-              if (timeDiff > 0)
+              Text(
+                isDNF ? 'DNF' : result.formattedTime, 
+                style: TextStyle(
+                  color: isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), 
+                  fontSize: 20, 
+                  fontWeight: FontWeight.bold, 
+                  fontFamily: isDNF ? null : 'monospace',
+                ),
+              ),
+              if (!isDNF && timeDiff > 0)
                 Text('+${_formatTime(timeDiff)}', style: const TextStyle(color: AppTheme.errorColor, fontSize: 12)),
             ],
           ),

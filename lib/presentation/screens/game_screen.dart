@@ -94,6 +94,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               isMemory: session.isMemoryMode,
             );
             ref.read(gameStateProvider.notifier).startGameWithLevel(playerLevel);
+            // Auto-start timer for multiplayer (countdown is in transition screen)
+            Future.delayed(const Duration(milliseconds: 100), () {
+              ref.read(gameStateProvider.notifier).startPlaying();
+            });
           }
         } else if (widget.isDailyChallenge && widget.dailyLevel != null) {
           // Use the provided level for daily challenge
