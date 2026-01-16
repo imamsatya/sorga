@@ -360,8 +360,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
               ],

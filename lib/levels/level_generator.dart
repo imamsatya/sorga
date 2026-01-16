@@ -635,19 +635,39 @@ class LevelGenerator {
 
   // ==================== KNOWLEDGE LEVELS (501-600) ====================
   
+  /// Cache for shuffled knowledge level mapping
+  List<(int, SortOrder)>? _knowledgeMapping;
+  
+  /// Build shuffled mapping: each of 50 questions appears twice (ASC + DESC) in random order
+  List<(int, SortOrder)> _getKnowledgeMapping() {
+    if (_knowledgeMapping != null) return _knowledgeMapping!;
+    
+    // Create pairs: each question gets 1 ASC and 1 DESC occurrence
+    final pairs = <(int, SortOrder)>[];
+    for (int i = 0; i < _knowledgeData.length; i++) {
+      pairs.add((i, SortOrder.ascending));
+      pairs.add((i, SortOrder.descending));
+    }
+    
+    // Shuffle with fixed seed for reproducibility
+    final random = Random(54321);
+    pairs.shuffle(random);
+    
+    _knowledgeMapping = pairs;
+    return pairs;
+  }
+  
   Level _generateKnowledgeLevel(int levelId) {
     final relativeId = levelId - AppConstants.knowledgeStart;
+    final mapping = _getKnowledgeMapping();
     
-    // Each question appears exactly twice: once ASC (odd), once DESC (even)
-    // Question 0 = levels 0,1 (local 1,2) // Question 1 = levels 2,3 (local 3,4)...
-    final knowledgeIndex = relativeId ~/ 2;  // Integer division: 0,1→0, 2,3→1, 4,5→2...
-    final data = _knowledgeData[knowledgeIndex % _knowledgeData.length];
+    // Get question index and sort order from shuffled mapping
+    final levelMapping = mapping[relativeId % mapping.length];
+    final knowledgeIndex = levelMapping.$1;
+    final sortOrder = levelMapping.$2;
+    final data = _knowledgeData[knowledgeIndex];
     
     final random = _getSeededRandom(levelId);
-    
-    // First occurrence (odd relative level) = ASC, second (even) = DESC
-    final isFirstOccurrence = relativeId % 2 == 0;
-    final sortOrder = isFirstOccurrence ? SortOrder.ascending : SortOrder.descending;
     
     final items = data.items.asMap().entries.map((entry) {
       return LevelItem(
