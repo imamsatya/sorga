@@ -60,22 +60,250 @@ class CategorySelectScreen extends ConsumerWidget {
   Widget _buildCategoryGrid(BuildContext context, WidgetRef ref) {
     final categories = LevelCategory.values;
     
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: GridView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.only(bottom: 80),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.9,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Regular categories grid
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.9,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final category = categories[index];
+              return _buildCategoryCard(context, ref, category);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Separator
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                Expanded(child: Divider(color: Colors.purple.withOpacity(0.3))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    '✨',
+                    style: TextStyle(fontSize: 16, color: Colors.purple[300]),
+                  ),
+                ),
+                Expanded(child: Divider(color: Colors.purple.withOpacity(0.3))),
+              ],
+            ),
+          ),
+          
+          // SORGAwy Section
+          _buildSORGAwySection(context, ref),
+          
+          const SizedBox(height: 80), // Bottom padding
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSORGAwySection(BuildContext context, WidgetRef ref) {
+    // Memory categories (exclude knowledge)
+    const memoryCategories = [
+      (LevelCategory.basic, '🔢'),
+      (LevelCategory.formatted, '📐'),
+      (LevelCategory.time, '⏱️'),
+      (LevelCategory.names, '👥'),
+      (LevelCategory.mixed, '🎲'),
+    ];
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.purple.withOpacity(0.4),
+          width: 2,
         ),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          return _buildCategoryCard(context, ref, category);
-        },
+      ),
+      child: Column(
+        children: [
+          // Header with branding
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('🧠', style: TextStyle(fontSize: 32)),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SORGAwy',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple[300],
+                    ),
+                  ),
+                  Text(
+                    'SORGA with Memory',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textMuted,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // Memory category cards grid
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.85,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: memoryCategories.length,
+            itemBuilder: (context, index) {
+              final cat = memoryCategories[index];
+              return _buildMemoryCategoryCard(context, ref, cat.$1, cat.$2);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildMemoryCategoryCard(
+    BuildContext context, 
+    WidgetRef ref,
+    LevelCategory category,
+    String emoji,
+  ) {
+    // Check if unlocked (Level 30 completed in regular category)
+    final allProgress = ref.watch(allProgressProvider);
+    final levels = ref.watch(levelsByCategoryProvider(category));
+    
+    int completed = 0;
+    allProgress.whenData((progressList) {
+      final levelIds = levels.map((l) => l.id).toSet();
+      for (final progress in progressList) {
+        if (levelIds.contains(progress.levelId) && progress.completed) {
+          completed++;
+        }
+      }
+    });
+    
+    final bool isUnlocked = completed >= 30;
+    final categoryInfo = _getCategoryInfo(category);
+    
+    return GestureDetector(
+      onTap: () {
+        if (isUnlocked) {
+          // TODO: Navigate to memory level select
+          context.go('/levels/${category.name}?memory=true');
+        } else {
+          // Show unlock tooltip
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Complete Level 30 in ${_getCategoryTitle(context, category)} to unlock',
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.purple[700],
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isUnlocked ? LinearGradient(
+            colors: [
+              Colors.purple.withOpacity(0.3),
+              Colors.purple.withOpacity(0.1),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ) : null,
+          color: isUnlocked ? null : AppTheme.surfaceColor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isUnlocked 
+                ? Colors.purple.withOpacity(0.5)
+                : AppTheme.textMuted.withOpacity(0.2),
+            width: isUnlocked ? 2 : 1,
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  emoji,
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: isUnlocked ? null : Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '🧠',
+                  style: TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _getCategoryTitle(context, category),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isUnlocked ? categoryInfo.color : AppTheme.textMuted,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$completed/30',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: AppTheme.textMuted,
+                  ),
+                ),
+              ],
+            ),
+            // Lock overlay
+            if (!isUnlocked)
+              Positioned(
+                top: 6,
+                right: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Icon(
+                    Icons.lock,
+                    size: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

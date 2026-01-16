@@ -151,10 +151,6 @@ class HomeScreen extends ConsumerWidget {
                         
                         // Daily Challenge Button
                         _buildDailyChallengeButton(context, scaleFactor),
-                        SizedBox(height: 16 * scaleFactor),
-                        
-                        // SORGAwy (Memory Mode) Section
-                        _buildSORGAwySection(context, scaleFactor),
                         
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                       ],
