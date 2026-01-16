@@ -691,12 +691,12 @@ Can you beat my time? 💪
                             ),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.close, color: Colors.white, size: 28),
-                              SizedBox(width: 8),
-                              Text('Gagal! Lanjut...', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                              const Icon(Icons.close, color: Colors.white, size: 28),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.failedNextPlayer, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                         ),
@@ -726,7 +726,7 @@ Can you beat my time? 💪
                             children: [
                               const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
                               const SizedBox(width: 8),
-                              Text('Continue (${2 - failedAttempts} left)', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Text(AppLocalizations.of(context)!.continueLeft(2 - failedAttempts), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                         ),
@@ -753,12 +753,12 @@ Can you beat my time? 💪
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: AppTheme.errorColor.withValues(alpha: 0.5)),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.flag, color: AppTheme.errorColor, size: 22),
-                              SizedBox(width: 8),
-                              Text('Menyerah', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.errorColor)),
+                              const Icon(Icons.flag, color: AppTheme.errorColor, size: 22),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.giveUp, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.errorColor)),
                             ],
                           ),
                         ),

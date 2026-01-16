@@ -67,12 +67,20 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       // - No existing state
       // - Different level
       // - Game was completed AND not currently running (i.e., not Continuing)
-      // Note: Do NOT restart if isRunning is true - that means Continue was clicked
-      // - Always restart for multiplayer (each player gets fresh state)
-      final shouldStartNewGame = widget.isMultiplayer ||
+      // Check if we should start a new game:
+      // - For multiplayer: start new ONLY if this is a fresh start (not Continue)
+      // - Continue keeps isRunning=true, isCompleted=false, so we can detect it
+      final isMultiplayerContinue = widget.isMultiplayer && 
+          currentState != null && 
+          currentState.isRunning && 
+          !currentState.isCompleted;
+      
+      final shouldStartNewGame = !isMultiplayerContinue && (
+          widget.isMultiplayer ||
           currentState == null || 
           currentState.level.id != widget.levelId ||
-          (currentState.isCompleted && !currentState.isRunning);
+          (currentState.isCompleted && !currentState.isRunning)
+      );
       
       if (shouldStartNewGame) {
         if (widget.isMultiplayer) {

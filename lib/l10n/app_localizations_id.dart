@@ -430,4 +430,61 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get descending => 'Turun';
+
+  @override
+  String get multiplayer => 'Multiplayer';
+
+  @override
+  String get multiplayerSetup => 'Pengaturan Multiplayer';
+
+  @override
+  String get selectCategory => 'Pilih Kategori';
+
+  @override
+  String get itemCount => 'Jumlah Item';
+
+  @override
+  String get playerCount => 'Jumlah Pemain';
+
+  @override
+  String playerName(Object number) {
+    return 'Nama Pemain $number';
+  }
+
+  @override
+  String get startGame => 'Mulai Permainan';
+
+  @override
+  String getReadyPlayer(Object name) {
+    return 'Bersiaplah, $name!';
+  }
+
+  @override
+  String get yourTurn => 'Giliranmu';
+
+  @override
+  String get tapToStart => 'Ketuk untuk Mulai';
+
+  @override
+  String get giveUp => 'Menyerah';
+
+  @override
+  String get failed => 'Gagal';
+
+  @override
+  String get failedNextPlayer => 'Gagal! Lanjut...';
+
+  @override
+  String continueLeft(Object count) {
+    return 'Lanjut ($count tersisa)';
+  }
+
+  @override
+  String get draw => 'Seri!';
+
+  @override
+  String get everyoneGaveUp => 'Semua menyerah!';
+
+  @override
+  String get leaderboard => 'Papan Peringkat';
 }

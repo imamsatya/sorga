@@ -424,4 +424,61 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get descending => '내림차순';
+
+  @override
+  String get multiplayer => 'Multiplayer';
+
+  @override
+  String get multiplayerSetup => 'Multiplayer Setup';
+
+  @override
+  String get selectCategory => 'Select Category';
+
+  @override
+  String get itemCount => 'Item Count';
+
+  @override
+  String get playerCount => 'Number of Players';
+
+  @override
+  String playerName(Object number) {
+    return 'Player $number Name';
+  }
+
+  @override
+  String get startGame => 'Start Game';
+
+  @override
+  String getReadyPlayer(Object name) {
+    return 'Get Ready, $name!';
+  }
+
+  @override
+  String get yourTurn => 'Your Turn';
+
+  @override
+  String get tapToStart => 'Tap to Start';
+
+  @override
+  String get giveUp => 'Give Up';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get failedNextPlayer => 'Failed! Next...';
+
+  @override
+  String continueLeft(Object count) {
+    return 'Continue ($count left)';
+  }
+
+  @override
+  String get draw => 'Draw!';
+
+  @override
+  String get everyoneGaveUp => 'Everyone gave up!';
+
+  @override
+  String get leaderboard => 'Leaderboard';
 }

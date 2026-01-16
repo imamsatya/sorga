@@ -919,6 +919,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'DESC'**
   String get descending;
+
+  /// No description provided for @multiplayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplayer'**
+  String get multiplayer;
+
+  /// No description provided for @multiplayerSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplayer Setup'**
+  String get multiplayerSetup;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @itemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Count'**
+  String get itemCount;
+
+  /// No description provided for @playerCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Players'**
+  String get playerCount;
+
+  /// No description provided for @playerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Player {number} Name'**
+  String playerName(Object number);
+
+  /// No description provided for @startGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Game'**
+  String get startGame;
+
+  /// No description provided for @getReadyPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Ready, {name}!'**
+  String getReadyPlayer(Object name);
+
+  /// No description provided for @yourTurn.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Turn'**
+  String get yourTurn;
+
+  /// No description provided for @tapToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to Start'**
+  String get tapToStart;
+
+  /// No description provided for @giveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Give Up'**
+  String get giveUp;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @failedNextPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed! Next...'**
+  String get failedNextPlayer;
+
+  /// No description provided for @continueLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue ({count} left)'**
+  String continueLeft(Object count);
+
+  /// No description provided for @draw.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw!'**
+  String get draw;
+
+  /// No description provided for @everyoneGaveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone gave up!'**
+  String get everyoneGaveUp;
+
+  /// No description provided for @leaderboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get leaderboard;
 }
 
 class _AppLocalizationsDelegate

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/multiplayer_session.dart';
 import '../providers/multiplayer_provider.dart';
+import '../../l10n/app_localizations.dart';
 
 class MultiplayerResultsScreen extends ConsumerWidget {
   const MultiplayerResultsScreen({super.key});
@@ -27,13 +28,13 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             const SizedBox(height: 24),
             // Show different title for draw
             if (isDraw) ...[
-              const Text('🤝 Draw!', style: TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('🤝 ${AppLocalizations.of(context)!.draw}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              const Text('Everyone gave up!', style: TextStyle(color: AppTheme.warningColor, fontSize: 16)),
+              Text(AppLocalizations.of(context)!.everyoneGaveUp, style: const TextStyle(color: AppTheme.warningColor, fontSize: 16)),
             ] else ...[
-              const Text('🏆 Leaderboard', style: TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('🏆 ${AppLocalizations.of(context)!.leaderboard}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              Text(session.isMemoryMode ? '✨ Memory Mode' : '${session.itemCount} items', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+              Text(session.isMemoryMode ? '✨ ${AppLocalizations.of(context)!.memoryMode}' : '${session.itemCount} ${AppLocalizations.of(context)!.items}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
             ],
             const SizedBox(height: 32),
             Expanded(
@@ -102,7 +103,7 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                result.statusText, // Shows 'Gagal', 'Menyerah', or formatted time
+                _getStatusText(context, result),
                 style: TextStyle(
                   color: result.isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), 
                   fontSize: result.isDNF ? 16 : 20, 
@@ -159,5 +160,18 @@ class MultiplayerResultsScreen extends ConsumerWidget {
   Color _getPlayerColor(int index) {
     const colors = [Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFFFF9800), Color(0xFF9C27B0)];
     return colors[index % colors.length];
+  }
+  
+  /// Get localized status text for result
+  String _getStatusText(BuildContext context, PlayerResult result) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (result.status) {
+      case ResultStatus.success:
+        return result.formattedTime;
+      case ResultStatus.failed:
+        return l10n.failed;
+      case ResultStatus.gaveUp:
+        return l10n.giveUp;
+    }
   }
 }
