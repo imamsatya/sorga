@@ -9,7 +9,7 @@ class AppConstants {
   static const bool isDevMode = false;
   
   // Level Constants
-  static const int totalLevels = 800;
+  static const int totalLevels = 600; // 500 regular + 100 knowledge
   
   // Memory Mode - unlock requirement (complete this many regular levels)
   static const int memoryUnlockLevel = 1;
@@ -31,7 +31,7 @@ class AppConstants {
   static const int mixedFormatsEnd = 500;
   
   static const int knowledgeStart = 501;
-  static const int knowledgeEnd = 800; // 300 levels (15 sets * 20)
+  static const int knowledgeEnd = 600; // 100 levels (50 unique questions × 2 directions)
   
   // Timer
   static const int maxTimerSeconds = 3600; // 1 hour max

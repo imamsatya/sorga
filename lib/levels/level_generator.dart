@@ -633,17 +633,21 @@ class LevelGenerator {
     }
   }
 
-  // ==================== KNOWLEDGE LEVELS (701-1000) ====================
+  // ==================== KNOWLEDGE LEVELS (501-600) ====================
   
   Level _generateKnowledgeLevel(int levelId) {
     final relativeId = levelId - AppConstants.knowledgeStart;
-    final knowledgeIndex = relativeId % _knowledgeData.length;
-    final data = _knowledgeData[knowledgeIndex];
+    
+    // Each question appears exactly twice: once ASC (odd), once DESC (even)
+    // Question 0 = levels 0,1 (local 1,2) // Question 1 = levels 2,3 (local 3,4)...
+    final knowledgeIndex = relativeId ~/ 2;  // Integer division: 0,1→0, 2,3→1, 4,5→2...
+    final data = _knowledgeData[knowledgeIndex % _knowledgeData.length];
     
     final random = _getSeededRandom(levelId);
     
-    // Alternate ascending/descending
-    final sortOrder = _getSortOrder(LevelCategory.knowledge, relativeId);
+    // First occurrence (odd relative level) = ASC, second (even) = DESC
+    final isFirstOccurrence = relativeId % 2 == 0;
+    final sortOrder = isFirstOccurrence ? SortOrder.ascending : SortOrder.descending;
     
     final items = data.items.asMap().entries.map((entry) {
       return LevelItem(
@@ -913,6 +917,479 @@ const _knowledgeData = [
       _KnowledgeItem('Sol (G)', 5),
       _KnowledgeItem('La (A)', 6),
       _KnowledgeItem('Si (B)', 7),
+    ],
+  ),
+  
+  // 16. Tallest buildings
+  _KnowledgeSet(
+    description: 'Sort buildings by height',
+    hint: 'Burj Khalifa is the tallest',
+    fact: 'Burj Khalifa in Dubai stands at 828 meters, more than twice the height of the Empire State Building!',
+    items: [
+      _KnowledgeItem('Burj Khalifa', 828),
+      _KnowledgeItem('Merdeka 118', 679),
+      _KnowledgeItem('Shanghai Tower', 632),
+      _KnowledgeItem('Abraj Al-Bait', 601),
+      _KnowledgeItem('One World Trade', 541),
+    ],
+  ),
+  
+  // 17. Countries by area
+  _KnowledgeSet(
+    description: 'Sort countries by land area',
+    fact: 'Russia is so large that it spans 11 time zones! It covers more than 17 million square kilometers.',
+    items: [
+      _KnowledgeItem('Russia', 17098),
+      _KnowledgeItem('Canada', 9985),
+      _KnowledgeItem('USA', 9834),
+      _KnowledgeItem('China', 9597),
+      _KnowledgeItem('Brazil', 8516),
+      _KnowledgeItem('Australia', 7692),
+    ],
+  ),
+  
+  // 18. Deepest ocean trenches
+  _KnowledgeSet(
+    description: 'Sort ocean trenches by depth',
+    fact: 'The Mariana Trench is so deep that if Mount Everest were placed inside, its peak would still be over 2 km underwater!',
+    items: [
+      _KnowledgeItem('Mariana Trench', 10994),
+      _KnowledgeItem('Tonga Trench', 10882),
+      _KnowledgeItem('Philippine Trench', 10540),
+      _KnowledgeItem('Kuril-Kamchatka', 10542),
+      _KnowledgeItem('Japan Trench', 9000),
+    ],
+  ),
+  
+  // 19. Hottest places on Earth
+  _KnowledgeSet(
+    description: 'Sort places by temperature record (°C)',
+    fact: 'Death Valley recorded 56.7°C in 1913 - hot enough to cook an egg on the ground!',
+    items: [
+      _KnowledgeItem('Death Valley', 57),
+      _KnowledgeItem('Kebili, Tunisia', 55),
+      _KnowledgeItem('Tirat Zvi, Israel', 54),
+      _KnowledgeItem('Ahwaz, Iran', 54),
+      _KnowledgeItem('Kuwait City', 53),
+    ],
+  ),
+  
+  // 20. Largest animals
+  _KnowledgeSet(
+    description: 'Sort animals by weight (tons)',
+    fact: 'A Blue Whale\'s heart is the size of a small car and weighs about 400 pounds!',
+    items: [
+      _KnowledgeItem('Blue Whale', 173),
+      _KnowledgeItem('Fin Whale', 74),
+      _KnowledgeItem('Sperm Whale', 45),
+      _KnowledgeItem('African Elephant', 6),
+      _KnowledgeItem('White Rhino', 2),
+    ],
+  ),
+  
+  // 21. Longest living animals
+  _KnowledgeSet(
+    description: 'Sort animals by lifespan (years)',
+    fact: 'The Greenland Shark can live over 400 years - some alive today were born before Shakespeare!',
+    items: [
+      _KnowledgeItem('Greenland Shark', 400),
+      _KnowledgeItem('Giant Tortoise', 175),
+      _KnowledgeItem('Bowhead Whale', 200),
+      _KnowledgeItem('Elephant', 70),
+      _KnowledgeItem('Human', 80),
+      _KnowledgeItem('Dog', 13),
+    ],
+  ),
+  
+  // 22. Periodic table - atomic numbers
+  _KnowledgeSet(
+    description: 'Sort elements by atomic number',
+    hint: 'H, He, Li, Be, B, C...',
+    fact: 'Hydrogen makes up 75% of all normal matter in the universe by mass!',
+    items: [
+      _KnowledgeItem('Hydrogen (H)', 1),
+      _KnowledgeItem('Helium (He)', 2),
+      _KnowledgeItem('Carbon (C)', 6),
+      _KnowledgeItem('Oxygen (O)', 8),
+      _KnowledgeItem('Iron (Fe)', 26),
+      _KnowledgeItem('Gold (Au)', 79),
+    ],
+  ),
+  
+  // 23. Planets by size
+  _KnowledgeSet(
+    description: 'Sort planets by diameter',
+    fact: 'Jupiter is so large that over 1,300 Earths could fit inside it!',
+    items: [
+      _KnowledgeItem('Jupiter', 139820),
+      _KnowledgeItem('Saturn', 116460),
+      _KnowledgeItem('Uranus', 50724),
+      _KnowledgeItem('Neptune', 49244),
+      _KnowledgeItem('Earth', 12742),
+      _KnowledgeItem('Mars', 6779),
+      _KnowledgeItem('Mercury', 4879),
+    ],
+  ),
+  
+  // 24. Computer storage units
+  _KnowledgeSet(
+    description: 'Sort storage units by size',
+    hint: 'KB < MB < GB < TB',
+    fact: 'A Yottabyte equals about 1 trillion terabytes - that\'s enough to store the entire internet many times over!',
+    items: [
+      _KnowledgeItem('Bit', 1),
+      _KnowledgeItem('Byte', 8),
+      _KnowledgeItem('Kilobyte', 1024),
+      _KnowledgeItem('Megabyte', 1048576),
+      _KnowledgeItem('Gigabyte', 1073741824),
+    ],
+  ),
+  
+  // 25. World Wars timeline
+  _KnowledgeSet(
+    description: 'Sort events by year',
+    fact: 'World War II is the deadliest conflict in human history, with an estimated 70-85 million fatalities.',
+    items: [
+      _KnowledgeItem('WW1 Starts', 1914),
+      _KnowledgeItem('WW1 Ends', 1918),
+      _KnowledgeItem('WW2 Starts', 1939),
+      _KnowledgeItem('D-Day', 1944),
+      _KnowledgeItem('WW2 Ends', 1945),
+    ],
+  ),
+  
+  // 26. Largest deserts
+  _KnowledgeSet(
+    description: 'Sort deserts by area',
+    fact: 'Antarctica is technically the largest desert because a desert is defined by precipitation, not temperature!',
+    items: [
+      _KnowledgeItem('Antarctic', 14000000),
+      _KnowledgeItem('Arctic', 13985000),
+      _KnowledgeItem('Sahara', 9200000),
+      _KnowledgeItem('Arabian', 2330000),
+      _KnowledgeItem('Gobi', 1295000),
+    ],
+  ),
+  
+  // 27. Fastest land vehicles
+  _KnowledgeSet(
+    description: 'Sort vehicles by top speed (km/h)',
+    fact: 'The Thrust SSC broke the sound barrier on land, reaching 1,228 km/h in 1997!',
+    items: [
+      _KnowledgeItem('Thrust SSC', 1228),
+      _KnowledgeItem('Bugatti Chiron', 490),
+      _KnowledgeItem('Ferrari SF90', 340),
+      _KnowledgeItem('Tesla Model S', 322),
+      _KnowledgeItem('Toyota Camry', 200),
+    ],
+  ),
+  
+  // 28. Languages by speakers
+  _KnowledgeSet(
+    description: 'Sort languages by native speakers (millions)',
+    fact: 'Mandarin Chinese has the most native speakers, but English is the most widely spoken including second-language speakers.',
+    items: [
+      _KnowledgeItem('Mandarin', 920),
+      _KnowledgeItem('Spanish', 475),
+      _KnowledgeItem('English', 373),
+      _KnowledgeItem('Hindi', 344),
+      _KnowledgeItem('Arabic', 274),
+      _KnowledgeItem('Portuguese', 232),
+    ],
+  ),
+  
+  // 29. Olympic Games years
+  _KnowledgeSet(
+    description: 'Sort Olympic cities by year',
+    fact: 'The 1896 Athens Olympics was the first modern Olympic Games, with only 14 nations participating.',
+    items: [
+      _KnowledgeItem('Athens', 1896),
+      _KnowledgeItem('Paris', 1900),
+      _KnowledgeItem('Berlin', 1936),
+      _KnowledgeItem('Tokyo', 1964),
+      _KnowledgeItem('Beijing', 2008),
+      _KnowledgeItem('Rio', 2016),
+    ],
+  ),
+  
+  // 30. Space exploration milestones
+  _KnowledgeSet(
+    description: 'Sort space events by year',
+    fact: 'Sputnik 1 was only the size of a beach ball but it changed the world forever, starting the Space Age.',
+    items: [
+      _KnowledgeItem('Sputnik 1', 1957),
+      _KnowledgeItem('Yuri Gagarin', 1961),
+      _KnowledgeItem('Moon Landing', 1969),
+      _KnowledgeItem('Space Shuttle', 1981),
+      _KnowledgeItem('ISS Completion', 2011),
+    ],
+  ),
+  
+  // 31. Calories in foods
+  _KnowledgeSet(
+    description: 'Sort foods by calories (per 100g)',
+    fact: 'Dark chocolate has more calories per gram than many fast foods, but it contains beneficial antioxidants!',
+    items: [
+      _KnowledgeItem('Butter', 717),
+      _KnowledgeItem('Chocolate', 546),
+      _KnowledgeItem('Cheese', 402),
+      _KnowledgeItem('Bread', 265),
+      _KnowledgeItem('Apple', 52),
+      _KnowledgeItem('Cucumber', 15),
+    ],
+  ),
+  
+  // 32. Hardest materials
+  _KnowledgeSet(
+    description: 'Sort materials by hardness (Mohs scale)',
+    hint: 'Diamond is the hardest natural material',
+    fact: 'Diamond can only be scratched by another diamond! That\'s why diamond-tipped tools are used for cutting.',
+    items: [
+      _KnowledgeItem('Diamond', 10),
+      _KnowledgeItem('Sapphire', 9),
+      _KnowledgeItem('Quartz', 7),
+      _KnowledgeItem('Steel', 5),
+      _KnowledgeItem('Copper', 3),
+      _KnowledgeItem('Talc', 1),
+    ],
+  ),
+  
+  // 33. Social media by users
+  _KnowledgeSet(
+    description: 'Sort social media by users (billions)',
+    fact: 'Facebook has more active users than the entire population of China and India combined!',
+    items: [
+      _KnowledgeItem('Facebook', 2900),
+      _KnowledgeItem('YouTube', 2500),
+      _KnowledgeItem('WhatsApp', 2000),
+      _KnowledgeItem('Instagram', 1500),
+      _KnowledgeItem('TikTok', 1000),
+      _KnowledgeItem('Twitter', 450),
+    ],
+  ),
+  
+  // 34. Famous paintings timeline
+  _KnowledgeSet(
+    description: 'Sort paintings by year created',
+    fact: 'The Mona Lisa is one of the most visited artworks in the world, attracting about 6 million visitors annually.',
+    items: [
+      _KnowledgeItem('Mona Lisa', 1506),
+      _KnowledgeItem('Starry Night', 1889),
+      _KnowledgeItem('The Scream', 1893),
+      _KnowledgeItem('Guernica', 1937),
+      _KnowledgeItem('Campbell Soup', 1962),
+    ],
+  ),
+  
+  // 35. Age of inventions
+  _KnowledgeSet(
+    description: 'Sort inventions by year',
+    fact: 'The printing press is considered one of the most important inventions in history, enabling mass communication.',
+    items: [
+      _KnowledgeItem('Printing Press', 1440),
+      _KnowledgeItem('Steam Engine', 1712),
+      _KnowledgeItem('Telephone', 1876),
+      _KnowledgeItem('Airplane', 1903),
+      _KnowledgeItem('Internet', 1983),
+    ],
+  ),
+  
+  // 36. Human body organs by weight
+  _KnowledgeSet(
+    description: 'Sort organs by weight (grams)',
+    fact: 'The skin is actually the largest organ, weighing about 4-5 kg in adults!',
+    items: [
+      _KnowledgeItem('Skin', 4500),
+      _KnowledgeItem('Liver', 1500),
+      _KnowledgeItem('Brain', 1400),
+      _KnowledgeItem('Lungs', 1100),
+      _KnowledgeItem('Heart', 310),
+      _KnowledgeItem('Kidney', 150),
+    ],
+  ),
+  
+  // 37. Distances from Earth
+  _KnowledgeSet(
+    description: 'Sort celestial objects by distance from Earth',
+    fact: 'Light from the Sun takes 8 minutes to reach Earth, while light from Alpha Centauri takes over 4 years!',
+    items: [
+      _KnowledgeItem('Moon', 384400),
+      _KnowledgeItem('Mars', 225000000),
+      _KnowledgeItem('Jupiter', 628730000),
+      _KnowledgeItem('Saturn', 1275000000),
+      _KnowledgeItem('Neptune', 4350000000),
+    ],
+  ),
+  
+  // 38. Volcanoes by height
+  _KnowledgeSet(
+    description: 'Sort volcanoes by height (meters)',
+    fact: 'Ojos del Salado on the Chile-Argentina border is the highest volcano on Earth and is still considered potentially active.',
+    items: [
+      _KnowledgeItem('Ojos del Salado', 6893),
+      _KnowledgeItem('Llullaillaco', 6739),
+      _KnowledgeItem('Cotopaxi', 5897),
+      _KnowledgeItem('Mt. Kilimanjaro', 5895),
+      _KnowledgeItem('Mt. Fuji', 3776),
+    ],
+  ),
+  
+  // 39. Coffee caffeine content
+  _KnowledgeSet(
+    description: 'Sort drinks by caffeine (mg per cup)',
+    fact: 'Espresso has less caffeine per cup than drip coffee because it uses less water, despite being more concentrated!',
+    items: [
+      _KnowledgeItem('Drip Coffee', 95),
+      _KnowledgeItem('Energy Drink', 80),
+      _KnowledgeItem('Espresso', 63),
+      _KnowledgeItem('Black Tea', 47),
+      _KnowledgeItem('Green Tea', 28),
+      _KnowledgeItem('Decaf Coffee', 2),
+    ],
+  ),
+  
+  // 40. Dinosaur sizes
+  _KnowledgeSet(
+    description: 'Sort dinosaurs by length (meters)',
+    fact: 'Argentinosaurus was so heavy (70+ tons) that its footsteps could be felt from far away!',
+    items: [
+      _KnowledgeItem('Argentinosaurus', 35),
+      _KnowledgeItem('Diplodocus', 27),
+      _KnowledgeItem('T-Rex', 12),
+      _KnowledgeItem('Triceratops', 9),
+      _KnowledgeItem('Velociraptor', 2),
+    ],
+  ),
+  
+  // 41. Currencies by value (vs USD)
+  _KnowledgeSet(
+    description: 'Sort currencies by value (1 USD =)',
+    fact: 'The Kuwaiti Dinar is the strongest currency in the world, with 1 KWD being worth over 3 USD!',
+    items: [
+      _KnowledgeItem('Kuwaiti Dinar', 0.3),
+      _KnowledgeItem('British Pound', 0.8),
+      _KnowledgeItem('Euro', 0.9),
+      _KnowledgeItem('US Dollar', 1),
+      _KnowledgeItem('Japanese Yen', 150),
+    ],
+  ),
+  
+  // 42. Famous composers timeline
+  _KnowledgeSet(
+    description: 'Sort composers by birth year',
+    fact: 'Mozart was a child prodigy who started composing at age 5 and wrote over 600 works in his short 35-year life.',
+    items: [
+      _KnowledgeItem('Bach', 1685),
+      _KnowledgeItem('Mozart', 1756),
+      _KnowledgeItem('Beethoven', 1770),
+      _KnowledgeItem('Chopin', 1810),
+      _KnowledgeItem('Debussy', 1862),
+    ],
+  ),
+  
+  // 43. Internet speeds
+  _KnowledgeSet(
+    description: 'Sort connection types by speed',
+    fact: '5G can theoretically reach 10 Gbps - fast enough to download a 4K movie in seconds!',
+    items: [
+      _KnowledgeItem('Dial-up', 56),
+      _KnowledgeItem('DSL', 25000),
+      _KnowledgeItem('Cable', 100000),
+      _KnowledgeItem('Fiber', 1000000),
+      _KnowledgeItem('5G', 10000000),
+    ],
+  ),
+  
+  // 44. Waterfalls by height
+  _KnowledgeSet(
+    description: 'Sort waterfalls by height (meters)',
+    fact: 'Angel Falls is so tall that water evaporates into mist before reaching the bottom during dry season!',
+    items: [
+      _KnowledgeItem('Angel Falls', 979),
+      _KnowledgeItem('Tugela Falls', 948),
+      _KnowledgeItem('Tres Hermanas', 914),
+      _KnowledgeItem('Niagara Falls', 51),
+      _KnowledgeItem('Victoria Falls', 108),
+    ],
+  ),
+  
+  // 45. Brightest stars
+  _KnowledgeSet(
+    description: 'Sort stars by brightness (magnitude)',
+    hint: 'Lower magnitude = brighter',
+    fact: 'Sirius is called the "Dog Star" because it\'s in Canis Major, and its heliacal rising marked the flooding of the Nile in ancient Egypt.',
+    items: [
+      _KnowledgeItem('Sirius', -1.46),
+      _KnowledgeItem('Canopus', -0.74),
+      _KnowledgeItem('Arcturus', -0.05),
+      _KnowledgeItem('Vega', 0.03),
+      _KnowledgeItem('Polaris', 1.98),
+    ],
+  ),
+  
+  // 46. Human bones count
+  _KnowledgeSet(
+    description: 'Sort body parts by number of bones',
+    fact: 'Over half of all bones in your body (106 out of 206) are in your hands and feet!',
+    items: [
+      _KnowledgeItem('Hands', 54),
+      _KnowledgeItem('Feet', 52),
+      _KnowledgeItem('Spine', 33),
+      _KnowledgeItem('Skull', 22),
+      _KnowledgeItem('Ribs', 24),
+    ],
+  ),
+  
+  // 47. Ancient civilizations
+  _KnowledgeSet(
+    description: 'Sort civilizations by founding year (BCE)',
+    fact: 'Ancient Sumer (Mesopotamia) is considered the cradle of civilization, inventing writing, the wheel, and mathematics.',
+    items: [
+      _KnowledgeItem('Sumer', 4500),
+      _KnowledgeItem('Egypt', 3100),
+      _KnowledgeItem('Indus Valley', 2500),
+      _KnowledgeItem('Greece', 800),
+      _KnowledgeItem('Rome', 753),
+    ],
+  ),
+  
+  // 48. Boiling points
+  _KnowledgeSet(
+    description: 'Sort substances by boiling point (°C)',
+    fact: 'Helium has the lowest boiling point of any element at -269°C, just 4 degrees above absolute zero!',
+    items: [
+      _KnowledgeItem('Helium', -269),
+      _KnowledgeItem('Nitrogen', -196),
+      _KnowledgeItem('Alcohol', 78),
+      _KnowledgeItem('Water', 100),
+      _KnowledgeItem('Mercury', 357),
+      _KnowledgeItem('Iron', 2862),
+    ],
+  ),
+  
+  // 49. Book pages
+  _KnowledgeSet(
+    description: 'Sort famous books by page count',
+    fact: 'War and Peace has about 580,000 words - reading it at 200 words per minute would take nearly 49 hours!',
+    items: [
+      _KnowledgeItem('War and Peace', 1225),
+      _KnowledgeItem('Les Misérables', 1232),
+      _KnowledgeItem('Harry Potter 5', 766),
+      _KnowledgeItem('To Kill a Mockingbird', 281),
+      _KnowledgeItem('The Great Gatsby', 180),
+    ],
+  ),
+  
+  // 50. Video game sales
+  _KnowledgeSet(
+    description: 'Sort games by units sold (millions)',
+    fact: 'Minecraft has sold over 300 million copies, making it the best-selling video game of all time!',
+    items: [
+      _KnowledgeItem('Minecraft', 300),
+      _KnowledgeItem('GTA V', 195),
+      _KnowledgeItem('Tetris', 100),
+      _KnowledgeItem('Mario Kart 8', 62),
+      _KnowledgeItem('Pokemon Red/Blue', 31),
     ],
   ),
 ];
