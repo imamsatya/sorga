@@ -20,7 +20,7 @@ class CategorySelectScreen extends ConsumerWidget {
           child: Column(
             children: [
               _buildHeader(context),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               Expanded(
                 child: _buildCategoryGrid(context, ref),
               ),
@@ -33,25 +33,25 @@ class CategorySelectScreen extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           IconButton(
             onPressed: () => context.go('/'),
-            icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary, size: 28),
+            icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary, size: 24),
           ),
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.chooseCategory,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 48), // Balance for back button
+          const SizedBox(width: 40),
         ],
       ),
     );
