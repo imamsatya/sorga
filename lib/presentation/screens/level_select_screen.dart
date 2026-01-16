@@ -59,7 +59,10 @@ class LevelSelectScreen extends ConsumerWidget {
     
     int completed = 0;
     allProgress.whenData((progressList) {
-      final levelIds = levels.map((l) => l.id).toSet();
+      // For memory mode, use memory level IDs (levelId + 10000)
+      final levelIds = isMemory 
+          ? levels.map((l) => l.id + 10000).toSet()
+          : levels.map((l) => l.id).toSet();
       for (final progress in progressList) {
         if (levelIds.contains(progress.levelId) && progress.completed) {
           completed++;
@@ -197,7 +200,10 @@ class LevelSelectScreen extends ConsumerWidget {
   Widget _buildLevelCard(BuildContext context, WidgetRef ref, Level level) {
     final isUnlockedAsync = ref.watch(isLevelUnlockedProvider(level.id));
     final isUnlocked = AppConstants.isDevMode || (isUnlockedAsync.valueOrNull ?? false);
-    final progressAsync = ref.watch(levelProgressProvider(level.id));
+    
+    // For memory mode, use memory level ID (levelId + 10000) for progress lookup
+    final progressId = isMemory ? level.id + 10000 : level.id;
+    final progressAsync = ref.watch(levelProgressProvider(progressId));
     final progress = progressAsync.valueOrNull;
     final isCompleted = progress?.completed ?? false;
     
