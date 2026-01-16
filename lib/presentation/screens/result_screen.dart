@@ -832,57 +832,101 @@ Can you beat my time? 💪
               const SizedBox(height: 16),
             ],
           ] else if (!isSuccess) ...[
-            // Failed - Retry Level
-            OutlinedButton(
-              onPressed: () {
-                 final gameState = ref.read(gameStateProvider);
-                 if (gameState != null) {
-                   // For daily challenges (localId == 0), use Navigator instead of URL routing
-                   if (gameState.level.localId == 0) {
-                     ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
-                     Navigator.of(context).pushReplacement(
-                       MaterialPageRoute(
-                         builder: (context) => GameScreen(
-                           levelId: gameState.level.id,
-                           isDailyChallenge: true,
-                           dailyLevel: gameState.level,
-                         ),
-                       ),
-                     );
-                   } else {
-                     ref.read(gameStateProvider.notifier).retry();
-                     // Preserve memory mode
-                     final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
-                     context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
-                   }
-                 }
-              },
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppTheme.primaryColor, width: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 18),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
-                  const SizedBox(width: 8),
-                  Text(
-                    AppLocalizations.of(context)!.retryLevel,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
+            // Failed completely - check if multiplayer
+            if (ref.read(multiplayerSessionProvider) != null) ...[
+              // Multiplayer: Failed completely, move to next player
+              Builder(builder: (context) {
+                final session = ref.read(multiplayerSessionProvider);
+                final gameState = ref.read(gameStateProvider);
+                return GestureDetector(
+                  onTap: () {
+                    if (session != null && gameState != null) {
+                      ref.read(multiplayerSessionProvider.notifier).submitResult(
+                        playerId: session.currentPlayer.id,
+                        timeMs: 999999,
+                        attempts: gameState.failedAttempts + 1,
+                        status: ResultStatus.failed,
+                      );
+                      _navigateToNextPlayer(context, ref, session);
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.close, color: Colors.white, size: 28),
+                        const SizedBox(width: 8),
+                        Text(AppLocalizations.of(context)!.failedNextPlayer, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                      ],
                     ),
                   ),
-                ],
+                );
+              }),
+            ] else ...[
+              // Regular game: Retry Level
+              OutlinedButton(
+                onPressed: () {
+                   final gameState = ref.read(gameStateProvider);
+                   if (gameState != null) {
+                     // For daily challenges (localId == 0), use Navigator instead of URL routing
+                     if (gameState.level.localId == 0) {
+                       ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
+                       Navigator.of(context).pushReplacement(
+                         MaterialPageRoute(
+                           builder: (context) => GameScreen(
+                             levelId: gameState.level.id,
+                             isDailyChallenge: true,
+                             dailyLevel: gameState.level,
+                           ),
+                         ),
+                       );
+                     } else {
+                       ref.read(gameStateProvider.notifier).retry();
+                       // Preserve memory mode
+                       final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                       context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                     }
+                   }
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
+                    const SizedBox(width: 8),
+                    Text(
+                      AppLocalizations.of(context)!.retryLevel,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ],
           const SizedBox(height: 16),
           
+          // Hide Retry/Home row for multiplayer (it has its own navigation)
+          if (ref.read(multiplayerSessionProvider) == null)
           Row(
             children: [
               if (isSuccess || !canContinue)
