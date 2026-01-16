@@ -153,6 +153,9 @@ class HomeScreen extends ConsumerWidget {
                         _buildDailyChallengeButton(context, scaleFactor),
                         SizedBox(height: 16 * scaleFactor),
                         
+                        // SORGAwy (Memory Mode) Section
+                        _buildSORGAwySection(context, scaleFactor),
+                        
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                       ],
                     ),
@@ -434,6 +437,172 @@ class HomeScreen extends ConsumerWidget {
                 color: AppTheme.textPrimary,
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildSORGAwySection(BuildContext context, double scale) {
+    // Memory categories (exclude knowledge)
+    const memoryCategories = [
+      ('basic', '🔢', 'Basic'),
+      ('formatted', '📐', 'Formatted'),
+      ('time', '⏱️', 'Time'),
+      ('names', '👥', 'Names'),
+      ('mixed', '🎲', 'Mixed'),
+    ];
+    
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 24 * scale),
+      padding: EdgeInsets.all(16 * scale),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.purple.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          // Header with branding
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '🧠',
+                style: TextStyle(fontSize: 24 * scale),
+              ),
+              SizedBox(width: 8 * scale),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SORGAwy',
+                    style: TextStyle(
+                      fontSize: 18 * scale,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple[300],
+                    ),
+                  ),
+                  Text(
+                    'SORGA with Memory',
+                    style: TextStyle(
+                      fontSize: 10 * scale,
+                      color: AppTheme.textMuted,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 12 * scale),
+          
+          // Memory category cards grid
+          Wrap(
+            spacing: 8 * scale,
+            runSpacing: 8 * scale,
+            alignment: WrapAlignment.center,
+            children: memoryCategories.map((cat) {
+              return _buildMemoryCategoryCard(
+                context, 
+                cat.$1, // key
+                cat.$2, // emoji
+                cat.$3, // name
+                scale,
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildMemoryCategoryCard(
+    BuildContext context, 
+    String categoryKey, 
+    String emoji, 
+    String name, 
+    double scale,
+  ) {
+    // TODO: Check actual progress from provider
+    // For now, all are locked for demo
+    const bool isUnlocked = false;
+    const int progress = 15; // Demo: 15/30 completed
+    const int required = 30;
+    
+    return GestureDetector(
+      onTap: () {
+        if (isUnlocked) {
+          // Navigate to memory level select
+          context.push('/levels/$categoryKey?memory=true');
+        } else {
+          // Show unlock tooltip
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Complete Level $required in $name to unlock',
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.purple[700],
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
+      child: Container(
+        width: 50 * scale,
+        height: 60 * scale,
+        decoration: BoxDecoration(
+          color: isUnlocked 
+              ? Colors.purple.withOpacity(0.2)
+              : AppTheme.surfaceColor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isUnlocked 
+                ? Colors.purple.withOpacity(0.5)
+                : AppTheme.textMuted.withOpacity(0.2),
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  emoji,
+                  style: TextStyle(
+                    fontSize: 18 * scale,
+                    color: isUnlocked ? null : Colors.grey,
+                  ),
+                ),
+                Text(
+                  '🧠',
+                  style: TextStyle(fontSize: 8 * scale),
+                ),
+              ],
+            ),
+            // Lock overlay
+            if (!isUnlocked)
+              Positioned(
+                top: 4,
+                right: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    Icons.lock,
+                    size: 10 * scale,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
