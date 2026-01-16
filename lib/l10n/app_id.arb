@@ -135,5 +135,9 @@
   "sortTime": "Urutkan",
   "totalTime": "Total Waktu",
   "completeLevelToUnlock": "Selesaikan Level {level} di {category} untuk membuka",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "Urutkan {count} {type} {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "Naik",
+  "descending": "Turun"
 }

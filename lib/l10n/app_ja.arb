@@ -135,5 +135,9 @@
   "sortTime": "並び替え",
   "totalTime": "合計時間",
   "completeLevelToUnlock": "{category}のレベル{level}をクリアして解放",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "{type}{count}つを{direction}で並べる",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "昇順",
+  "descending": "降順"
 }

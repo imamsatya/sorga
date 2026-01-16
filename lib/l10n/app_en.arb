@@ -136,5 +136,9 @@
   "sortTime": "Sort",
   "totalTime": "Total Time",
   "completeLevelToUnlock": "Complete Level {level} in {category} to unlock",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "Sort {count} {type} {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "ASC",
+  "descending": "DESC"
 }

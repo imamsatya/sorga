@@ -419,4 +419,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String completeLevelToUnlock(Object level, Object category) {
     return 'Completa el Nivel $level en $category para desbloquear';
   }
+
+  @override
+  String sortDescription(Object count, Object type, Object direction) {
+    return 'Ordenar $count $type $direction';
+  }
+
+  @override
+  String get ascending => 'ASC';
+
+  @override
+  String get descending => 'DESC';
 }

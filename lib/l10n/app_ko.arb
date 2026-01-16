@@ -135,5 +135,9 @@
   "sortTime": "정렬",
   "totalTime": "총 시간",
   "completeLevelToUnlock": "{category}의 레벨 {level}을 완료하여 잠금 해제",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "{count}개의 {type}을 {direction}으로 정렬",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "오름차순",
+  "descending": "내림차순"
 }

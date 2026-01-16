@@ -413,4 +413,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String completeLevelToUnlock(Object level, Object category) {
     return '$categoryのレベル$levelをクリアして解放';
   }
+
+  @override
+  String sortDescription(Object count, Object type, Object direction) {
+    return '$type$countつを$directionで並べる';
+  }
+
+  @override
+  String get ascending => '昇順';
+
+  @override
+  String get descending => '降順';
 }

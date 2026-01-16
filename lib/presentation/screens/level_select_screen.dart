@@ -441,7 +441,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      level.description,
+                      level.getLocalizedDescription(context),
                       style: const TextStyle(
                         fontSize: 14,
                         color: AppTheme.textSecondary,

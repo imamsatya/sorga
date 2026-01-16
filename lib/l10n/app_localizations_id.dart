@@ -419,4 +419,15 @@ class AppLocalizationsId extends AppLocalizations {
   String completeLevelToUnlock(Object level, Object category) {
     return 'Selesaikan Level $level di $category untuk membuka';
   }
+
+  @override
+  String sortDescription(Object count, Object type, Object direction) {
+    return 'Urutkan $count $type $direction';
+  }
+
+  @override
+  String get ascending => 'Naik';
+
+  @override
+  String get descending => 'Turun';
 }

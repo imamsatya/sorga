@@ -135,5 +135,9 @@
   "sortTime": "Sortieren",
   "totalTime": "Gesamtzeit",
   "completeLevelToUnlock": "Level {level} in {category} abschließen zum Freischalten",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "{count} {type} sortieren {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "aufst.",
+  "descending": "abst."
 }

@@ -413,4 +413,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String completeLevelToUnlock(Object level, Object category) {
     return '$category의 레벨 $level을 완료하여 잠금 해제';
   }
+
+  @override
+  String sortDescription(Object count, Object type, Object direction) {
+    return '$count개의 $type을 $direction으로 정렬';
+  }
+
+  @override
+  String get ascending => '오름차순';
+
+  @override
+  String get descending => '내림차순';
 }

@@ -135,5 +135,9 @@
   "sortTime": "Trier",
   "totalTime": "Temps Total",
   "completeLevelToUnlock": "Terminer le niveau {level} dans {category} pour débloquer",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "Trier {count} {type} {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "croissant",
+  "descending": "décroissant"
 }

@@ -901,6 +901,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete Level {level} in {category} to unlock'**
   String completeLevelToUnlock(Object level, Object category);
+
+  /// No description provided for @sortDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort {count} {type} {direction}'**
+  String sortDescription(Object count, Object type, Object direction);
+
+  /// No description provided for @ascending.
+  ///
+  /// In en, this message translates to:
+  /// **'ASC'**
+  String get ascending;
+
+  /// No description provided for @descending.
+  ///
+  /// In en, this message translates to:
+  /// **'DESC'**
+  String get descending;
 }
 
 class _AppLocalizationsDelegate

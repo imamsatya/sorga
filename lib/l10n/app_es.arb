@@ -135,5 +135,9 @@
   "sortTime": "Ordenar",
   "totalTime": "Tiempo Total",
   "completeLevelToUnlock": "Completa el Nivel {level} en {category} para desbloquear",
-  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } }
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "Ordenar {count} {type} {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "ASC",
+  "descending": "DESC"
 }

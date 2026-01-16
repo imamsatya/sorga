@@ -420,4 +420,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String completeLevelToUnlock(Object level, Object category) {
     return 'Level $level in $category abschließen zum Freischalten';
   }
+
+  @override
+  String sortDescription(Object count, Object type, Object direction) {
+    return '$count $type sortieren $direction';
+  }
+
+  @override
+  String get ascending => 'aufst.';
+
+  @override
+  String get descending => 'abst.';
 }
