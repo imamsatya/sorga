@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -33,6 +34,16 @@ void main() async {
   runApp(const ProviderScope(child: SorgaApp()));
 }
 
+/// Custom scroll behavior to enable mouse/trackpad drag scrolling on web
+class WebScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
+}
+
 class SorgaApp extends ConsumerWidget {
   const SorgaApp({super.key});
 
@@ -46,6 +57,8 @@ class SorgaApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
+      // Enable mouse/trackpad drag scrolling on web
+      scrollBehavior: WebScrollBehavior(),
       // Use selected locale if set, otherwise use system default
       locale: selectedLocale,
       // Localization Configuration
