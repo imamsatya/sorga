@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
 import '../providers/daily_challenge_provider.dart';
+import '../providers/multiplayer_provider.dart';
 import '../widgets/game_button.dart';
 import '../../l10n/app_localizations.dart';
 import 'game_screen.dart';
@@ -642,67 +643,131 @@ Can you beat my time? 💪
             ),
             const SizedBox(height: 16),
           ] else if (!isSuccess && canContinue) ...[
-            // Continue (Resume) button
-            GestureDetector(
-              onTap: () {
-                final gameState = ref.read(gameStateProvider);
-                if (gameState != null) {
-                  ref.read(gameStateProvider.notifier).continueGame();
-                  // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
-                  if (gameState.level.localId == 0) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => GameScreen(
-                          levelId: gameState.level.id,
-                          isDailyChallenge: true,
-                          dailyLevel: gameState.level,
+            // Check if this is a multiplayer game
+            if (ref.read(multiplayerSessionProvider) != null) ...[
+              // Multiplayer: Give Up button (DNF - skip to next player)
+              GestureDetector(
+                onTap: () {
+                  final session = ref.read(multiplayerSessionProvider);
+                  final gameState = ref.read(gameStateProvider);
+                  if (session != null && gameState != null) {
+                    // Submit DNF result (max time penalty)
+                    ref.read(multiplayerSessionProvider.notifier).submitResult(
+                      playerId: session.currentPlayer.id,
+                      timeMs: 999999, // DNF penalty
+                      attempts: gameState.failedAttempts + 1,
+                    );
+                    
+                    // Navigate to next player or results
+                    final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
+                    if (isLastPlayer) {
+                      context.go('/multiplayer/results');
+                    } else {
+                      ref.read(multiplayerSessionProvider.notifier).nextPlayer();
+                      context.go('/multiplayer/transition');
+                    }
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.errorColor.withValues(alpha: 0.4),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.flag, color: Colors.white, size: 28),
+                      SizedBox(width: 8),
+                      Text(
+                        'Give Up',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 2,
                         ),
                       ),
-                    );
-                  } else {
-                    // Preserve memory mode
-                    final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
-                    context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
-                  }
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.warningColor, Color(0xFFFFB347)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.warningColor.withValues(alpha: 0.4),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
-                    const SizedBox(width: 8),
-                    Text(
-                      AppLocalizations.of(context)!.continueGame,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
+            ] else ...[
+              // Normal Continue (Resume) button
+              GestureDetector(
+                onTap: () {
+                  final gameState = ref.read(gameStateProvider);
+                  if (gameState != null) {
+                    ref.read(gameStateProvider.notifier).continueGame();
+                    // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
+                    if (gameState.level.localId == 0) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => GameScreen(
+                            levelId: gameState.level.id,
+                            isDailyChallenge: true,
+                            dailyLevel: gameState.level,
+                          ),
+                        ),
+                      );
+                    } else {
+                      // Preserve memory mode
+                      final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                      context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                    }
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.warningColor, Color(0xFFFFB347)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.warningColor.withValues(alpha: 0.4),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                      const SizedBox(width: 8),
+                      Text(
+                        AppLocalizations.of(context)!.continueGame,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ] else if (!isSuccess) ...[
             // Failed - Retry Level
             OutlinedButton(

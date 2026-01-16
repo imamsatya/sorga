@@ -155,8 +155,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
           ),
           
-          // Countdown Overlay - only show when tutorial is not active
-          if (!gameState.isRunning && !gameState.isCompleted && !_showTutorial)
+          // Countdown Overlay - skip for multiplayer (transition has countdown)
+          if (!widget.isMultiplayer && !gameState.isRunning && !gameState.isCompleted && !_showTutorial)
             _CountdownOverlay(
               onFinished: () {
                 ref.read(gameStateProvider.notifier).startPlaying();
@@ -265,9 +265,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           IconButton(
             onPressed: () {
               ref.read(gameStateProvider.notifier).endGame();
-              // Preserve memory mode when going back to level selection
-              final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
-              context.go('/levels/${gameState.level.category.name}$memoryParam');
+              if (widget.isMultiplayer) {
+                // For multiplayer, go back to setup
+                ref.read(multiplayerSessionProvider.notifier).endSession();
+                context.go('/');
+              } else {
+                // Preserve memory mode when going back to level selection
+                final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                context.go('/levels/${gameState.level.category.name}$memoryParam');
+              }
             },
             icon: const Icon(Icons.close, color: AppTheme.textPrimary, size: 28),
           ),
@@ -296,15 +302,19 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-            color: widget.isDailyChallenge 
-                ? AppTheme.warningColor 
-                : AppTheme.primaryColor,
+            color: widget.isMultiplayer
+                ? _getMultiplayerPlayerColor()
+                : widget.isDailyChallenge 
+                    ? AppTheme.warningColor 
+                    : AppTheme.primaryColor,
             borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              widget.isDailyChallenge 
-                  ? '📅 ${AppLocalizations.of(context)!.daily}' 
-                  : '${AppLocalizations.of(context)!.level} ${gameState.level.localId}',
+              widget.isMultiplayer
+                  ? _getMultiplayerPlayerName()
+                  : widget.isDailyChallenge 
+                      ? '📅 ${AppLocalizations.of(context)!.daily}' 
+                      : '${AppLocalizations.of(context)!.level} ${gameState.level.localId}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -447,6 +457,25 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       case LevelCategory.knowledge:
         return AppTheme.knowledgeColor;
     }
+  }
+  
+  // Helper for multiplayer player name
+  String _getMultiplayerPlayerName() {
+    final session = ref.read(multiplayerSessionProvider);
+    if (session != null) {
+      return session.currentPlayer.name;
+    }
+    return 'Player';
+  }
+  
+  // Helper for multiplayer player color
+  Color _getMultiplayerPlayerColor() {
+    final session = ref.read(multiplayerSessionProvider);
+    if (session != null) {
+      const colors = [Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFFFF9800), Color(0xFF9C27B0)];
+      return colors[session.currentPlayerIndex % colors.length];
+    }
+    return AppTheme.primaryColor;
   }
 
   Widget _buildSortableGrid(GameState gameState) {
