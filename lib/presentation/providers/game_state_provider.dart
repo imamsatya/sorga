@@ -114,6 +114,16 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     _initializeGameWithLevel(level);
   }
 
+  /// Start a MEMORY game (SORGAwy mode) with a level ID
+  void startGameMemory(int levelId) {
+    _stopTimer();
+    
+    // Get memory level (uses different seed for different items)
+    final generator = _ref.read(levelGeneratorProvider);
+    final memoryLevel = generator.getMemoryLevel(levelId);
+    _initializeGameWithLevel(memoryLevel);
+  }
+
   /// Initialize game state with a level
   void _initializeGameWithLevel(Level level) {
     // Shuffle items for initial display

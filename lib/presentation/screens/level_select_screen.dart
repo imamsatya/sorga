@@ -199,7 +199,10 @@ class LevelSelectScreen extends ConsumerWidget {
 
     return GestureDetector(
       onTap: isUnlocked
-          ? () => context.go('/game/${level.category.name}/${level.localId}')
+          ? () {
+              final memoryParam = isMemory ? '?memory=true' : '';
+              context.go('/game/${level.category.name}/${level.localId}$memoryParam');
+            }
           : null,
       onLongPress: isCompleted
           ? () => _showShareDialog(context, level, progress!, categoryColor)

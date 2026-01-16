@@ -19,12 +19,14 @@ enum DragMode { swap, shift }
 class GameScreen extends ConsumerStatefulWidget {
   final int levelId;
   final bool isDailyChallenge;
+  final bool isMemory; // SORGAwy memory mode
   final Level? dailyLevel; // For daily challenge, pass the level directly
   
   const GameScreen({
     super.key, 
     required this.levelId,
     this.isDailyChallenge = false,
+    this.isMemory = false,
     this.dailyLevel,
   });
 
@@ -71,6 +73,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         if (widget.isDailyChallenge && widget.dailyLevel != null) {
           // Use the provided level for daily challenge
           ref.read(gameStateProvider.notifier).startGameWithLevel(widget.dailyLevel!);
+        } else if (widget.isMemory) {
+          // Start memory game (SORGAwy mode)
+          ref.read(gameStateProvider.notifier).startGameMemory(widget.levelId);
         } else {
           ref.read(gameStateProvider.notifier).startGame(widget.levelId);
         }

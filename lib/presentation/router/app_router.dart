@@ -51,6 +51,7 @@ final appRouter = GoRouter(
         try {
           final categoryStr = state.pathParameters['category'] ?? 'basic';
           final localIdStr = state.pathParameters['localId'] ?? '1';
+          final isMemory = state.uri.queryParameters['memory'] == 'true';
           
           final category = LevelCategory.values.firstWhere(
             (e) => e.name == categoryStr,
@@ -62,7 +63,7 @@ final appRouter = GoRouter(
           final generator = LevelGenerator();
           final levelId = generator.getGlobalId(category, localId);
           
-          return GameScreen(levelId: levelId);
+          return GameScreen(levelId: levelId, isMemory: isMemory);
         } catch (e) {
           // Fallback to home/categories on error (prevent crash)
           return const CategorySelectScreen();
