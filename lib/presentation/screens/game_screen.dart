@@ -10,6 +10,7 @@ import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/multiplayer_provider.dart';
 import '../widgets/tutorial_overlay.dart';
 import 'result_screen.dart';
 
@@ -20,6 +21,7 @@ class GameScreen extends ConsumerStatefulWidget {
   final int levelId;
   final bool isDailyChallenge;
   final bool isMemory; // SORGAwy memory mode
+  final bool isMultiplayer; // Local multiplayer mode
   final Level? dailyLevel; // For daily challenge, pass the level directly
   
   const GameScreen({
@@ -27,6 +29,7 @@ class GameScreen extends ConsumerStatefulWidget {
     required this.levelId,
     this.isDailyChallenge = false,
     this.isMemory = false,
+    this.isMultiplayer = false,
     this.dailyLevel,
   });
 
@@ -65,12 +68,34 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       // - Different level
       // - Game was completed AND not currently running (i.e., not Continuing)
       // Note: Do NOT restart if isRunning is true - that means Continue was clicked
-      final shouldStartNewGame = currentState == null || 
+      // - Always restart for multiplayer (each player gets fresh state)
+      final shouldStartNewGame = widget.isMultiplayer ||
+          currentState == null || 
           currentState.level.id != widget.levelId ||
           (currentState.isCompleted && !currentState.isRunning);
       
       if (shouldStartNewGame) {
-        if (widget.isDailyChallenge && widget.dailyLevel != null) {
+        if (widget.isMultiplayer) {
+          // Start multiplayer game - load level from session
+          final session = ref.read(multiplayerSessionProvider);
+          if (session != null) {
+            // Get player-specific shuffled items
+            final shuffledItems = ref.read(multiplayerSessionProvider.notifier)
+                .getShuffledItemsForPlayer(session.currentPlayer.id);
+            // Create level with shuffled items for this player
+            final playerLevel = Level(
+              id: session.level.id,
+              localId: session.level.localId,
+              category: session.level.category,
+              sortOrder: session.level.sortOrder,
+              title: session.level.title,
+              description: session.level.description,
+              items: shuffledItems,
+              isMemory: session.isMemoryMode,
+            );
+            ref.read(gameStateProvider.notifier).startGameWithLevel(playerLevel);
+          }
+        } else if (widget.isDailyChallenge && widget.dailyLevel != null) {
           // Use the provided level for daily challenge
           ref.read(gameStateProvider.notifier).startGameWithLevel(widget.dailyLevel!);
         } else if (widget.isMemory) {
@@ -808,8 +833,30 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 
                 // Navigate to result screen
                 if (mounted) {
-                  // For daily challenges, use Navigator directly to bypass GoRouter issues
-                  if (widget.isDailyChallenge) {
+                  // For multiplayer, submit result and navigate to next player or results
+                  if (widget.isMultiplayer && isCorrect && verifyState != null) {
+                    final session = ref.read(multiplayerSessionProvider);
+                    if (session != null) {
+                      // Submit result
+                      ref.read(multiplayerSessionProvider.notifier).submitResult(
+                        playerId: session.currentPlayer.id,
+                        timeMs: verifyState.elapsedTime.inMilliseconds,
+                        memorizeTimeMs: session.isMemoryMode ? verifyState.memorizeTime.inMilliseconds : null,
+                        sortTimeMs: session.isMemoryMode ? (verifyState.elapsedTime.inMilliseconds - verifyState.memorizeTime.inMilliseconds) : null,
+                        attempts: verifyState.failedAttempts + 1,
+                      );
+                      
+                      // Navigate to next player or results
+                      final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
+                      if (isLastPlayer) {
+                        context.go('/multiplayer/results');
+                      } else {
+                        ref.read(multiplayerSessionProvider.notifier).nextPlayer();
+                        context.go('/multiplayer/transition');
+                      }
+                    }
+                  } else if (widget.isDailyChallenge) {
+                    // For daily challenges, use Navigator directly to bypass GoRouter issues
                     debugPrint('Daily Challenge: Using Navigator.pushReplacement');
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const ResultScreen()),

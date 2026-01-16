@@ -10,7 +10,6 @@ import '../screens/settings_screen.dart';
 import '../screens/daily_challenge_screen.dart';
 import '../screens/multiplayer_setup_screen.dart';
 import '../screens/multiplayer_transition_screen.dart';
-import '../screens/multiplayer_game_screen.dart';
 import '../screens/multiplayer_results_screen.dart';
 
 import 'package:sorga/domain/entities/level.dart';
@@ -120,7 +119,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/multiplayer/game',
-      builder: (context, state) => const MultiplayerGameScreen(),
+      builder: (context, state) => const GameScreen(levelId: 9999, isMultiplayer: true),
     ),
     GoRoute(
       path: '/multiplayer/results',
