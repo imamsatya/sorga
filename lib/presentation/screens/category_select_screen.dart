@@ -252,34 +252,35 @@ class CategorySelectScreen extends ConsumerWidget {
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   emoji,
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 24,
                     color: isUnlocked ? null : Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 4),
                 Text(
                   '🧠',
-                  style: TextStyle(fontSize: 14),
+                  style: TextStyle(fontSize: 10),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   _getCategoryTitle(context, category),
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 9,
                     color: isUnlocked ? categoryInfo.color : AppTheme.textMuted,
                     fontWeight: FontWeight.w600,
                   ),
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
                 Text(
                   '$completed/30',
                   style: TextStyle(
-                    fontSize: 9,
+                    fontSize: 8,
                     color: AppTheme.textMuted,
                   ),
                 ),
