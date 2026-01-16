@@ -290,7 +290,14 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     if (state == null) return;
     
     final repository = _ref.read(progressRepositoryProvider);
-    final existingProgress = await repository.getProgress(state!.level.id);
+    
+    // Use offset for memory levels to track separately from regular levels
+    // Memory levels: ID = levelId + 10000
+    final int progressId = state!.level.isMemory 
+        ? state!.level.id + 10000 
+        : state!.level.id;
+    
+    final existingProgress = await repository.getProgress(progressId);
     
     UserProgress newProgress;
     if (existingProgress != null) {
@@ -300,7 +307,7 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       );
     } else {
       newProgress = UserProgress(
-        levelId: state!.level.id,
+        levelId: progressId,
         completed: success,
         bestTimeMs: success ? state!.elapsedTime.inMilliseconds : null,
         completedAt: success ? DateTime.now() : null,
@@ -314,7 +321,7 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     _ref.invalidate(allProgressProvider);
     _ref.invalidate(completedCountProvider);
     _ref.invalidate(highestUnlockedProvider);
-    _ref.invalidate(levelProgressProvider(state!.level.id));
+    _ref.invalidate(levelProgressProvider(progressId));
     
     // Record play time for streak tracking on successful completion
     if (success) {
@@ -394,12 +401,23 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   void retry() {
     if (state == null) return;
     final levelId = state!.level.id;
-    startGame(levelId);
+    final isMemory = state!.level.isMemory;
+    
+    if (isMemory) {
+      startGameMemory(levelId);
+    } else {
+      startGame(levelId);
+    }
   }
 
   /// Retry with the same level object (for Daily Challenge)
   void retryWithLevel(Level level) {
-    startGameWithLevel(level);
+    if (level.isMemory) {
+      // For memory mode, use startGameMemory
+      startGameMemory(level.id);
+    } else {
+      startGameWithLevel(level);
+    }
   }
   
   /// Stop and clear the game

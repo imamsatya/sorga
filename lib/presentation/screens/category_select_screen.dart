@@ -197,19 +197,29 @@ class CategorySelectScreen extends ConsumerWidget {
     final allProgress = ref.watch(allProgressProvider);
     final levels = ref.watch(levelsByCategoryProvider(category));
     
-    int completed = 0;
+    int regularCompleted = 0;
+    int memoryCompleted = 0;
+    
     allProgress.whenData((progressList) {
       final levelIds = levels.map((l) => l.id).toSet();
+      final memoryLevelIds = levels.map((l) => l.id + 10000).toSet(); // Memory uses ID + 10000
+      
       for (final progress in progressList) {
+        // Count regular progress for unlock check
         if (levelIds.contains(progress.levelId) && progress.completed) {
-          completed++;
+          regularCompleted++;
+        }
+        // Count memory progress for progress bar
+        if (memoryLevelIds.contains(progress.levelId) && progress.completed) {
+          memoryCompleted++;
         }
       }
     });
     
     // DevMode: unlock all memory levels; Production: unlock when level 30 completed
-    final bool isUnlocked = AppConstants.isDevMode || completed >= 30;
+    final bool isUnlocked = AppConstants.isDevMode || regularCompleted >= 30;
     final categoryInfo = _getCategoryInfo(category);
+    final double progress = levels.isEmpty ? 0.0 : memoryCompleted / levels.length;
     
     return GestureDetector(
       onTap: () {
@@ -307,7 +317,7 @@ class CategorySelectScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // Progress bar + counter (TODO: track memory level progress separately)
+                // Progress bar + counter
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
@@ -315,7 +325,7 @@ class CategorySelectScreen extends ConsumerWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(3),
                         child: LinearProgressIndicator(
-                          value: 0.0, // TODO: Calculate from memory level progress
+                          value: progress,
                           minHeight: 4,
                           backgroundColor: AppTheme.backgroundDark.withOpacity(0.5),
                           valueColor: AlwaysStoppedAnimation(categoryInfo.color),
@@ -323,7 +333,7 @@ class CategorySelectScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '0/100', // TODO: Get from memory level progress
+                        '$memoryCompleted/${levels.length}',
                         style: TextStyle(
                           fontSize: 9,
                           color: categoryInfo.color,
