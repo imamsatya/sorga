@@ -5,10 +5,12 @@ import '../../l10n/app_localizations.dart';
 /// Tutorial overlay for first-time users
 class TutorialOverlay extends StatefulWidget {
   final VoidCallback onComplete;
+  final bool isMemory; // Different tutorial for memory mode
   
   const TutorialOverlay({
     super.key,
     required this.onComplete,
+    this.isMemory = false,
   });
 
   @override
@@ -20,6 +22,29 @@ class _TutorialOverlayState extends State<TutorialOverlay> {
   
   List<TutorialStep> _getSteps(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    
+    // Memory mode tutorial
+    if (widget.isMemory) {
+      return [
+        TutorialStep(
+          emoji: '🧠',
+          title: 'Memory Mode',
+          description: 'In this mode, you must MEMORIZE the numbers first, then sort them from memory!',
+        ),
+        TutorialStep(
+          emoji: '👀',
+          title: 'Step 1: Memorize',
+          description: 'Look at the numbers carefully. When ready, tap "I\'ve Memorized!" to hide them.',
+        ),
+        TutorialStep(
+          emoji: '🔀',
+          title: 'Step 2: Sort',
+          description: 'The numbers become "?" - sort them based on your memory. Good luck!',
+        ),
+      ];
+    }
+    
+    // Regular tutorial
     return [
       TutorialStep(
         emoji: '👆',

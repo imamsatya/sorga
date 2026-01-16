@@ -90,8 +90,14 @@ class LevelSelectScreen extends ConsumerWidget {
                             style: const TextStyle(fontSize: 24),
                           ),
                           const SizedBox(width: 8),
+                          if (isMemory) ...[
+                            const Text('🧠', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 4),
+                          ],
                           Text(
-                            _getCategoryTitle(context, category),
+                            isMemory
+                                ? 'Memory: ${_getCategoryTitle(context, category)}'
+                                : _getCategoryTitle(context, category),
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,

@@ -459,8 +459,37 @@ Can you beat my time? 💪
       ),
       child: Column(
         children: [
+          // Memory mode badge
+          if (gameState.level.isMemory) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.purple.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('🧠', style: TextStyle(fontSize: 14)),
+                  SizedBox(width: 4),
+                  Text(
+                    'SORGAwy',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.purpleAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          
           Text(
-            AppLocalizations.of(context)!.yourTime,
+            gameState.level.isMemory 
+                ? 'TOTAL TIME' 
+                : AppLocalizations.of(context)!.yourTime,
             style: const TextStyle(
               fontSize: 12,
               color: AppTheme.textMuted,
@@ -474,7 +503,9 @@ Can you beat my time? 💪
               const Icon(Icons.timer, color: AppTheme.accentColor, size: 28),
               const SizedBox(width: 12),
               Text(
-                gameState.formattedTime,
+                gameState.level.isMemory
+                    ? _formatTotalTime(gameState.memorizeTime + gameState.elapsedTime)
+                    : gameState.formattedTime,
                 style: const TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -484,8 +515,66 @@ Can you beat my time? 💪
               ),
             ],
           ),
+          
+          // Memory mode: Show breakdown
+          if (gameState.level.isMemory) ...[
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildTimeBreakdown(
+                  '🧠',
+                  'Memorize',
+                  gameState.formattedMemorizeTime,
+                ),
+                Container(
+                  width: 1,
+                  height: 40,
+                  color: AppTheme.textMuted.withOpacity(0.3),
+                ),
+                _buildTimeBreakdown(
+                  '🔀',
+                  'Sort',
+                  gameState.formattedTime,
+                ),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+  
+  String _formatTotalTime(Duration total) {
+    final minutes = total.inMinutes.toString().padLeft(2, '0');
+    final seconds = (total.inSeconds % 60).toString().padLeft(2, '0');
+    final ms = ((total.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
+    return '$minutes:$seconds.$ms';
+  }
+  
+  Widget _buildTimeBreakdown(String emoji, String label, String time) {
+    return Column(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 20)),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            color: AppTheme.textMuted,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          time,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textSecondary,
+            fontFamily: 'monospace',
+          ),
+        ),
+      ],
     );
   }
 
@@ -511,7 +600,9 @@ Can you beat my time? 💪
                   final nextLevelId = currentLevelId + 1;
                   // Get next level info for navigation
                   final nextLevel = ref.read(levelRepositoryProvider).getLevel(nextLevelId);
-                  context.go('/game/${nextLevel.category.name}/${nextLevel.localId}');
+                  // Preserve memory mode when going to next level
+                  final memoryParam = (gameState?.level.isMemory ?? false) ? '?memory=true' : '';
+                  context.go('/game/${nextLevel.category.name}/${nextLevel.localId}$memoryParam');
                 } catch (e) {
                   // Fallback or end of game
                   context.go('/');
@@ -569,7 +660,9 @@ Can you beat my time? 💪
                       ),
                     );
                   } else {
-                    context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                    // Preserve memory mode
+                    final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                    context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
                   }
                 }
               },
@@ -630,7 +723,9 @@ Can you beat my time? 💪
                      );
                    } else {
                      ref.read(gameStateProvider.notifier).retry();
-                     context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                     // Preserve memory mode
+                     final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                     context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
                    }
                  }
               },
@@ -681,7 +776,9 @@ Can you beat my time? 💪
                           );
                         } else {
                           ref.read(gameStateProvider.notifier).retry();
-                          context.go('/game/${gameState.level.category.name}/${gameState.level.localId}');
+                          // Preserve memory mode
+                          final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                          context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
                         }
                       }
                     },

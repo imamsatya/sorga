@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
 import '../../l10n/app_localizations.dart';
@@ -206,8 +207,8 @@ class CategorySelectScreen extends ConsumerWidget {
       }
     });
     
-    // TEMP: Unlock all for testing (change back to completed >= 30 for production)
-    final bool isUnlocked = true; // completed >= 30;
+    // DevMode: unlock all memory levels; Production: unlock when level 30 completed
+    final bool isUnlocked = AppConstants.isDevMode || completed >= 30;
     final categoryInfo = _getCategoryInfo(category);
     
     return GestureDetector(

@@ -166,6 +166,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           if (_showTutorial)
             TutorialOverlay(
               onComplete: _completeTutorial,
+              isMemory: gameState.level.isMemory,
             ),
           
 
