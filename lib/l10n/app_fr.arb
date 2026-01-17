@@ -177,5 +177,9 @@
   "categoryProgress": "Progression par Catégorie",
   "complete": "terminé",
   "days": "jours",
-  "knowledge": "Connaissance"
+  "knowledge": "Connaissance",
+  "achievements": "Succès",
+  "unlocked": "débloqué",
+  "locked": "Verrouillé",
+  "secretAchievement": "Succès secret"
 }

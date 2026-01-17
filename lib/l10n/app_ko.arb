@@ -177,5 +177,9 @@
   "categoryProgress": "카테고리 진행",
   "complete": "완료",
   "days": "일",
-  "knowledge": "지식"
+  "knowledge": "지식",
+  "achievements": "업적",
+  "unlocked": "잠금 해제",
+  "locked": "잠김",
+  "secretAchievement": "비밀 업적"
 }

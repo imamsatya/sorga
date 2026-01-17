@@ -517,4 +517,13 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get complete => 'selesai';
+
+  @override
+  String get unlocked => 'terbuka';
+
+  @override
+  String get locked => 'Terkunci';
+
+  @override
+  String get secretAchievement => 'Pencapaian rahasia';
 }

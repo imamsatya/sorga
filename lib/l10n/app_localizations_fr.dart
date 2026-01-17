@@ -519,4 +519,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get complete => 'terminé';
+
+  @override
+  String get unlocked => 'débloqué';
+
+  @override
+  String get locked => 'Verrouillé';
+
+  @override
+  String get secretAchievement => 'Succès secret';
 }

@@ -511,4 +511,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get complete => '완료';
+
+  @override
+  String get unlocked => '잠금 해제';
+
+  @override
+  String get locked => '잠김';
+
+  @override
+  String get secretAchievement => '비밀 업적';
 }

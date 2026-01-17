@@ -177,5 +177,9 @@
   "categoryProgress": "Progreso de Categoría",
   "complete": "completo",
   "days": "días",
-  "knowledge": "Conocimiento"
+  "knowledge": "Conocimiento",
+  "achievements": "Logros",
+  "unlocked": "desbloqueado",
+  "locked": "Bloqueado",
+  "secretAchievement": "Logro secreto"
 }

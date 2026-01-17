@@ -1081,6 +1081,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'complete'**
   String get complete;
+
+  /// No description provided for @unlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'unlocked'**
+  String get unlocked;
+
+  /// No description provided for @locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get locked;
+
+  /// No description provided for @secretAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Secret achievement'**
+  String get secretAchievement;
 }
 
 class _AppLocalizationsDelegate

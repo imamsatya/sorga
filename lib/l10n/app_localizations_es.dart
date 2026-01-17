@@ -517,4 +517,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get complete => 'completo';
+
+  @override
+  String get unlocked => 'desbloqueado';
+
+  @override
+  String get locked => 'Bloqueado';
+
+  @override
+  String get secretAchievement => 'Logro secreto';
 }

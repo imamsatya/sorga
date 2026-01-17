@@ -177,5 +177,9 @@
   "categoryProgress": "カテゴリ進捗",
   "complete": "完了",
   "days": "日",
-  "knowledge": "知識"
+  "knowledge": "知識",
+  "achievements": "実績",
+  "unlocked": "解除済み",
+  "locked": "未解除",
+  "secretAchievement": "シークレット実績"
 }

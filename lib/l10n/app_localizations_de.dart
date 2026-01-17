@@ -518,4 +518,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get complete => 'abgeschlossen';
+
+  @override
+  String get unlocked => 'freigeschaltet';
+
+  @override
+  String get locked => 'Gesperrt';
+
+  @override
+  String get secretAchievement => 'Geheime Errungenschaft';
 }

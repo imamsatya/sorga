@@ -177,5 +177,9 @@
   "categoryProgress": "Kategorie-Fortschritt",
   "complete": "abgeschlossen",
   "days": "Tage",
-  "knowledge": "Wissen"
+  "knowledge": "Wissen",
+  "achievements": "Erfolge",
+  "unlocked": "freigeschaltet",
+  "locked": "Gesperrt",
+  "secretAchievement": "Geheime Errungenschaft"
 }

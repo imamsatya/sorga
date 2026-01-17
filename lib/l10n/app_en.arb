@@ -179,5 +179,9 @@
   "categoryProgress": "Category Progress",
   "complete": "complete",
   "days": "days",
-  "knowledge": "Knowledge"
+  "knowledge": "Knowledge",
+  "achievements": "Achievements",
+  "unlocked": "unlocked",
+  "locked": "Locked",
+  "secretAchievement": "Secret achievement"
 }

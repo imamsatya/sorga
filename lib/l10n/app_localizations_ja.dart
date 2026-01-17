@@ -511,4 +511,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get complete => '完了';
+
+  @override
+  String get unlocked => '解除済み';
+
+  @override
+  String get locked => '未解除';
+
+  @override
+  String get secretAchievement => 'シークレット実績';
 }

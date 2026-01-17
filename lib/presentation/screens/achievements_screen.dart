@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/achievement_service.dart';
 import '../../domain/entities/achievement.dart';
+import '../../l10n/app_localizations.dart';
 
 class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key});
@@ -28,6 +29,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   Widget build(BuildContext context) {
     final unlockedCount = AchievementService.instance.unlockedCount;
     final totalCount = AchievementService.instance.totalCount;
+    final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
       body: Container(
@@ -37,9 +39,9 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context, unlockedCount, totalCount),
+              _buildHeader(context, unlockedCount, totalCount, l10n),
               Expanded(
-                child: _buildAchievementGrid(),
+                child: _buildAchievementGrid(l10n),
               ),
             ],
           ),
@@ -48,7 +50,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     );
   }
   
-  Widget _buildHeader(BuildContext context, int unlocked, int total) {
+  Widget _buildHeader(BuildContext context, int unlocked, int total, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -69,16 +71,16 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Achievements',
-                  style: TextStyle(
+                Text(
+                  l10n.achievements,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
                 Text(
-                  '$unlocked / $total unlocked',
+                  '$unlocked / $total ${l10n.unlocked}',
                   style: TextStyle(
                     fontSize: 14,
                     color: AppTheme.textSecondary,
@@ -114,25 +116,25 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     );
   }
   
-  Widget _buildAchievementGrid() {
+  Widget _buildAchievementGrid(AppLocalizations l10n) {
     return GridView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.75, // Taller cards to prevent overflow
+        childAspectRatio: 0.72, // Slightly taller to fit 2 lines
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
       itemCount: _achievements.length,
       itemBuilder: (context, index) {
         final item = _achievements[index];
-        return _buildAchievementCard(item.achievement, item.unlocked);
+        return _buildAchievementCard(item.achievement, item.unlocked, l10n);
       },
     );
   }
   
-  Widget _buildAchievementCard(Achievement achievement, bool unlocked) {
+  Widget _buildAchievementCard(Achievement achievement, bool unlocked, AppLocalizations l10n) {
     // For secret achievements that are not unlocked, show mystery card
     final isHidden = achievement.isSecret && !unlocked;
     
@@ -175,24 +177,24 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            // Name
+            // Name - allow 2 lines
             Text(
               isHidden ? '???' : achievement.name,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: unlocked ? Colors.white : AppTheme.textMuted,
               ),
               textAlign: TextAlign.center,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
             // Description
             Text(
-              isHidden ? 'Secret achievement' : achievement.description,
+              isHidden ? l10n.secretAchievement : achievement.description,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 color: unlocked 
                     ? AppTheme.textSecondary 
                     : AppTheme.textMuted.withOpacity(0.7),
@@ -212,7 +214,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                unlocked ? '✓ Unlocked' : 'Locked',
+                unlocked ? '✓ ${l10n.unlocked}' : l10n.locked,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
