@@ -170,5 +170,13 @@
   "ready": "Siap?",
   "go": "MULAI!",
   "yourTurn": "Giliranmu!",
-  "names": "Nama"
+  "names": "Nama",
+  "statistics": "Statistik",
+  "currentStreak": "Streak Saat Ini",
+  "longestStreak": "Streak Terpanjang",
+  "totalTime": "Total Waktu",
+  "categoryProgress": "Progres Kategori",
+  "complete": "selesai",
+  "days": "hari",
+  "knowledge": "Pengetahuan"
 }

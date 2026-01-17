@@ -190,7 +190,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dailyStreakActive => 'Série Quotidienne Active!';
 
   @override
-  String get categoryProgress => 'Progrès de Catégorie';
+  String get categoryProgress => 'Progression par Catégorie';
 
   @override
   String get completedLevels => 'Niveaux Terminés';
@@ -199,7 +199,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get currentStreak => 'Série Actuelle';
 
   @override
-  String get longestStreak => 'Plus Longue Série';
+  String get longestStreak => 'Meilleure Série';
 
   @override
   String get totalPlayTime => 'Temps de Jeu Total';
@@ -516,4 +516,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get go => 'GO!';
+
+  @override
+  String get complete => 'terminé';
 }

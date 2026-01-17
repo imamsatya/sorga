@@ -169,5 +169,13 @@
   "category": "Categoría",
   "ready": "¿Listo?",
   "go": "¡YA!",
-  "names": "Nombres"
+  "names": "Nombres",
+  "statistics": "Estadísticas",
+  "currentStreak": "Racha Actual",
+  "longestStreak": "Mayor Racha",
+  "totalTime": "Tiempo Total",
+  "categoryProgress": "Progreso de Categoría",
+  "complete": "completo",
+  "days": "días",
+  "knowledge": "Conocimiento"
 }

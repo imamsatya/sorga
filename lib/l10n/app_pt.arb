@@ -169,5 +169,13 @@
   "category": "Categoria",
   "ready": "Pronto?",
   "go": "VAI!",
-  "names": "Nomes"
+  "names": "Nomes",
+  "statistics": "Estatísticas",
+  "currentStreak": "Sequência Atual",
+  "longestStreak": "Maior Sequência",
+  "totalTime": "Tempo Total",
+  "categoryProgress": "Progresso de Categoria",
+  "complete": "completo",
+  "days": "dias",
+  "knowledge": "Conhecimento"
 }

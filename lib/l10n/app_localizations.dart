@@ -1075,6 +1075,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'GO!'**
   String get go;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'complete'**
+  String get complete;
 }
 
 class _AppLocalizationsDelegate

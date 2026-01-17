@@ -169,5 +169,13 @@
   "category": "Kategorie",
   "ready": "Bereit?",
   "go": "LOS!",
-  "names": "Namen"
+  "names": "Namen",
+  "statistics": "Statistik",
+  "currentStreak": "Aktuelle Serie",
+  "longestStreak": "Längste Serie",
+  "totalTime": "Gesamtzeit",
+  "categoryProgress": "Kategorie-Fortschritt",
+  "complete": "abgeschlossen",
+  "days": "Tage",
+  "knowledge": "Wissen"
 }

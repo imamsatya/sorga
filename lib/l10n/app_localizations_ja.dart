@@ -86,7 +86,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get mixedFormats => 'ミックス形式';
 
   @override
-  String get knowledge => 'ナレッジ';
+  String get knowledge => '知識';
 
   @override
   String get levels => 'レベル';
@@ -196,10 +196,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get completedLevels => '完了レベル';
 
   @override
-  String get currentStreak => '現在の連続記録';
+  String get currentStreak => '現在の連続日数';
 
   @override
-  String get longestStreak => '最長連続記録';
+  String get longestStreak => '最長連続日数';
 
   @override
   String get totalPlayTime => '合計プレイ時間';
@@ -508,4 +508,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get go => 'GO!';
+
+  @override
+  String get complete => '完了';
 }

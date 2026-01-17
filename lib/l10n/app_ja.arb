@@ -169,5 +169,13 @@
   "category": "カテゴリ",
   "ready": "準備？",
   "go": "GO!",
-  "names": "名前"
+  "names": "名前",
+  "statistics": "統計",
+  "currentStreak": "現在の連続日数",
+  "longestStreak": "最長連続日数",
+  "totalTime": "合計時間",
+  "categoryProgress": "カテゴリ進捗",
+  "complete": "完了",
+  "days": "日",
+  "knowledge": "知識"
 }

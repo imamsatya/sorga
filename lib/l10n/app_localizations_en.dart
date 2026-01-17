@@ -514,4 +514,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get go => 'GO!';
+
+  @override
+  String get complete => 'complete';
 }

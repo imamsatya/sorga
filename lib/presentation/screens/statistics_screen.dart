@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 import '../../core/constants/app_constants.dart';
 
@@ -19,12 +20,18 @@ class StatisticsScreen extends ConsumerWidget {
     
     // Calculate stats
     int totalCompleted = 0;
+    int memoryCompleted = 0;
     int totalAttempts = 0;
     final categoryStats = <LevelCategory, CategoryStat>{};
     
     for (final progress in allProgress) {
       if (progress.completed) {
         totalCompleted++;
+        
+        // Track Memory mode completions
+        if (progress.isMemoryProgress) {
+          memoryCompleted++;
+        }
         
         // Skip daily challenge levels (IDs > 1000 are date-based)
         // They don't exist in the level generator
@@ -48,6 +55,8 @@ class StatisticsScreen extends ConsumerWidget {
       totalAttempts += progress.attempts;
     }
     
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -56,7 +65,7 @@ class StatisticsScreen extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context),
+              _buildHeader(context, l10n),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
@@ -65,19 +74,21 @@ class StatisticsScreen extends ConsumerWidget {
                     children: [
                       // Overall Stats Cards
                       _buildOverallStats(
+                        l10n: l10n,
                         completed: totalCompleted,
                         streak: gameStats.currentStreak,
                         longestStreak: gameStats.longestStreak,
                         totalTime: gameStats.totalPlayTimeFormatted,
                         totalAttempts: totalAttempts,
+                        memoryCompleted: memoryCompleted,
                       ),
                       
                       const SizedBox(height: 24),
                       
                       // Category Breakdown
-                      _buildSectionTitle('Category Progress'),
+                      _buildSectionTitle(l10n.categoryProgress),
                       const SizedBox(height: 12),
-                      _buildCategoryBreakdown(categoryStats),
+                      _buildCategoryBreakdown(categoryStats, l10n),
                     ],
                   ),
                 ),
@@ -89,7 +100,7 @@ class StatisticsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -106,9 +117,9 @@ class StatisticsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 16),
-          const Text(
-            'Statistics',
-            style: TextStyle(
+          Text(
+            l10n.statistics,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -120,11 +131,13 @@ class StatisticsScreen extends ConsumerWidget {
   }
 
   Widget _buildOverallStats({
+    required AppLocalizations l10n,
     required int completed,
     required int streak,
     required int longestStreak,
     required String totalTime,
     required int totalAttempts,
+    required int memoryCompleted,
   }) {
     return Column(
       children: [
@@ -134,7 +147,7 @@ class StatisticsScreen extends ConsumerWidget {
               child: _buildStatCard(
                 emoji: '✅',
                 value: '$completed',
-                label: 'Completed',
+                label: l10n.completed,
                 color: AppTheme.successColor,
               ),
             ),
@@ -143,7 +156,7 @@ class StatisticsScreen extends ConsumerWidget {
               child: _buildStatCard(
                 emoji: '🔥',
                 value: '$streak',
-                label: 'Current Streak',
+                label: l10n.currentStreak,
                 color: AppTheme.warningColor,
               ),
             ),
@@ -156,17 +169,17 @@ class StatisticsScreen extends ConsumerWidget {
               child: _buildStatCard(
                 emoji: '⏱️',
                 value: totalTime,
-                label: 'Total Time',
+                label: l10n.totalTime,
                 color: AppTheme.primaryColor,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: _buildStatCard(
-                emoji: '🎮',
-                value: '$totalAttempts',
-                label: 'Total Plays',
-                color: AppTheme.accentColor,
+                emoji: '🧠',
+                value: '$memoryCompleted',
+                label: l10n.memoryMode,
+                color: const Color(0xFF9B59B6),
               ),
             ),
           ],
@@ -174,8 +187,8 @@ class StatisticsScreen extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildStatCard(
           emoji: '🏆',
-          value: '$longestStreak days',
-          label: 'Longest Streak',
+          value: '$longestStreak ${l10n.days}',
+          label: l10n.longestStreak,
           color: const Color(0xFFFFD700),
           fullWidth: true,
         ),
@@ -244,14 +257,14 @@ class StatisticsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats) {
+  Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats, AppLocalizations l10n) {
     final categories = [
-      (LevelCategory.basic, 'Basic Numbers', AppConstants.basicNumbersEnd - AppConstants.basicNumbersStart + 1, AppTheme.basicColor),
-      (LevelCategory.formatted, 'Formatted Numbers', AppConstants.formattedNumbersEnd - AppConstants.formattedNumbersStart + 1, AppTheme.formattedColor),
-      (LevelCategory.time, 'Time & Dates', AppConstants.timeFormatsEnd - AppConstants.timeFormatsStart + 1, AppTheme.timeColor),
-      (LevelCategory.names, 'Names', AppConstants.nameSortingEnd - AppConstants.nameSortingStart + 1, AppTheme.namesColor),
-      (LevelCategory.mixed, 'Mixed', AppConstants.mixedFormatsEnd - AppConstants.mixedFormatsStart + 1, AppTheme.mixedColor),
-      (LevelCategory.knowledge, 'Knowledge', AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor),
+      (LevelCategory.basic, l10n.basicNumbers, AppConstants.basicNumbersEnd - AppConstants.basicNumbersStart + 1, AppTheme.basicColor),
+      (LevelCategory.formatted, l10n.formattedNumbers, AppConstants.formattedNumbersEnd - AppConstants.formattedNumbersStart + 1, AppTheme.formattedColor),
+      (LevelCategory.time, l10n.timeFormats, AppConstants.timeFormatsEnd - AppConstants.timeFormatsStart + 1, AppTheme.timeColor),
+      (LevelCategory.names, l10n.nameSorting, AppConstants.nameSortingEnd - AppConstants.nameSortingStart + 1, AppTheme.namesColor),
+      (LevelCategory.mixed, l10n.mixedFormats, AppConstants.mixedFormatsEnd - AppConstants.mixedFormatsStart + 1, AppTheme.mixedColor),
+      (LevelCategory.knowledge, l10n.knowledge, AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor),
     ];
 
     return Column(
@@ -269,6 +282,7 @@ class StatisticsScreen extends ConsumerWidget {
             total: total,
             progress: progress,
             color: cat.$4,
+            l10n: l10n,
           ),
         );
       }).toList(),
@@ -281,6 +295,7 @@ class StatisticsScreen extends ConsumerWidget {
     required int total,
     required double progress,
     required Color color,
+    required AppLocalizations l10n,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -325,7 +340,7 @@ class StatisticsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '${(progress * 100).toInt()}% complete',
+            '${(progress * 100).toInt()}% ${l10n.complete}',
             style: TextStyle(
               fontSize: 11,
               color: AppTheme.textMuted,

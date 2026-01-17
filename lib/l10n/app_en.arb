@@ -171,5 +171,13 @@
   "ready": "Ready?",
   "go": "GO!",
   "yourTurn": "It's Your Turn!",
-  "names": "Names"
+  "names": "Names",
+  "statistics": "Statistics",
+  "currentStreak": "Current Streak",
+  "longestStreak": "Longest Streak",
+  "totalTime": "Total Time",
+  "categoryProgress": "Category Progress",
+  "complete": "complete",
+  "days": "days",
+  "knowledge": "Knowledge"
 }

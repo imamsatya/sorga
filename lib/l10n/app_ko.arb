@@ -169,5 +169,13 @@
   "category": "카테고리",
   "ready": "준비?",
   "go": "시작!",
-  "names": "이름"
+  "names": "이름",
+  "statistics": "통계",
+  "currentStreak": "현재 연속 일수",
+  "longestStreak": "최장 연속 일수",
+  "totalTime": "총 시간",
+  "categoryProgress": "카테고리 진행",
+  "complete": "완료",
+  "days": "일",
+  "knowledge": "지식"
 }

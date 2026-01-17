@@ -196,10 +196,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get completedLevels => '완료된 레벨';
 
   @override
-  String get currentStreak => '현재 연속';
+  String get currentStreak => '현재 연속 일수';
 
   @override
-  String get longestStreak => '최장 연속';
+  String get longestStreak => '최장 연속 일수';
 
   @override
   String get totalPlayTime => '총 플레이 시간';
@@ -508,4 +508,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get go => '시작!';
+
+  @override
+  String get complete => '완료';
 }

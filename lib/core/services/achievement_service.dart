@@ -70,6 +70,7 @@ class AchievementService {
     required int? lastLevelTimeMs,
     required Map<LevelCategory, int> completedPerCategory,
     required int consecutivePerfect, // levels completed without mistakes in a row
+    int memoryCompletions = 0, // levels completed in Memory mode
   }) async {
     List<Achievement> newlyUnlocked = [];
     
@@ -99,7 +100,7 @@ class AchievementService {
         newlyUnlocked.add(Achievement.getByType(AchievementType.level500));
       }
     }
-    if (completedLevels >= 800) { // Adjusted from 1000
+    if (completedLevels >= 600) { // All 600 levels
       if (await unlock(AchievementType.level1000)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.level1000));
       }
@@ -162,7 +163,7 @@ class AchievementService {
         newlyUnlocked.add(Achievement.getByType(AchievementType.mixedMaster));
       }
     }
-    if ((completedPerCategory[LevelCategory.knowledge] ?? 0) >= 150) {
+    if ((completedPerCategory[LevelCategory.knowledge] ?? 0) >= 100) { // 100 knowledge levels
       if (await unlock(AchievementType.knowledgeMaster)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.knowledgeMaster));
       }
@@ -185,6 +186,13 @@ class AchievementService {
     if (totalPlayTimeMs >= 5 * hourMs) {
       if (await unlock(AchievementType.marathon)) {
         newlyUnlocked.add(Achievement.getByType(AchievementType.marathon));
+      }
+    }
+    
+    // Memory Mode achievement
+    if (memoryCompletions >= 100) {
+      if (await unlock(AchievementType.memoryMaster)) {
+        newlyUnlocked.add(Achievement.getByType(AchievementType.memoryMaster));
       }
     }
     

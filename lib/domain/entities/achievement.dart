@@ -9,7 +9,7 @@ enum AchievementType {
   level50,         // Complete 50 levels
   level100,        // Complete 100 levels
   level500,        // Complete 500 levels
-  level1000,       // Complete all 1000 levels
+  level1000,       // Complete all 600 levels
   
   // Streak milestones
   streak3,         // 3 day streak
@@ -21,17 +21,18 @@ enum AchievementType {
   lightning,       // Complete a level in under 3 seconds
   
   // Category mastery
-  basicMaster,     // Complete all basic levels (1-60)
-  formattedMaster, // Complete all formatted levels (61-250)
-  timeMaster,      // Complete all time levels (251-450)
-  namesMaster,     // Complete all names levels (451-650)
-  mixedMaster,     // Complete all mixed levels (651-850)
-  knowledgeMaster, // Complete all knowledge levels (851-1000)
+  basicMaster,     // Complete 100 basic levels
+  formattedMaster, // Complete 100 formatted levels
+  timeMaster,      // Complete 100 time levels
+  namesMaster,     // Complete 100 names levels
+  mixedMaster,     // Complete 100 mixed levels
+  knowledgeMaster, // Complete 100 knowledge levels
   
   // Special
   perfectRun,      // Complete 10 levels in a row without mistakes
   dedicated,       // Play for 1 hour total
   marathon,        // Play for 5 hours total
+  memoryMaster,    // Complete 100 levels in Memory mode
 }
 
 /// Achievement definition with metadata
@@ -93,7 +94,7 @@ class Achievement extends Equatable {
     const Achievement(
       type: AchievementType.level1000,
       name: 'Sorting Master',
-      description: 'Complete all 1000 levels',
+      description: 'Complete all 600 levels',
       emoji: '👑',
       color: Color(0xFFFD79A8),
     ),
@@ -138,47 +139,47 @@ class Achievement extends Equatable {
       isSecret: true,
     ),
     
-    // Category Mastery
+    // Category Mastery (100 levels each)
     const Achievement(
       type: AchievementType.basicMaster,
       name: 'Basic Expert',
-      description: 'Complete all basic number levels',
+      description: 'Complete 100 basic number levels',
       emoji: '🔢',
       color: Color(0xFF74B9FF),
     ),
     const Achievement(
       type: AchievementType.formattedMaster,
       name: 'Format Pro',
-      description: 'Complete all formatted number levels',
+      description: 'Complete 100 formatted number levels',
       emoji: '📊',
       color: Color(0xFFFFBE76),
     ),
     const Achievement(
       type: AchievementType.timeMaster,
       name: 'Time Lord',
-      description: 'Complete all time-based levels',
+      description: 'Complete 100 time-based levels',
       emoji: '⏰',
       color: Color(0xFF55E6C1),
     ),
     const Achievement(
       type: AchievementType.namesMaster,
       name: 'Alphabetizer',
-      description: 'Complete all name sorting levels',
+      description: 'Complete 100 name sorting levels',
       emoji: '📝',
       color: Color(0xFFFF7675),
     ),
     const Achievement(
       type: AchievementType.mixedMaster,
       name: 'Mix Master',
-      description: 'Complete all mixed format levels',
+      description: 'Complete 100 mixed format levels',
       emoji: '🎨',
       color: Color(0xFFA29BFE),
     ),
     const Achievement(
       type: AchievementType.knowledgeMaster,
       name: 'Knowledge King',
-      description: 'Complete all knowledge levels',
-      emoji: '✨',
+      description: 'Complete 100 knowledge levels',
+      emoji: '🧠',
       color: Color(0xFFFD79A8),
     ),
     
@@ -205,6 +206,15 @@ class Achievement extends Equatable {
       emoji: '🏃',
       color: Color(0xFFD63031),
       isSecret: true,
+    ),
+    
+    // Memory Mode
+    const Achievement(
+      type: AchievementType.memoryMaster,
+      name: 'Memory Master',
+      description: 'Complete 100 levels in Memory mode',
+      emoji: '🧠',
+      color: Color(0xFF9B59B6),
     ),
   ];
   

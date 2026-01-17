@@ -514,4 +514,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get go => 'MULAI!';
+
+  @override
+  String get complete => 'selesai';
 }

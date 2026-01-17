@@ -199,7 +199,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get currentStreak => 'Racha Actual';
 
   @override
-  String get longestStreak => 'Racha Más Larga';
+  String get longestStreak => 'Mayor Racha';
 
   @override
   String get totalPlayTime => 'Tiempo Total de Juego';
@@ -514,4 +514,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get go => '¡YA!';
+
+  @override
+  String get complete => 'completo';
 }

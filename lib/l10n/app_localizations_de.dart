@@ -21,7 +21,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get achievements => 'Erfolge';
 
   @override
-  String get statistics => 'Statistiken';
+  String get statistics => 'Statistik';
 
   @override
   String get chooseCategory => 'Kategorie wählen';
@@ -515,4 +515,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get go => 'LOS!';
+
+  @override
+  String get complete => 'abgeschlossen';
 }

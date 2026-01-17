@@ -190,7 +190,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dailyStreakActive => 'Sequência Diária Ativa!';
 
   @override
-  String get categoryProgress => 'Progresso da Categoria';
+  String get categoryProgress => 'Progresso de Categoria';
 
   @override
   String get completedLevels => 'Níveis Concluídos';
@@ -514,4 +514,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get go => 'VAI!';
+
+  @override
+  String get complete => 'completo';
 }
