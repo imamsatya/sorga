@@ -168,5 +168,7 @@
   "removePlayer": "Hapus",
   "category": "Kategori",
   "ready": "Siap?",
-  "go": "MULAI!"
+  "go": "MULAI!",
+  "yourTurn": "Giliranmu!",
+  "names": "Nama"
 }

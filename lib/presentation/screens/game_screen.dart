@@ -804,64 +804,50 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
     }
     
-    // Normal mode: Reset and Check buttons
+    // Normal mode: Reset and Check buttons (Reset hidden in multiplayer)
     return Container(
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: widget.isMultiplayer ? null : () {
-                _hapticService.selectionClick();
-                ref.read(gameStateProvider.notifier).retry();
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  color: widget.isMultiplayer 
-                      ? AppTheme.surfaceColor.withOpacity(0.3) 
-                      : AppTheme.surfaceColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: widget.isMultiplayer 
-                        ? AppTheme.textMuted.withValues(alpha: 0.1) 
-                        : AppTheme.textMuted.withValues(alpha: 0.3),
+          // Hide Reset button for multiplayer (fairness)
+          if (!widget.isMultiplayer) ...[
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  _hapticService.selectionClick();
+                  ref.read(gameStateProvider.notifier).retry();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceColor,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
                   ),
-                ),
-                child: Builder(
-                  builder: (context) => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.refresh, 
-                        color: widget.isMultiplayer 
-                            ? AppTheme.textMuted.withOpacity(0.3) 
-                            : AppTheme.textSecondary, 
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          AppLocalizations.of(context)!.reset, 
-                          style: TextStyle(
-                            color: widget.isMultiplayer 
-                                ? AppTheme.textMuted.withOpacity(0.3) 
-                                : AppTheme.textSecondary, 
-                            fontWeight: FontWeight.w600, 
-                            fontSize: 13,
+                  child: Builder(
+                    builder: (context) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.refresh, color: AppTheme.textSecondary, size: 18),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            AppLocalizations.of(context)!.reset, 
+                            style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 16),
+            const SizedBox(width: 16),
+          ],
+          // Check button (full width for multiplayer)
           Expanded(
-            flex: 2,
+            flex: widget.isMultiplayer ? 1 : 2,
             child: GestureDetector(
               onTap: () async {
                 _hapticService.selectionClick();

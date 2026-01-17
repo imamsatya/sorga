@@ -398,7 +398,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get times => 'times';
 
   @override
-  String get names => 'names';
+  String get names => 'Names';
 
   @override
   String get memorized => 'I\'ve Memorized!';
@@ -460,7 +460,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get yourTurn => 'Your Turn';
+  String get yourTurn => 'It\'s Your Turn!';
 
   @override
   String get tapToStart => 'Tap to Start';

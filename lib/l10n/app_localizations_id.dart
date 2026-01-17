@@ -398,7 +398,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get times => 'waktu';
 
   @override
-  String get names => 'nama';
+  String get names => 'Nama';
 
   @override
   String get memorized => 'Sudah Dihafal!';
@@ -460,7 +460,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get yourTurn => 'Giliranmu';
+  String get yourTurn => 'Giliranmu!';
 
   @override
   String get tapToStart => 'Ketuk untuk Mulai';

@@ -863,7 +863,7 @@ abstract class AppLocalizations {
   /// No description provided for @names.
   ///
   /// In en, this message translates to:
-  /// **'names'**
+  /// **'Names'**
   String get names;
 
   /// No description provided for @memorized.
@@ -971,7 +971,7 @@ abstract class AppLocalizations {
   /// No description provided for @yourTurn.
   ///
   /// In en, this message translates to:
-  /// **'Your Turn'**
+  /// **'It\'s Your Turn!'**
   String get yourTurn;
 
   /// No description provided for @tapToStart.

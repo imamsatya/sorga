@@ -77,7 +77,7 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
           icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary),
           onPressed: () => context.go('/'),
         ),
-        title: const Text('Multiplayer', style: TextStyle(color: AppTheme.textPrimary)),
+        title: Text(AppLocalizations.of(context)!.multiplayer, style: const TextStyle(color: AppTheme.textPrimary)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -85,21 +85,21 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildSectionTitle('Category'),
+              _buildSectionTitle(AppLocalizations.of(context)!.category),
               const SizedBox(height: 8),
               _buildCategorySelector(),
               const SizedBox(height: 24),
-              _buildSectionTitle('Items: $_itemCount'),
+              _buildSectionTitle('${AppLocalizations.of(context)!.items}: $_itemCount'),
               const SizedBox(height: 8),
               _buildItemCountSlider(),
               const SizedBox(height: 24),
               _buildMemoryModeToggle(),
               const SizedBox(height: 24),
-              _buildSectionTitle('Players'),
+              _buildSectionTitle(AppLocalizations.of(context)!.players),
               const SizedBox(height: 8),
               _buildPlayerCountSelector(),
               const SizedBox(height: 24),
-              _buildSectionTitle('Player Names'),
+              _buildSectionTitle('${AppLocalizations.of(context)!.players} ${AppLocalizations.of(context)!.names}'),
               const SizedBox(height: 8),
               ..._buildPlayerNameInputs(),
               const SizedBox(height: 32),
@@ -127,10 +127,18 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
       LevelCategory.basic, LevelCategory.formatted, LevelCategory.time,
       LevelCategory.names, LevelCategory.mixed,
     ];
-    final categoryNames = {
-      LevelCategory.basic: 'Numbers', LevelCategory.formatted: 'Formatted',
-      LevelCategory.time: 'Time', LevelCategory.names: 'Names', LevelCategory.mixed: 'Mixed',
-    };
+    
+    String getCategoryName(LevelCategory category) {
+      final l10n = AppLocalizations.of(context)!;
+      switch (category) {
+        case LevelCategory.basic: return l10n.basicNumbers;
+        case LevelCategory.formatted: return l10n.formattedNumbers;
+        case LevelCategory.time: return l10n.timeFormats;
+        case LevelCategory.names: return l10n.nameSorting;
+        case LevelCategory.mixed: return l10n.mixedFormats;
+        default: return category.name;
+      }
+    }
     
     return Wrap(
       spacing: 8,
@@ -149,7 +157,7 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
               ),
             ),
             child: Text(
-              categoryNames[category] ?? category.name,
+              getCategoryName(category),
               style: TextStyle(
                 color: isSelected ? Colors.white : AppTheme.textSecondary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -203,12 +211,12 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
         children: [
           const Text('✨', style: TextStyle(fontSize: 24)),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Memory Mode', style: TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
-                Text('Memorize first, then sort', style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                Text(AppLocalizations.of(context)!.memoryMode, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                Text('${AppLocalizations.of(context)!.memorizeTime}, ${AppLocalizations.of(context)!.sortTime.toLowerCase()}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
               ],
             ),
           ),
@@ -238,7 +246,7 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
                 border: Border.all(color: isSelected ? AppTheme.primaryColor : AppTheme.primaryColor.withOpacity(0.3)),
               ),
               child: Text(
-                '$count Players',
+                '$count ${AppLocalizations.of(context)!.players}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: isSelected ? Colors.white : AppTheme.textSecondary,
@@ -260,7 +268,7 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
           controller: _nameControllers[index],
           style: const TextStyle(color: AppTheme.textPrimary),
           decoration: InputDecoration(
-            labelText: 'Player ${index + 1}',
+            labelText: '${AppLocalizations.of(context)!.players} ${index + 1}',
             labelStyle: const TextStyle(color: AppTheme.textSecondary),
             prefixIcon: CircleAvatar(
               radius: 14,
@@ -292,12 +300,12 @@ class _MultiplayerSetupScreenState extends ConsumerState<MultiplayerSetupScreen>
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.play_arrow, size: 28),
-          SizedBox(width: 8),
-          Text('Start Game', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Icon(Icons.play_arrow, size: 28),
+          const SizedBox(width: 8),
+          Text(AppLocalizations.of(context)!.startGame, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ],
       ),
     );

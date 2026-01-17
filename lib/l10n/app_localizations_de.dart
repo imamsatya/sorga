@@ -461,7 +461,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get yourTurn => 'Your Turn';
+  String get yourTurn => 'It\'s Your Turn!';
 
   @override
   String get tapToStart => 'Tap to Start';

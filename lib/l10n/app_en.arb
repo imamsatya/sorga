@@ -169,5 +169,7 @@
   "removePlayer": "Remove",
   "category": "Category",
   "ready": "Ready?",
-  "go": "GO!"
+  "go": "GO!",
+  "yourTurn": "It's Your Turn!",
+  "names": "Names"
 }

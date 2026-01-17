@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/multiplayer_provider.dart';
 
 class MultiplayerTransitionScreen extends ConsumerStatefulWidget {
@@ -89,10 +90,12 @@ class _MultiplayerTransitionScreenState extends ConsumerState<MultiplayerTransit
                 const SizedBox(height: 32),
                 Text(currentPlayer.name, style: TextStyle(color: playerColor, fontSize: 36, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
-                const Text("It's Your Turn!", style: TextStyle(color: AppTheme.textPrimary, fontSize: 24)),
+                Text(AppLocalizations.of(context)!.yourTurn, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 24)),
                 const SizedBox(height: 8),
                 Text(
-                  session.isMemoryMode ? '✨ Memory Mode • ${session.itemCount} items' : '${session.itemCount} items to sort',
+                  session.isMemoryMode 
+                      ? '✨ ${AppLocalizations.of(context)!.memoryMode} • ${session.itemCount} ${AppLocalizations.of(context)!.items}' 
+                      : '${session.itemCount} ${AppLocalizations.of(context)!.items}',
                   style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16),
                 ),
                 const SizedBox(height: 48),
@@ -105,7 +108,7 @@ class _MultiplayerTransitionScreenState extends ConsumerState<MultiplayerTransit
                       return Transform.scale(
                         scale: value,
                         child: Text(
-                          _countdown > 0 ? '$_countdown' : 'GO!',
+                          _countdown > 0 ? '$_countdown' : AppLocalizations.of(context)!.go,
                           style: TextStyle(color: _countdown > 0 ? AppTheme.primaryColor : AppTheme.successColor, fontSize: 80, fontWeight: FontWeight.bold),
                         ),
                       );
@@ -121,18 +124,18 @@ class _MultiplayerTransitionScreenState extends ConsumerState<MultiplayerTransit
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4), blurRadius: 16, offset: const Offset(0, 4))],
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.touch_app, color: Colors.white, size: 28),
-                          SizedBox(width: 12),
-                          Text('Tap to Start', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                          const Icon(Icons.touch_app, color: Colors.white, size: 28),
+                          const SizedBox(width: 12),
+                          Text(AppLocalizations.of(context)!.tapToStart, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
                   ),
                 const SizedBox(height: 48),
-                Text('Player ${playerIndex + 1} of ${session.players.length}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+                Text('${AppLocalizations.of(context)!.players} ${playerIndex + 1} / ${session.players.length}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
               ],
             ),
           ),
