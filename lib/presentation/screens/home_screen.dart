@@ -468,7 +468,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             SizedBox(width: 10 * scale),
             Text(
-              'Multiplayer',
+              AppLocalizations.of(context)!.multiplayer,
               style: TextStyle(
                 fontSize: 16 * scale,
                 fontWeight: FontWeight.w600,

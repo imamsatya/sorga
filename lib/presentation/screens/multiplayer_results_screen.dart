@@ -147,7 +147,7 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             child: OutlinedButton.icon(
               onPressed: () { ref.read(multiplayerSessionProvider.notifier).endSession(); context.go('/'); },
               icon: const Icon(Icons.home),
-              label: const Text('Home'),
+              label: Text(AppLocalizations.of(context)!.home),
               style: OutlinedButton.styleFrom(foregroundColor: AppTheme.textSecondary, side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.3)), padding: const EdgeInsets.symmetric(vertical: 16)),
             ),
           ),
@@ -157,7 +157,7 @@ class MultiplayerResultsScreen extends ConsumerWidget {
             child: ElevatedButton.icon(
               onPressed: () { ref.read(multiplayerSessionProvider.notifier).playAgain(); context.go('/multiplayer/transition'); },
               icon: const Icon(Icons.replay),
-              label: const Text('Play Again'),
+              label: Text(AppLocalizations.of(context)!.playAgain),
               style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16)),
             ),
           ),

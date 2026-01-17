@@ -193,15 +193,41 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
   }
   
   /// Get shuffled items for a specific player (fairness logic)
+  /// All players get the SAME shuffled order for fairness
   List<LevelItem> getShuffledItemsForPlayer(String playerId) {
     if (state == null) return [];
     
-    // Use player ID as seed for consistent but unique shuffle per player
-    final seed = state!.sessionId.hashCode ^ playerId.hashCode;
+    // Use session ID as seed so ALL players get the SAME shuffle (fair competition)
+    final seed = state!.sessionId.hashCode;
     final random = Random(seed);
     
     final items = List<LevelItem>.from(state!.level.items);
-    items.shuffle(random);
+    
+    // Shuffle until items are NOT in correct order (avoid instant-win scenario)
+    int maxAttempts = 10;
+    while (maxAttempts > 0) {
+      items.shuffle(random);
+      
+      // Check if items are in correct order
+      bool isAlreadySorted = true;
+      for (int i = 0; i < items.length - 1; i++) {
+        if (state!.level.sortOrder == SortOrder.ascending) {
+          if (items[i].sortValue > items[i + 1].sortValue) {
+            isAlreadySorted = false;
+            break;
+          }
+        } else {
+          if (items[i].sortValue < items[i + 1].sortValue) {
+            isAlreadySorted = false;
+            break;
+          }
+        }
+      }
+      
+      if (!isAlreadySorted) break;
+      maxAttempts--;
+    }
+    
     return items;
   }
   
