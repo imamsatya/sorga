@@ -341,11 +341,22 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       );
       // Update consecutive perfect counter
       await LocalDatabase.instance.incrementPerfect();
+      
+      // Track Memory mode perfect completion (assuming no mistakes = success)
+      if (state!.level.isMemory) {
+        await LocalDatabase.instance.incrementMemoryPerfect();
+      }
+      
       // Refresh game stats provider to update streak badge
       _ref.read(gameStatsNotifierProvider.notifier).refresh();
       
       // Update daily challenge streak if this is a daily challenge (localId == 0)
       if (state!.level.localId == 0) {
+        // Track daily completion
+        await LocalDatabase.instance.incrementDailyCompletions();
+        // Track daily perfect (success = no mistakes for now)
+        await LocalDatabase.instance.incrementDailyPerfect();
+        
         await _ref.read(dailyChallengeProvider.notifier).completeChallenge(
           state!.elapsedTime.inMilliseconds,
         );
@@ -386,6 +397,28 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       }
     }
     
+    // Count Memory mode completions
+    int memoryCompletions = 0;
+    final memoryCompletedPerCategory = <LevelCategory, int>{};
+    
+    for (final progress in allProgress) {
+      if (progress.completed && progress.isMemoryProgress) {
+        memoryCompletions++;
+        try {
+          // Memory levels have offset of 10000
+          final originalLevelId = progress.levelId > 10000 
+              ? progress.levelId - 10000 
+              : progress.levelId;
+          if (originalLevelId > 1000) continue;
+          final level = levelGenerator.getLevel(originalLevelId);
+          memoryCompletedPerCategory[level.category] = 
+              (memoryCompletedPerCategory[level.category] ?? 0) + 1;
+        } catch (e) {
+          // Skip levels that don't exist
+        }
+      }
+    }
+    
     // Check achievements
     final newlyUnlocked = await AchievementService.instance.checkUnlocks(
       completedLevels: completedCount,
@@ -394,6 +427,14 @@ class GameStateNotifier extends StateNotifier<GameState?> {
       lastLevelTimeMs: state?.elapsedTime.inMilliseconds,
       completedPerCategory: completedPerCategory,
       consecutivePerfect: gameStats.consecutivePerfect,
+      memoryCompletions: memoryCompletions,
+      memoryPerfectCompletions: gameStats.memoryPerfectCount,
+      memoryCompletedPerCategory: memoryCompletedPerCategory,
+      dailyCompletions: gameStats.dailyCompletions,
+      dailyPerfectCompletions: gameStats.dailyPerfectCount,
+      multiplayerGamesHosted: gameStats.multiplayerGamesHosted,
+      completionTime: DateTime.now(),
+      retryCount: gameStats.retryCount,
     );
     
     // Store newly unlocked for display (can be shown in result screen)
@@ -413,6 +454,10 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     if (state == null) return;
     final levelId = state!.level.id;
     final isMemory = state!.level.isMemory;
+    
+    // Track retry count
+    LocalDatabase.instance.incrementRetryCount();
+    _ref.read(gameStatsNotifierProvider.notifier).refresh();
     
     if (isMemory) {
       startGameMemory(levelId);

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/multiplayer_session.dart';
@@ -24,6 +25,9 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
     required List<String> playerNames,
   }) {
     final sessionId = DateTime.now().millisecondsSinceEpoch.toString();
+    
+    // Track multiplayer game hosted
+    LocalDatabase.instance.incrementMultiplayerGames();
     
     // Create players
     final players = playerNames.asMap().entries.map((entry) {

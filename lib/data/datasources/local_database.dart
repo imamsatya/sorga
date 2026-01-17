@@ -78,6 +78,36 @@ class LocalDatabase {
     await saveStats(stats.resetPerfect());
   }
   
+  /// Increment Memory perfect count
+  Future<void> incrementMemoryPerfect() async {
+    final stats = getStats();
+    await saveStats(stats.incrementMemoryPerfect());
+  }
+  
+  /// Increment Daily perfect count
+  Future<void> incrementDailyPerfect() async {
+    final stats = getStats();
+    await saveStats(stats.incrementDailyPerfect());
+  }
+  
+  /// Increment Daily completions count
+  Future<void> incrementDailyCompletions() async {
+    final stats = getStats();
+    await saveStats(stats.incrementDailyCompletions());
+  }
+  
+  /// Increment Multiplayer games hosted count
+  Future<void> incrementMultiplayerGames() async {
+    final stats = getStats();
+    await saveStats(stats.incrementMultiplayerGames());
+  }
+  
+  /// Increment retry count
+  Future<void> incrementRetryCount() async {
+    final stats = getStats();
+    await saveStats(stats.incrementRetryCount());
+  }
+  
   /// Close the database
   Future<void> close() async {
     await _progressBox.close();
