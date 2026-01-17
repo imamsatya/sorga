@@ -1099,6 +1099,750 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Secret achievement'**
   String get secretAchievement;
+
+  /// No description provided for @achFirstSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'First Steps'**
+  String get achFirstSteps;
+
+  /// No description provided for @achFirstStepsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your first level'**
+  String get achFirstStepsDesc;
+
+  /// No description provided for @achGettingStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting Started'**
+  String get achGettingStarted;
+
+  /// No description provided for @achGettingStartedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 10 levels'**
+  String get achGettingStartedDesc;
+
+  /// No description provided for @achOnARoll.
+  ///
+  /// In en, this message translates to:
+  /// **'On a Roll'**
+  String get achOnARoll;
+
+  /// No description provided for @achOnARollDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 50 levels'**
+  String get achOnARollDesc;
+
+  /// No description provided for @achCenturyClub.
+  ///
+  /// In en, this message translates to:
+  /// **'Century Club'**
+  String get achCenturyClub;
+
+  /// No description provided for @achCenturyClubDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 levels'**
+  String get achCenturyClubDesc;
+
+  /// No description provided for @achHalfwayThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Halfway There'**
+  String get achHalfwayThere;
+
+  /// No description provided for @achHalfwayThereDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 500 levels'**
+  String get achHalfwayThereDesc;
+
+  /// No description provided for @achSortingMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorting Master'**
+  String get achSortingMaster;
+
+  /// No description provided for @achSortingMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete all 600 levels'**
+  String get achSortingMasterDesc;
+
+  /// No description provided for @achConsistent.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistent'**
+  String get achConsistent;
+
+  /// No description provided for @achConsistentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play 3 days in a row'**
+  String get achConsistentDesc;
+
+  /// No description provided for @achWeekWarrior.
+  ///
+  /// In en, this message translates to:
+  /// **'Week Warrior'**
+  String get achWeekWarrior;
+
+  /// No description provided for @achWeekWarriorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play 7 days in a row'**
+  String get achWeekWarriorDesc;
+
+  /// No description provided for @achMonthlyMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Master'**
+  String get achMonthlyMaster;
+
+  /// No description provided for @achMonthlyMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play 30 days in a row'**
+  String get achMonthlyMasterDesc;
+
+  /// No description provided for @achLegendaryStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Legendary Streak'**
+  String get achLegendaryStreak;
+
+  /// No description provided for @achLegendaryStreakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play 100 days in a row'**
+  String get achLegendaryStreakDesc;
+
+  /// No description provided for @achSpeedDemon.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed Demon'**
+  String get achSpeedDemon;
+
+  /// No description provided for @achSpeedDemonDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete level in under 5s'**
+  String get achSpeedDemonDesc;
+
+  /// No description provided for @achLightningFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightning Fast'**
+  String get achLightningFast;
+
+  /// No description provided for @achLightningFastDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete level in under 3s'**
+  String get achLightningFastDesc;
+
+  /// No description provided for @achBasicExpert.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Expert'**
+  String get achBasicExpert;
+
+  /// No description provided for @achBasicExpertDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 basic levels'**
+  String get achBasicExpertDesc;
+
+  /// No description provided for @achFormatPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Format Pro'**
+  String get achFormatPro;
+
+  /// No description provided for @achFormatProDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 formatted levels'**
+  String get achFormatProDesc;
+
+  /// No description provided for @achTimeLord.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Lord'**
+  String get achTimeLord;
+
+  /// No description provided for @achTimeLordDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 time levels'**
+  String get achTimeLordDesc;
+
+  /// No description provided for @achAlphabetizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Alphabetizer'**
+  String get achAlphabetizer;
+
+  /// No description provided for @achAlphabetizerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 name levels'**
+  String get achAlphabetizerDesc;
+
+  /// No description provided for @achMixMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Mix Master'**
+  String get achMixMaster;
+
+  /// No description provided for @achMixMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 mixed levels'**
+  String get achMixMasterDesc;
+
+  /// No description provided for @achKnowledgeKing.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge King'**
+  String get achKnowledgeKing;
+
+  /// No description provided for @achKnowledgeKingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete 100 knowledge levels'**
+  String get achKnowledgeKingDesc;
+
+  /// No description provided for @achBasicPerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Perfectionist'**
+  String get achBasicPerfectionist;
+
+  /// No description provided for @achBasicPerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% basic levels'**
+  String get achBasicPerfectionistDesc;
+
+  /// No description provided for @achFormatPerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Format Perfectionist'**
+  String get achFormatPerfectionist;
+
+  /// No description provided for @achFormatPerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% formatted levels'**
+  String get achFormatPerfectionistDesc;
+
+  /// No description provided for @achTimePerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Perfectionist'**
+  String get achTimePerfectionist;
+
+  /// No description provided for @achTimePerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% time levels'**
+  String get achTimePerfectionistDesc;
+
+  /// No description provided for @achNamesPerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Names Perfectionist'**
+  String get achNamesPerfectionist;
+
+  /// No description provided for @achNamesPerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% name levels'**
+  String get achNamesPerfectionistDesc;
+
+  /// No description provided for @achMixedPerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed Perfectionist'**
+  String get achMixedPerfectionist;
+
+  /// No description provided for @achMixedPerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% mixed levels'**
+  String get achMixedPerfectionistDesc;
+
+  /// No description provided for @achKnowledgePerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowledge Perfectionist'**
+  String get achKnowledgePerfectionist;
+
+  /// No description provided for @achKnowledgePerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100% knowledge levels'**
+  String get achKnowledgePerfectionistDesc;
+
+  /// No description provided for @achMemoryNovice.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Novice'**
+  String get achMemoryNovice;
+
+  /// No description provided for @achMemoryNoviceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 Memory levels'**
+  String get achMemoryNoviceDesc;
+
+  /// No description provided for @achMemoryExpert.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Expert'**
+  String get achMemoryExpert;
+
+  /// No description provided for @achMemoryExpertDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'50 Memory levels'**
+  String get achMemoryExpertDesc;
+
+  /// No description provided for @achMemoryMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Master'**
+  String get achMemoryMaster;
+
+  /// No description provided for @achMemoryMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100 Memory levels'**
+  String get achMemoryMasterDesc;
+
+  /// No description provided for @achPerfectRecall.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Recall'**
+  String get achPerfectRecall;
+
+  /// No description provided for @achPerfectRecallDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'5 perfect Memory levels'**
+  String get achPerfectRecallDesc;
+
+  /// No description provided for @achMemoryPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Pro'**
+  String get achMemoryPro;
+
+  /// No description provided for @achMemoryProDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 perfect Memory levels'**
+  String get achMemoryProDesc;
+
+  /// No description provided for @achMemoryGenius.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Genius'**
+  String get achMemoryGenius;
+
+  /// No description provided for @achMemoryGeniusDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'25 perfect Memory levels'**
+  String get achMemoryGeniusDesc;
+
+  /// No description provided for @achEideticMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Eidetic Memory'**
+  String get achEideticMemory;
+
+  /// No description provided for @achEideticMemoryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'50 perfect Memory levels'**
+  String get achEideticMemoryDesc;
+
+  /// No description provided for @achPhotographicMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Photographic Memory'**
+  String get achPhotographicMemory;
+
+  /// No description provided for @achPhotographicMemoryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100 perfect Memory levels'**
+  String get achPhotographicMemoryDesc;
+
+  /// No description provided for @achMemoryBasicMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Basic Master'**
+  String get achMemoryBasicMaster;
+
+  /// No description provided for @achMemoryBasicMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All basic in Memory'**
+  String get achMemoryBasicMasterDesc;
+
+  /// No description provided for @achMemoryFormatMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Format Master'**
+  String get achMemoryFormatMaster;
+
+  /// No description provided for @achMemoryFormatMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All formatted in Memory'**
+  String get achMemoryFormatMasterDesc;
+
+  /// No description provided for @achMemoryTimeMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Time Master'**
+  String get achMemoryTimeMaster;
+
+  /// No description provided for @achMemoryTimeMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All time in Memory'**
+  String get achMemoryTimeMasterDesc;
+
+  /// No description provided for @achMemoryNamesMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Names Master'**
+  String get achMemoryNamesMaster;
+
+  /// No description provided for @achMemoryNamesMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All names in Memory'**
+  String get achMemoryNamesMasterDesc;
+
+  /// No description provided for @achMemoryMixedMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Mixed Master'**
+  String get achMemoryMixedMaster;
+
+  /// No description provided for @achMemoryMixedMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'All mixed in Memory'**
+  String get achMemoryMixedMasterDesc;
+
+  /// No description provided for @achDailyStarter.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Starter'**
+  String get achDailyStarter;
+
+  /// No description provided for @achDailyStarterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'First daily challenge'**
+  String get achDailyStarterDesc;
+
+  /// No description provided for @achWeeklyChallenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Challenger'**
+  String get achWeeklyChallenger;
+
+  /// No description provided for @achWeeklyChallengerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'7 daily challenges'**
+  String get achWeeklyChallengerDesc;
+
+  /// No description provided for @achMonthlyChallenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Challenger'**
+  String get achMonthlyChallenger;
+
+  /// No description provided for @achMonthlyChallengerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'30 daily challenges'**
+  String get achMonthlyChallengerDesc;
+
+  /// No description provided for @achDailyLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Legend'**
+  String get achDailyLegend;
+
+  /// No description provided for @achDailyLegendDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100 daily challenges'**
+  String get achDailyLegendDesc;
+
+  /// No description provided for @achPerfectDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Day'**
+  String get achPerfectDay;
+
+  /// No description provided for @achPerfectDayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'5 perfect daily'**
+  String get achPerfectDayDesc;
+
+  /// No description provided for @achPerfectWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Week'**
+  String get achPerfectWeek;
+
+  /// No description provided for @achPerfectWeekDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 perfect daily'**
+  String get achPerfectWeekDesc;
+
+  /// No description provided for @achPerfectStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Streak'**
+  String get achPerfectStreak;
+
+  /// No description provided for @achPerfectStreakDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'25 perfect daily'**
+  String get achPerfectStreakDesc;
+
+  /// No description provided for @achFlawlessPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Flawless Player'**
+  String get achFlawlessPlayer;
+
+  /// No description provided for @achFlawlessPlayerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'50 perfect daily'**
+  String get achFlawlessPlayerDesc;
+
+  /// No description provided for @achDailyPerfectionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Perfectionist'**
+  String get achDailyPerfectionist;
+
+  /// No description provided for @achDailyPerfectionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'100 perfect daily'**
+  String get achDailyPerfectionistDesc;
+
+  /// No description provided for @achPartyHost.
+  ///
+  /// In en, this message translates to:
+  /// **'Party Host'**
+  String get achPartyHost;
+
+  /// No description provided for @achPartyHostDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Host 10 multiplayer games'**
+  String get achPartyHostDesc;
+
+  /// No description provided for @achSocialGamer.
+  ///
+  /// In en, this message translates to:
+  /// **'Social Gamer'**
+  String get achSocialGamer;
+
+  /// No description provided for @achSocialGamerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Host 25 multiplayer games'**
+  String get achSocialGamerDesc;
+
+  /// No description provided for @achMultiplayerLegend.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplayer Legend'**
+  String get achMultiplayerLegend;
+
+  /// No description provided for @achMultiplayerLegendDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Host 50 multiplayer games'**
+  String get achMultiplayerLegendDesc;
+
+  /// No description provided for @achPerfectRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect Run'**
+  String get achPerfectRun;
+
+  /// No description provided for @achPerfectRunDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 levels without mistakes'**
+  String get achPerfectRunDesc;
+
+  /// No description provided for @achDedicatedPlayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Dedicated Player'**
+  String get achDedicatedPlayer;
+
+  /// No description provided for @achDedicatedPlayerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play for 1 hour total'**
+  String get achDedicatedPlayerDesc;
+
+  /// No description provided for @achMarathonRunner.
+  ///
+  /// In en, this message translates to:
+  /// **'Marathon Runner'**
+  String get achMarathonRunner;
+
+  /// No description provided for @achMarathonRunnerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play for 5 hours total'**
+  String get achMarathonRunnerDesc;
+
+  /// No description provided for @achTotalMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Master'**
+  String get achTotalMaster;
+
+  /// No description provided for @achTotalMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'1100 levels (regular + Memory)'**
+  String get achTotalMasterDesc;
+
+  /// No description provided for @achCompletionist.
+  ///
+  /// In en, this message translates to:
+  /// **'Completionist'**
+  String get achCompletionist;
+
+  /// No description provided for @achCompletionistDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock all achievements'**
+  String get achCompletionistDesc;
+
+  /// No description provided for @achNightOwl.
+  ///
+  /// In en, this message translates to:
+  /// **'Night Owl'**
+  String get achNightOwl;
+
+  /// No description provided for @achNightOwlDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play between midnight and 5 AM'**
+  String get achNightOwlDesc;
+
+  /// No description provided for @achEarlyBird.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Bird'**
+  String get achEarlyBird;
+
+  /// No description provided for @achEarlyBirdDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play between 5 AM and 7 AM'**
+  String get achEarlyBirdDesc;
+
+  /// No description provided for @achNewYearSorter.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year Sorter'**
+  String get achNewYearSorter;
+
+  /// No description provided for @achNewYearSorterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Play on January 1st'**
+  String get achNewYearSorterDesc;
+
+  /// No description provided for @achNeverGiveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Never Give Up'**
+  String get achNeverGiveUp;
+
+  /// No description provided for @achNeverGiveUpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use retry 50 times'**
+  String get achNeverGiveUpDesc;
+
+  /// No description provided for @achInstantWin.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant Win'**
+  String get achInstantWin;
+
+  /// No description provided for @achInstantWinDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete in under 2s'**
+  String get achInstantWinDesc;
+
+  /// No description provided for @achDescendingFan.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending Fan'**
+  String get achDescendingFan;
+
+  /// No description provided for @achDescendingFanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'20 descending in a row'**
+  String get achDescendingFanDesc;
+
+  /// No description provided for @achSwapMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap Master'**
+  String get achSwapMaster;
+
+  /// No description provided for @achSwapMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 levels using only swap'**
+  String get achSwapMasterDesc;
+
+  /// No description provided for @achShiftMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift Master'**
+  String get achShiftMaster;
+
+  /// No description provided for @achShiftMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'10 levels using only shift'**
+  String get achShiftMasterDesc;
 }
 
 class _AppLocalizationsDelegate

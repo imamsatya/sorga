@@ -526,4 +526,376 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get secretAchievement => 'Pencapaian rahasia';
+
+  @override
+  String get achFirstSteps => 'Langkah Pertama';
+
+  @override
+  String get achFirstStepsDesc => 'Selesaikan level pertama';
+
+  @override
+  String get achGettingStarted => 'Mulai Bermain';
+
+  @override
+  String get achGettingStartedDesc => 'Selesaikan 10 level';
+
+  @override
+  String get achOnARoll => 'Lancar Jaya';
+
+  @override
+  String get achOnARollDesc => 'Selesaikan 50 level';
+
+  @override
+  String get achCenturyClub => 'Klub 100';
+
+  @override
+  String get achCenturyClubDesc => 'Selesaikan 100 level';
+
+  @override
+  String get achHalfwayThere => 'Setengah Jalan';
+
+  @override
+  String get achHalfwayThereDesc => 'Selesaikan 500 level';
+
+  @override
+  String get achSortingMaster => 'Master Sortir';
+
+  @override
+  String get achSortingMasterDesc => 'Selesaikan 600 level';
+
+  @override
+  String get achConsistent => 'Konsisten';
+
+  @override
+  String get achConsistentDesc => 'Main 3 hari berturut';
+
+  @override
+  String get achWeekWarrior => 'Pejuang Mingguan';
+
+  @override
+  String get achWeekWarriorDesc => 'Main 7 hari berturut';
+
+  @override
+  String get achMonthlyMaster => 'Master Bulanan';
+
+  @override
+  String get achMonthlyMasterDesc => 'Main 30 hari berturut';
+
+  @override
+  String get achLegendaryStreak => 'Streak Legendaris';
+
+  @override
+  String get achLegendaryStreakDesc => 'Main 100 hari berturut';
+
+  @override
+  String get achSpeedDemon => 'Si Cepat';
+
+  @override
+  String get achSpeedDemonDesc => 'Selesaikan dalam 5 detik';
+
+  @override
+  String get achLightningFast => 'Secepat Kilat';
+
+  @override
+  String get achLightningFastDesc => 'Selesaikan dalam 3 detik';
+
+  @override
+  String get achBasicExpert => 'Ahli Dasar';
+
+  @override
+  String get achBasicExpertDesc => '100 level dasar';
+
+  @override
+  String get achFormatPro => 'Pro Format';
+
+  @override
+  String get achFormatProDesc => '100 level format';
+
+  @override
+  String get achTimeLord => 'Penguasa Waktu';
+
+  @override
+  String get achTimeLordDesc => '100 level waktu';
+
+  @override
+  String get achAlphabetizer => 'Pengurut Huruf';
+
+  @override
+  String get achAlphabetizerDesc => '100 level nama';
+
+  @override
+  String get achMixMaster => 'Master Campuran';
+
+  @override
+  String get achMixMasterDesc => '100 level campuran';
+
+  @override
+  String get achKnowledgeKing => 'Raja Pengetahuan';
+
+  @override
+  String get achKnowledgeKingDesc => '100 level pengetahuan';
+
+  @override
+  String get achBasicPerfectionist => 'Perfeksionis Dasar';
+
+  @override
+  String get achBasicPerfectionistDesc => '100% level dasar';
+
+  @override
+  String get achFormatPerfectionist => 'Perfeksionis Format';
+
+  @override
+  String get achFormatPerfectionistDesc => '100% level format';
+
+  @override
+  String get achTimePerfectionist => 'Perfeksionis Waktu';
+
+  @override
+  String get achTimePerfectionistDesc => '100% level waktu';
+
+  @override
+  String get achNamesPerfectionist => 'Perfeksionis Nama';
+
+  @override
+  String get achNamesPerfectionistDesc => '100% level nama';
+
+  @override
+  String get achMixedPerfectionist => 'Perfeksionis Campuran';
+
+  @override
+  String get achMixedPerfectionistDesc => '100% level campuran';
+
+  @override
+  String get achKnowledgePerfectionist => 'Perfeksionis Pengetahuan';
+
+  @override
+  String get achKnowledgePerfectionistDesc => '100% level pengetahuan';
+
+  @override
+  String get achMemoryNovice => 'Pemula Memory';
+
+  @override
+  String get achMemoryNoviceDesc => '10 level Memory';
+
+  @override
+  String get achMemoryExpert => 'Ahli Memory';
+
+  @override
+  String get achMemoryExpertDesc => '50 level Memory';
+
+  @override
+  String get achMemoryMaster => 'Master Memory';
+
+  @override
+  String get achMemoryMasterDesc => '100 level Memory';
+
+  @override
+  String get achPerfectRecall => 'Ingatan Sempurna';
+
+  @override
+  String get achPerfectRecallDesc => '5 Memory sempurna';
+
+  @override
+  String get achMemoryPro => 'Pro Memory';
+
+  @override
+  String get achMemoryProDesc => '10 Memory sempurna';
+
+  @override
+  String get achMemoryGenius => 'Jenius Memory';
+
+  @override
+  String get achMemoryGeniusDesc => '25 Memory sempurna';
+
+  @override
+  String get achEideticMemory => 'Memory Eidetik';
+
+  @override
+  String get achEideticMemoryDesc => '50 Memory sempurna';
+
+  @override
+  String get achPhotographicMemory => 'Memory Fotografis';
+
+  @override
+  String get achPhotographicMemoryDesc => '100 Memory sempurna';
+
+  @override
+  String get achMemoryBasicMaster => 'Master Dasar Memory';
+
+  @override
+  String get achMemoryBasicMasterDesc => 'Semua dasar di Memory';
+
+  @override
+  String get achMemoryFormatMaster => 'Master Format Memory';
+
+  @override
+  String get achMemoryFormatMasterDesc => 'Semua format di Memory';
+
+  @override
+  String get achMemoryTimeMaster => 'Master Waktu Memory';
+
+  @override
+  String get achMemoryTimeMasterDesc => 'Semua waktu di Memory';
+
+  @override
+  String get achMemoryNamesMaster => 'Master Nama Memory';
+
+  @override
+  String get achMemoryNamesMasterDesc => 'Semua nama di Memory';
+
+  @override
+  String get achMemoryMixedMaster => 'Master Campuran Memory';
+
+  @override
+  String get achMemoryMixedMasterDesc => 'Semua campuran di Memory';
+
+  @override
+  String get achDailyStarter => 'Pemula Harian';
+
+  @override
+  String get achDailyStarterDesc => 'Tantangan harian pertama';
+
+  @override
+  String get achWeeklyChallenger => 'Penantang Mingguan';
+
+  @override
+  String get achWeeklyChallengerDesc => '7 tantangan harian';
+
+  @override
+  String get achMonthlyChallenger => 'Penantang Bulanan';
+
+  @override
+  String get achMonthlyChallengerDesc => '30 tantangan harian';
+
+  @override
+  String get achDailyLegend => 'Legenda Harian';
+
+  @override
+  String get achDailyLegendDesc => '100 tantangan harian';
+
+  @override
+  String get achPerfectDay => 'Hari Sempurna';
+
+  @override
+  String get achPerfectDayDesc => '5 harian sempurna';
+
+  @override
+  String get achPerfectWeek => 'Minggu Sempurna';
+
+  @override
+  String get achPerfectWeekDesc => '10 harian sempurna';
+
+  @override
+  String get achPerfectStreak => 'Streak Sempurna';
+
+  @override
+  String get achPerfectStreakDesc => '25 harian sempurna';
+
+  @override
+  String get achFlawlessPlayer => 'Pemain Tanpa Cela';
+
+  @override
+  String get achFlawlessPlayerDesc => '50 harian sempurna';
+
+  @override
+  String get achDailyPerfectionist => 'Perfeksionis Harian';
+
+  @override
+  String get achDailyPerfectionistDesc => '100 harian sempurna';
+
+  @override
+  String get achPartyHost => 'Tuan Rumah';
+
+  @override
+  String get achPartyHostDesc => '10 game multiplayer';
+
+  @override
+  String get achSocialGamer => 'Gamer Sosial';
+
+  @override
+  String get achSocialGamerDesc => '25 game multiplayer';
+
+  @override
+  String get achMultiplayerLegend => 'Legenda Multiplayer';
+
+  @override
+  String get achMultiplayerLegendDesc => '50 game multiplayer';
+
+  @override
+  String get achPerfectRun => 'Lari Sempurna';
+
+  @override
+  String get achPerfectRunDesc => '10 level tanpa salah';
+
+  @override
+  String get achDedicatedPlayer => 'Pemain Setia';
+
+  @override
+  String get achDedicatedPlayerDesc => 'Main 1 jam total';
+
+  @override
+  String get achMarathonRunner => 'Pelari Maraton';
+
+  @override
+  String get achMarathonRunnerDesc => 'Main 5 jam total';
+
+  @override
+  String get achTotalMaster => 'Master Total';
+
+  @override
+  String get achTotalMasterDesc => '1100 level (biasa + Memory)';
+
+  @override
+  String get achCompletionist => 'Kolektor Lengkap';
+
+  @override
+  String get achCompletionistDesc => 'Buka semua pencapaian';
+
+  @override
+  String get achNightOwl => 'Burung Hantu';
+
+  @override
+  String get achNightOwlDesc => 'Main tengah malam - 5 pagi';
+
+  @override
+  String get achEarlyBird => 'Burung Pagi';
+
+  @override
+  String get achEarlyBirdDesc => 'Main 5 - 7 pagi';
+
+  @override
+  String get achNewYearSorter => 'Sortir Tahun Baru';
+
+  @override
+  String get achNewYearSorterDesc => 'Main tanggal 1 Januari';
+
+  @override
+  String get achNeverGiveUp => 'Pantang Menyerah';
+
+  @override
+  String get achNeverGiveUpDesc => 'Ulangi 50 kali';
+
+  @override
+  String get achInstantWin => 'Kemenangan Instan';
+
+  @override
+  String get achInstantWinDesc => 'Selesaikan dalam 2 detik';
+
+  @override
+  String get achDescendingFan => 'Penggemar Turun';
+
+  @override
+  String get achDescendingFanDesc => '20 descending berturut';
+
+  @override
+  String get achSwapMaster => 'Master Tukar';
+
+  @override
+  String get achSwapMasterDesc => '10 level hanya swap';
+
+  @override
+  String get achShiftMaster => 'Master Geser';
+
+  @override
+  String get achShiftMasterDesc => '10 level hanya shift';
 }

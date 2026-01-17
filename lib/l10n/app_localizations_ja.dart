@@ -520,4 +520,376 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get secretAchievement => 'シークレット実績';
+
+  @override
+  String get achFirstSteps => 'はじめの一歩';
+
+  @override
+  String get achFirstStepsDesc => '最初のレベルをクリア';
+
+  @override
+  String get achGettingStarted => 'スタート';
+
+  @override
+  String get achGettingStartedDesc => '10レベルをクリア';
+
+  @override
+  String get achOnARoll => '絶好調';
+
+  @override
+  String get achOnARollDesc => '50レベルをクリア';
+
+  @override
+  String get achCenturyClub => '100クラブ';
+
+  @override
+  String get achCenturyClubDesc => '100レベルをクリア';
+
+  @override
+  String get achHalfwayThere => '折り返し地点';
+
+  @override
+  String get achHalfwayThereDesc => '500レベルをクリア';
+
+  @override
+  String get achSortingMaster => 'ソートマスター';
+
+  @override
+  String get achSortingMasterDesc => '全600レベルをクリア';
+
+  @override
+  String get achConsistent => '継続は力';
+
+  @override
+  String get achConsistentDesc => '3日連続プレイ';
+
+  @override
+  String get achWeekWarrior => '週間戦士';
+
+  @override
+  String get achWeekWarriorDesc => '7日連続プレイ';
+
+  @override
+  String get achMonthlyMaster => '月間マスター';
+
+  @override
+  String get achMonthlyMasterDesc => '30日連続プレイ';
+
+  @override
+  String get achLegendaryStreak => '伝説の連続記録';
+
+  @override
+  String get achLegendaryStreakDesc => '100日連続プレイ';
+
+  @override
+  String get achSpeedDemon => 'スピードの悪魔';
+
+  @override
+  String get achSpeedDemonDesc => '5秒以内にクリア';
+
+  @override
+  String get achLightningFast => '電光石火';
+
+  @override
+  String get achLightningFastDesc => '3秒以内にクリア';
+
+  @override
+  String get achBasicExpert => '基本のエキスパート';
+
+  @override
+  String get achBasicExpertDesc => '基本100レベル';
+
+  @override
+  String get achFormatPro => 'フォーマットプロ';
+
+  @override
+  String get achFormatProDesc => '形式100レベル';
+
+  @override
+  String get achTimeLord => 'タイムロード';
+
+  @override
+  String get achTimeLordDesc => '時間100レベル';
+
+  @override
+  String get achAlphabetizer => '名前の達人';
+
+  @override
+  String get achAlphabetizerDesc => '名前100レベル';
+
+  @override
+  String get achMixMaster => 'ミックスマスター';
+
+  @override
+  String get achMixMasterDesc => '混合100レベル';
+
+  @override
+  String get achKnowledgeKing => '知識の王';
+
+  @override
+  String get achKnowledgeKingDesc => '知識100レベル';
+
+  @override
+  String get achBasicPerfectionist => '基本パーフェクト';
+
+  @override
+  String get achBasicPerfectionistDesc => '基本100%完了';
+
+  @override
+  String get achFormatPerfectionist => '形式パーフェクト';
+
+  @override
+  String get achFormatPerfectionistDesc => '形式100%完了';
+
+  @override
+  String get achTimePerfectionist => '時間パーフェクト';
+
+  @override
+  String get achTimePerfectionistDesc => '時間100%完了';
+
+  @override
+  String get achNamesPerfectionist => '名前パーフェクト';
+
+  @override
+  String get achNamesPerfectionistDesc => '名前100%完了';
+
+  @override
+  String get achMixedPerfectionist => '混合パーフェクト';
+
+  @override
+  String get achMixedPerfectionistDesc => '混合100%完了';
+
+  @override
+  String get achKnowledgePerfectionist => '知識パーフェクト';
+
+  @override
+  String get achKnowledgePerfectionistDesc => '知識100%完了';
+
+  @override
+  String get achMemoryNovice => 'メモリー初心者';
+
+  @override
+  String get achMemoryNoviceDesc => 'メモリー10レベル';
+
+  @override
+  String get achMemoryExpert => 'メモリーエキスパート';
+
+  @override
+  String get achMemoryExpertDesc => 'メモリー50レベル';
+
+  @override
+  String get achMemoryMaster => 'メモリーマスター';
+
+  @override
+  String get achMemoryMasterDesc => 'メモリー100レベル';
+
+  @override
+  String get achPerfectRecall => '完璧な記憶';
+
+  @override
+  String get achPerfectRecallDesc => 'メモリー5回ノーミス';
+
+  @override
+  String get achMemoryPro => 'メモリープロ';
+
+  @override
+  String get achMemoryProDesc => 'メモリー10回ノーミス';
+
+  @override
+  String get achMemoryGenius => 'メモリー天才';
+
+  @override
+  String get achMemoryGeniusDesc => 'メモリー25回ノーミス';
+
+  @override
+  String get achEideticMemory => '映像記憶';
+
+  @override
+  String get achEideticMemoryDesc => 'メモリー50回ノーミス';
+
+  @override
+  String get achPhotographicMemory => '写真記憶';
+
+  @override
+  String get achPhotographicMemoryDesc => 'メモリー100回ノーミス';
+
+  @override
+  String get achMemoryBasicMaster => 'メモリー基本マスター';
+
+  @override
+  String get achMemoryBasicMasterDesc => 'メモリーで基本全完了';
+
+  @override
+  String get achMemoryFormatMaster => 'メモリー形式マスター';
+
+  @override
+  String get achMemoryFormatMasterDesc => 'メモリーで形式全完了';
+
+  @override
+  String get achMemoryTimeMaster => 'メモリー時間マスター';
+
+  @override
+  String get achMemoryTimeMasterDesc => 'メモリーで時間全完了';
+
+  @override
+  String get achMemoryNamesMaster => 'メモリー名前マスター';
+
+  @override
+  String get achMemoryNamesMasterDesc => 'メモリーで名前全完了';
+
+  @override
+  String get achMemoryMixedMaster => 'メモリー混合マスター';
+
+  @override
+  String get achMemoryMixedMasterDesc => 'メモリーで混合全完了';
+
+  @override
+  String get achDailyStarter => 'デイリースタート';
+
+  @override
+  String get achDailyStarterDesc => '初のデイリー';
+
+  @override
+  String get achWeeklyChallenger => '週間挑戦者';
+
+  @override
+  String get achWeeklyChallengerDesc => 'デイリー7回';
+
+  @override
+  String get achMonthlyChallenger => '月間挑戦者';
+
+  @override
+  String get achMonthlyChallengerDesc => 'デイリー30回';
+
+  @override
+  String get achDailyLegend => 'デイリーレジェンド';
+
+  @override
+  String get achDailyLegendDesc => 'デイリー100回';
+
+  @override
+  String get achPerfectDay => 'パーフェクトデイ';
+
+  @override
+  String get achPerfectDayDesc => 'デイリー5回ノーミス';
+
+  @override
+  String get achPerfectWeek => 'パーフェクトウィーク';
+
+  @override
+  String get achPerfectWeekDesc => 'デイリー10回ノーミス';
+
+  @override
+  String get achPerfectStreak => 'パーフェクト連続';
+
+  @override
+  String get achPerfectStreakDesc => 'デイリー25回ノーミス';
+
+  @override
+  String get achFlawlessPlayer => '完璧なプレイヤー';
+
+  @override
+  String get achFlawlessPlayerDesc => 'デイリー50回ノーミス';
+
+  @override
+  String get achDailyPerfectionist => 'デイリー完璧主義';
+
+  @override
+  String get achDailyPerfectionistDesc => 'デイリー100回ノーミス';
+
+  @override
+  String get achPartyHost => 'パーティホスト';
+
+  @override
+  String get achPartyHostDesc => 'マルチ10ゲーム';
+
+  @override
+  String get achSocialGamer => 'ソーシャルゲーマー';
+
+  @override
+  String get achSocialGamerDesc => 'マルチ25ゲーム';
+
+  @override
+  String get achMultiplayerLegend => 'マルチレジェンド';
+
+  @override
+  String get achMultiplayerLegendDesc => 'マルチ50ゲーム';
+
+  @override
+  String get achPerfectRun => 'パーフェクトラン';
+
+  @override
+  String get achPerfectRunDesc => '10レベル連続ノーミス';
+
+  @override
+  String get achDedicatedPlayer => '熱心なプレイヤー';
+
+  @override
+  String get achDedicatedPlayerDesc => '累計1時間プレイ';
+
+  @override
+  String get achMarathonRunner => 'マラソンランナー';
+
+  @override
+  String get achMarathonRunnerDesc => '累計5時間プレイ';
+
+  @override
+  String get achTotalMaster => 'トータルマスター';
+
+  @override
+  String get achTotalMasterDesc => '1100レベル達成';
+
+  @override
+  String get achCompletionist => 'コンプリート';
+
+  @override
+  String get achCompletionistDesc => '全実績を解除';
+
+  @override
+  String get achNightOwl => '夜型人間';
+
+  @override
+  String get achNightOwlDesc => '深夜0時〜5時にプレイ';
+
+  @override
+  String get achEarlyBird => '早起き鳥';
+
+  @override
+  String get achEarlyBirdDesc => '朝5時〜7時にプレイ';
+
+  @override
+  String get achNewYearSorter => '新年ソーター';
+
+  @override
+  String get achNewYearSorterDesc => '1月1日にプレイ';
+
+  @override
+  String get achNeverGiveUp => '諦めない心';
+
+  @override
+  String get achNeverGiveUpDesc => 'リトライ50回使用';
+
+  @override
+  String get achInstantWin => '即勝利';
+
+  @override
+  String get achInstantWinDesc => '2秒以内にクリア';
+
+  @override
+  String get achDescendingFan => '降順ファン';
+
+  @override
+  String get achDescendingFanDesc => '降順20連続';
+
+  @override
+  String get achSwapMaster => 'スワップマスター';
+
+  @override
+  String get achSwapMasterDesc => 'スワップのみで10レベル';
+
+  @override
+  String get achShiftMaster => 'シフトマスター';
+
+  @override
+  String get achShiftMasterDesc => 'シフトのみで10レベル';
 }

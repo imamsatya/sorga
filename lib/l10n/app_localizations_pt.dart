@@ -526,4 +526,376 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get secretAchievement => 'Conquista secreta';
+
+  @override
+  String get achFirstSteps => 'Primeiros Passos';
+
+  @override
+  String get achFirstStepsDesc => 'Complete seu primeiro nível';
+
+  @override
+  String get achGettingStarted => 'Começando';
+
+  @override
+  String get achGettingStartedDesc => 'Complete 10 níveis';
+
+  @override
+  String get achOnARoll => 'Em Alta';
+
+  @override
+  String get achOnARollDesc => 'Complete 50 níveis';
+
+  @override
+  String get achCenturyClub => 'Clube dos 100';
+
+  @override
+  String get achCenturyClubDesc => 'Complete 100 níveis';
+
+  @override
+  String get achHalfwayThere => 'Metade do Caminho';
+
+  @override
+  String get achHalfwayThereDesc => 'Complete 500 níveis';
+
+  @override
+  String get achSortingMaster => 'Mestre da Ordenação';
+
+  @override
+  String get achSortingMasterDesc => 'Complete todos os 600 níveis';
+
+  @override
+  String get achConsistent => 'Consistente';
+
+  @override
+  String get achConsistentDesc => 'Jogue 3 dias seguidos';
+
+  @override
+  String get achWeekWarrior => 'Guerreiro Semanal';
+
+  @override
+  String get achWeekWarriorDesc => 'Jogue 7 dias seguidos';
+
+  @override
+  String get achMonthlyMaster => 'Mestre Mensal';
+
+  @override
+  String get achMonthlyMasterDesc => 'Jogue 30 dias seguidos';
+
+  @override
+  String get achLegendaryStreak => 'Sequência Lendária';
+
+  @override
+  String get achLegendaryStreakDesc => 'Jogue 100 dias seguidos';
+
+  @override
+  String get achSpeedDemon => 'Demônio da Velocidade';
+
+  @override
+  String get achSpeedDemonDesc => 'Nível em menos de 5s';
+
+  @override
+  String get achLightningFast => 'Rápido como Raio';
+
+  @override
+  String get achLightningFastDesc => 'Nível em menos de 3s';
+
+  @override
+  String get achBasicExpert => 'Especialista Básico';
+
+  @override
+  String get achBasicExpertDesc => '100 níveis básicos';
+
+  @override
+  String get achFormatPro => 'Pro do Formato';
+
+  @override
+  String get achFormatProDesc => '100 níveis formato';
+
+  @override
+  String get achTimeLord => 'Senhor do Tempo';
+
+  @override
+  String get achTimeLordDesc => '100 níveis tempo';
+
+  @override
+  String get achAlphabetizer => 'Alfabetizador';
+
+  @override
+  String get achAlphabetizerDesc => '100 níveis nomes';
+
+  @override
+  String get achMixMaster => 'Mestre do Mix';
+
+  @override
+  String get achMixMasterDesc => '100 níveis mistos';
+
+  @override
+  String get achKnowledgeKing => 'Rei do Conhecimento';
+
+  @override
+  String get achKnowledgeKingDesc => '100 níveis conhecimento';
+
+  @override
+  String get achBasicPerfectionist => 'Perfeccion. Básico';
+
+  @override
+  String get achBasicPerfectionistDesc => '100% níveis básicos';
+
+  @override
+  String get achFormatPerfectionist => 'Perfeccion. Formato';
+
+  @override
+  String get achFormatPerfectionistDesc => '100% níveis formato';
+
+  @override
+  String get achTimePerfectionist => 'Perfeccion. Tempo';
+
+  @override
+  String get achTimePerfectionistDesc => '100% níveis tempo';
+
+  @override
+  String get achNamesPerfectionist => 'Perfeccion. Nomes';
+
+  @override
+  String get achNamesPerfectionistDesc => '100% níveis nomes';
+
+  @override
+  String get achMixedPerfectionist => 'Perfeccion. Misto';
+
+  @override
+  String get achMixedPerfectionistDesc => '100% níveis mistos';
+
+  @override
+  String get achKnowledgePerfectionist => 'Perfec. Conhecimento';
+
+  @override
+  String get achKnowledgePerfectionistDesc => '100% conhecimento';
+
+  @override
+  String get achMemoryNovice => 'Novato Memória';
+
+  @override
+  String get achMemoryNoviceDesc => '10 níveis Memória';
+
+  @override
+  String get achMemoryExpert => 'Especialista Memória';
+
+  @override
+  String get achMemoryExpertDesc => '50 níveis Memória';
+
+  @override
+  String get achMemoryMaster => 'Mestre Memória';
+
+  @override
+  String get achMemoryMasterDesc => '100 níveis Memória';
+
+  @override
+  String get achPerfectRecall => 'Lembrança Perfeita';
+
+  @override
+  String get achPerfectRecallDesc => '5 Memória perfeitos';
+
+  @override
+  String get achMemoryPro => 'Pro Memória';
+
+  @override
+  String get achMemoryProDesc => '10 Memória perfeitos';
+
+  @override
+  String get achMemoryGenius => 'Gênio Memória';
+
+  @override
+  String get achMemoryGeniusDesc => '25 Memória perfeitos';
+
+  @override
+  String get achEideticMemory => 'Memória Eidética';
+
+  @override
+  String get achEideticMemoryDesc => '50 Memória perfeitos';
+
+  @override
+  String get achPhotographicMemory => 'Memória Fotográfica';
+
+  @override
+  String get achPhotographicMemoryDesc => '100 Memória perfeitos';
+
+  @override
+  String get achMemoryBasicMaster => 'Mestre Básico Memória';
+
+  @override
+  String get achMemoryBasicMasterDesc => 'Todo básico na Memória';
+
+  @override
+  String get achMemoryFormatMaster => 'Mestre Formato Memória';
+
+  @override
+  String get achMemoryFormatMasterDesc => 'Todo formato na Memória';
+
+  @override
+  String get achMemoryTimeMaster => 'Mestre Tempo Memória';
+
+  @override
+  String get achMemoryTimeMasterDesc => 'Todo tempo na Memória';
+
+  @override
+  String get achMemoryNamesMaster => 'Mestre Nomes Memória';
+
+  @override
+  String get achMemoryNamesMasterDesc => 'Todo nomes na Memória';
+
+  @override
+  String get achMemoryMixedMaster => 'Mestre Misto Memória';
+
+  @override
+  String get achMemoryMixedMasterDesc => 'Todo misto na Memória';
+
+  @override
+  String get achDailyStarter => 'Início Diário';
+
+  @override
+  String get achDailyStarterDesc => 'Primeiro desafio diário';
+
+  @override
+  String get achWeeklyChallenger => 'Desafiante Semanal';
+
+  @override
+  String get achWeeklyChallengerDesc => '7 desafios diários';
+
+  @override
+  String get achMonthlyChallenger => 'Desafiante Mensal';
+
+  @override
+  String get achMonthlyChallengerDesc => '30 desafios diários';
+
+  @override
+  String get achDailyLegend => 'Lenda Diária';
+
+  @override
+  String get achDailyLegendDesc => '100 desafios diários';
+
+  @override
+  String get achPerfectDay => 'Dia Perfeito';
+
+  @override
+  String get achPerfectDayDesc => '5 diários perfeitos';
+
+  @override
+  String get achPerfectWeek => 'Semana Perfeita';
+
+  @override
+  String get achPerfectWeekDesc => '10 diários perfeitos';
+
+  @override
+  String get achPerfectStreak => 'Sequência Perfeita';
+
+  @override
+  String get achPerfectStreakDesc => '25 diários perfeitos';
+
+  @override
+  String get achFlawlessPlayer => 'Jogador Impecável';
+
+  @override
+  String get achFlawlessPlayerDesc => '50 diários perfeitos';
+
+  @override
+  String get achDailyPerfectionist => 'Perfeccion. Diário';
+
+  @override
+  String get achDailyPerfectionistDesc => '100 diários perfeitos';
+
+  @override
+  String get achPartyHost => 'Anfitrião';
+
+  @override
+  String get achPartyHostDesc => '10 jogos multijogador';
+
+  @override
+  String get achSocialGamer => 'Jogador Social';
+
+  @override
+  String get achSocialGamerDesc => '25 jogos multijogador';
+
+  @override
+  String get achMultiplayerLegend => 'Lenda Multijogador';
+
+  @override
+  String get achMultiplayerLegendDesc => '50 jogos multijogador';
+
+  @override
+  String get achPerfectRun => 'Corrida Perfeita';
+
+  @override
+  String get achPerfectRunDesc => '10 níveis sem erros';
+
+  @override
+  String get achDedicatedPlayer => 'Jogador Dedicado';
+
+  @override
+  String get achDedicatedPlayerDesc => '1 hora de jogo total';
+
+  @override
+  String get achMarathonRunner => 'Maratonista';
+
+  @override
+  String get achMarathonRunnerDesc => '5 horas de jogo total';
+
+  @override
+  String get achTotalMaster => 'Mestre Total';
+
+  @override
+  String get achTotalMasterDesc => '1100 níveis totais';
+
+  @override
+  String get achCompletionist => 'Completista';
+
+  @override
+  String get achCompletionistDesc => 'Desbloqueie todas conquistas';
+
+  @override
+  String get achNightOwl => 'Coruja Noturna';
+
+  @override
+  String get achNightOwlDesc => 'Jogue 0h-5h';
+
+  @override
+  String get achEarlyBird => 'Madrugador';
+
+  @override
+  String get achEarlyBirdDesc => 'Jogue 5h-7h';
+
+  @override
+  String get achNewYearSorter => 'Ordenador de Ano Novo';
+
+  @override
+  String get achNewYearSorterDesc => 'Jogue em 1 de janeiro';
+
+  @override
+  String get achNeverGiveUp => 'Nunca Desistir';
+
+  @override
+  String get achNeverGiveUpDesc => 'Tentar novamente 50 vezes';
+
+  @override
+  String get achInstantWin => 'Vitória Instantânea';
+
+  @override
+  String get achInstantWinDesc => 'Nível em menos de 2s';
+
+  @override
+  String get achDescendingFan => 'Fã Descendente';
+
+  @override
+  String get achDescendingFanDesc => '20 descendentes seguidos';
+
+  @override
+  String get achSwapMaster => 'Mestre Troca';
+
+  @override
+  String get achSwapMasterDesc => '10 níveis só swap';
+
+  @override
+  String get achShiftMaster => 'Mestre Deslocamento';
+
+  @override
+  String get achShiftMasterDesc => '10 níveis só shift';
 }
