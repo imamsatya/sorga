@@ -24,13 +24,18 @@ class GameStatsAdapter extends TypeAdapter<GameStats> {
       hasSeenTutorial: fields[4] as bool,
       firstOpenedAt: fields[5] as DateTime?,
       consecutivePerfect: fields[6] as int,
+      memoryPerfectCount: fields[7] as int,
+      dailyPerfectCount: fields[8] as int,
+      dailyCompletions: fields[9] as int,
+      multiplayerGamesHosted: fields[10] as int,
+      retryCount: fields[11] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, GameStats obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.currentStreak)
       ..writeByte(1)
@@ -44,7 +49,17 @@ class GameStatsAdapter extends TypeAdapter<GameStats> {
       ..writeByte(5)
       ..write(obj.firstOpenedAt)
       ..writeByte(6)
-      ..write(obj.consecutivePerfect);
+      ..write(obj.consecutivePerfect)
+      ..writeByte(7)
+      ..write(obj.memoryPerfectCount)
+      ..writeByte(8)
+      ..write(obj.dailyPerfectCount)
+      ..writeByte(9)
+      ..write(obj.dailyCompletions)
+      ..writeByte(10)
+      ..write(obj.multiplayerGamesHosted)
+      ..writeByte(11)
+      ..write(obj.retryCount);
   }
 
   @override

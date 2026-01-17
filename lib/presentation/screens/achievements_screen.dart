@@ -122,7 +122,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.72, // Slightly taller to fit 2 lines
+        childAspectRatio: 0.65, // Taller to fit longer descriptions
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
@@ -190,18 +190,20 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            // Description
-            Text(
-              isHidden ? l10n.secretAchievement : achievement.description,
-              style: TextStyle(
-                fontSize: 10,
-                color: unlocked 
-                    ? AppTheme.textSecondary 
-                    : AppTheme.textMuted.withOpacity(0.7),
+            // Description - allow 3 lines for longer text
+            Expanded(
+              child: Text(
+                isHidden ? l10n.secretAchievement : achievement.description,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: unlocked 
+                      ? AppTheme.textSecondary 
+                      : AppTheme.textMuted.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8),
             // Status badge

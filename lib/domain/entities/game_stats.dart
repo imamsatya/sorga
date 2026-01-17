@@ -33,6 +33,26 @@ class GameStats extends Equatable {
   /// Consecutive levels completed without mistakes (for Perfect Run achievement)
   @HiveField(6)
   final int consecutivePerfect;
+  
+  /// Total Memory levels completed without mistakes
+  @HiveField(7)
+  final int memoryPerfectCount;
+  
+  /// Total Daily challenges completed without mistakes
+  @HiveField(8)
+  final int dailyPerfectCount;
+  
+  /// Total Daily challenges completed
+  @HiveField(9)
+  final int dailyCompletions;
+  
+  /// Total Multiplayer games hosted
+  @HiveField(10)
+  final int multiplayerGamesHosted;
+  
+  /// Total retry button uses
+  @HiveField(11)
+  final int retryCount;
 
   const GameStats({
     this.currentStreak = 0,
@@ -42,6 +62,11 @@ class GameStats extends Equatable {
     this.hasSeenTutorial = false,
     this.firstOpenedAt,
     this.consecutivePerfect = 0,
+    this.memoryPerfectCount = 0,
+    this.dailyPerfectCount = 0,
+    this.dailyCompletions = 0,
+    this.multiplayerGamesHosted = 0,
+    this.retryCount = 0,
   });
 
   /// Get total play time as Duration
@@ -134,6 +159,31 @@ class GameStats extends Equatable {
   GameStats resetPerfect() {
     return copyWith(consecutivePerfect: 0);
   }
+  
+  /// Increment Memory perfect count
+  GameStats incrementMemoryPerfect() {
+    return copyWith(memoryPerfectCount: memoryPerfectCount + 1);
+  }
+  
+  /// Increment Daily perfect count
+  GameStats incrementDailyPerfect() {
+    return copyWith(dailyPerfectCount: dailyPerfectCount + 1);
+  }
+  
+  /// Increment Daily completions count
+  GameStats incrementDailyCompletions() {
+    return copyWith(dailyCompletions: dailyCompletions + 1);
+  }
+  
+  /// Increment Multiplayer games hosted count
+  GameStats incrementMultiplayerGames() {
+    return copyWith(multiplayerGamesHosted: multiplayerGamesHosted + 1);
+  }
+  
+  /// Increment retry count
+  GameStats incrementRetryCount() {
+    return copyWith(retryCount: retryCount + 1);
+  }
 
   GameStats copyWith({
     int? currentStreak,
@@ -143,6 +193,11 @@ class GameStats extends Equatable {
     bool? hasSeenTutorial,
     DateTime? firstOpenedAt,
     int? consecutivePerfect,
+    int? memoryPerfectCount,
+    int? dailyPerfectCount,
+    int? dailyCompletions,
+    int? multiplayerGamesHosted,
+    int? retryCount,
   }) {
     return GameStats(
       currentStreak: currentStreak ?? this.currentStreak,
@@ -152,6 +207,11 @@ class GameStats extends Equatable {
       hasSeenTutorial: hasSeenTutorial ?? this.hasSeenTutorial,
       firstOpenedAt: firstOpenedAt ?? this.firstOpenedAt,
       consecutivePerfect: consecutivePerfect ?? this.consecutivePerfect,
+      memoryPerfectCount: memoryPerfectCount ?? this.memoryPerfectCount,
+      dailyPerfectCount: dailyPerfectCount ?? this.dailyPerfectCount,
+      dailyCompletions: dailyCompletions ?? this.dailyCompletions,
+      multiplayerGamesHosted: multiplayerGamesHosted ?? this.multiplayerGamesHosted,
+      retryCount: retryCount ?? this.retryCount,
     );
   }
 
@@ -164,5 +224,10 @@ class GameStats extends Equatable {
     hasSeenTutorial,
     firstOpenedAt,
     consecutivePerfect,
+    memoryPerfectCount,
+    dailyPerfectCount,
+    dailyCompletions,
+    multiplayerGamesHosted,
+    retryCount,
   ];
 }
