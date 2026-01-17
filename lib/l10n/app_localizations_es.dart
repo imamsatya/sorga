@@ -398,7 +398,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get times => 'tiempos';
 
   @override
-  String get names => 'nombres';
+  String get names => 'Nombres';
 
   @override
   String get memorized => '¡Lo Memoricé!';
@@ -432,86 +432,86 @@ class AppLocalizationsEs extends AppLocalizations {
   String get descending => 'DESC';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'Multijugador';
 
   @override
-  String get multiplayerSetup => 'Multiplayer Setup';
+  String get multiplayerSetup => 'Configuración Multijugador';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'Seleccionar categoría';
 
   @override
-  String get itemCount => 'Item Count';
+  String get itemCount => 'Cantidad';
 
   @override
-  String get playerCount => 'Number of Players';
+  String get playerCount => 'Número de jugadores';
 
   @override
   String playerName(Object number) {
-    return 'Player $number Name';
+    return 'Nombre del jugador $number';
   }
 
   @override
-  String get startGame => 'Start Game';
+  String get startGame => 'Iniciar juego';
 
   @override
   String getReadyPlayer(Object name) {
-    return 'Get Ready, $name!';
+    return '¡$name, prepárate!';
   }
 
   @override
-  String get yourTurn => 'It\'s Your Turn!';
+  String get yourTurn => '¡Es tu turno!';
 
   @override
-  String get tapToStart => 'Tap to Start';
+  String get tapToStart => 'Toca para empezar';
 
   @override
-  String get giveUp => 'Give Up';
+  String get giveUp => 'Rendirse';
 
   @override
-  String get failed => 'Failed';
+  String get failed => 'Fallido';
 
   @override
-  String get failedNextPlayer => 'Failed! Next...';
+  String get failedNextPlayer => '¡Fallido! Siguiente...';
 
   @override
   String continueLeft(Object count) {
-    return 'Continue ($count left)';
+    return 'Continuar ($count restantes)';
   }
 
   @override
-  String get draw => 'Draw!';
+  String get draw => '¡Empate!';
 
   @override
-  String get everyoneGaveUp => 'Everyone gave up!';
+  String get everyoneGaveUp => '¡Todos se rindieron!';
 
   @override
-  String get everyoneFailed => 'Everyone failed!';
+  String get everyoneFailed => '¡Todos fallaron!';
 
   @override
-  String get noOneCompleted => 'No one completed!';
+  String get noOneCompleted => '¡Nadie lo completó!';
 
   @override
-  String get leaderboard => 'Leaderboard';
+  String get leaderboard => 'Tabla de posiciones';
 
   @override
-  String get localMultiplayer => 'Local Multiplayer';
+  String get localMultiplayer => 'Multijugador local';
 
   @override
-  String get players => 'Players';
+  String get players => 'Jugadores';
 
   @override
-  String get addPlayer => 'Add Player';
+  String get addPlayer => 'Añadir jugador';
 
   @override
-  String get removePlayer => 'Remove';
+  String get removePlayer => 'Eliminar';
 
   @override
-  String get category => 'Category';
+  String get category => 'Categoría';
 
   @override
-  String get ready => 'Ready?';
+  String get ready => '¿Listo?';
 
   @override
-  String get go => 'GO!';
+  String get go => '¡YA!';
 }

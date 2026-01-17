@@ -426,85 +426,85 @@ class AppLocalizationsJa extends AppLocalizations {
   String get descending => '降順';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'マルチプレイヤー';
 
   @override
-  String get multiplayerSetup => 'Multiplayer Setup';
+  String get multiplayerSetup => 'マルチプレイヤー設定';
 
   @override
-  String get selectCategory => 'Select Category';
+  String get selectCategory => 'カテゴリ選択';
 
   @override
-  String get itemCount => 'Item Count';
+  String get itemCount => 'アイテム数';
 
   @override
-  String get playerCount => 'Number of Players';
+  String get playerCount => 'プレイヤー数';
 
   @override
   String playerName(Object number) {
-    return 'Player $number Name';
+    return 'プレイヤー$number名';
   }
 
   @override
-  String get startGame => 'Start Game';
+  String get startGame => 'ゲーム開始';
 
   @override
   String getReadyPlayer(Object name) {
-    return 'Get Ready, $name!';
+    return '$nameさん、準備！';
   }
 
   @override
-  String get yourTurn => 'It\'s Your Turn!';
+  String get yourTurn => 'あなたの番です！';
 
   @override
-  String get tapToStart => 'Tap to Start';
+  String get tapToStart => 'タップして開始';
 
   @override
-  String get giveUp => 'Give Up';
+  String get giveUp => 'ギブアップ';
 
   @override
-  String get failed => 'Failed';
+  String get failed => '失敗';
 
   @override
-  String get failedNextPlayer => 'Failed! Next...';
+  String get failedNextPlayer => '失敗！次へ...';
 
   @override
   String continueLeft(Object count) {
-    return 'Continue ($count left)';
+    return '続ける ($count回残り)';
   }
 
   @override
-  String get draw => 'Draw!';
+  String get draw => '引き分け！';
 
   @override
-  String get everyoneGaveUp => 'Everyone gave up!';
+  String get everyoneGaveUp => '全員がギブアップ！';
 
   @override
-  String get everyoneFailed => 'Everyone failed!';
+  String get everyoneFailed => '全員が失敗！';
 
   @override
-  String get noOneCompleted => 'No one completed!';
+  String get noOneCompleted => '誰も完了しなかった！';
 
   @override
-  String get leaderboard => 'Leaderboard';
+  String get leaderboard => 'リーダーボード';
 
   @override
-  String get localMultiplayer => 'Local Multiplayer';
+  String get localMultiplayer => 'ローカルマルチプレイヤー';
 
   @override
-  String get players => 'Players';
+  String get players => 'プレイヤー';
 
   @override
-  String get addPlayer => 'Add Player';
+  String get addPlayer => 'プレイヤー追加';
 
   @override
-  String get removePlayer => 'Remove';
+  String get removePlayer => '削除';
 
   @override
-  String get category => 'Category';
+  String get category => 'カテゴリ';
 
   @override
-  String get ready => 'Ready?';
+  String get ready => '準備？';
 
   @override
   String get go => 'GO!';
