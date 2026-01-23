@@ -12,7 +12,7 @@ class AppConstants {
   static const int totalLevels = 600; // 500 regular + 100 knowledge
   
   // Memory Mode - unlock requirement (complete this many regular levels)
-  static const int memoryUnlockLevel = 1;
+  static const int memoryUnlockLevel = 30;
   
   // Level Ranges per Category (100 levels each for non-knowledge)
   static const int basicNumbersStart = 1;

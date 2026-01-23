@@ -118,7 +118,8 @@ class _MultiplayerTransitionScreenState extends ConsumerState<MultiplayerTransit
                   GestureDetector(
                     onTap: _startCountdown,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
                       decoration: BoxDecoration(
                         color: AppTheme.primaryColor,
                         borderRadius: BorderRadius.circular(16),
@@ -129,7 +130,14 @@ class _MultiplayerTransitionScreenState extends ConsumerState<MultiplayerTransit
                         children: [
                           const Icon(Icons.touch_app, color: Colors.white, size: 28),
                           const SizedBox(width: 12),
-                          Text(AppLocalizations.of(context)!.tapToStart, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                          Flexible(
+                            child: Text(
+                              AppLocalizations.of(context)!.tapToStart,
+                              style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ],
                       ),
                     ),
