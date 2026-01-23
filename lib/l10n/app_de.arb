@@ -182,6 +182,10 @@
   "unlocked": "freigeschaltet",
   "locked": "Gesperrt",
   "secretAchievement": "Geheime Errungenschaft",
+  "dailyChallenges": "Tägliche Aufgaben",
+  "dailyCompleted": "Abgeschlossen",
+  "perfectCompletions": "Perfekt",
+  "multiplayerGames": "Mehrspieler",
   
   "achFirstSteps": "Erste Schritte",
   "achFirstStepsDesc": "Erstes Level abschließen",

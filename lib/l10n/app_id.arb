@@ -183,6 +183,10 @@
   "unlocked": "terbuka",
   "locked": "Terkunci",
   "secretAchievement": "Pencapaian rahasia",
+  "dailyChallenges": "Tantangan Harian",
+  "dailyCompleted": "Harian Selesai",
+  "perfectCompletions": "Sempurna",
+  "multiplayerGames": "Multiplayer",
   
   "achFirstSteps": "Langkah Pertama",
   "achFirstStepsDesc": "Selesaikan level pertama",

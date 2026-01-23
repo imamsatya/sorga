@@ -184,6 +184,10 @@
   "unlocked": "unlocked",
   "locked": "Locked",
   "secretAchievement": "Secret achievement",
+  "dailyChallenges": "Daily Challenges",
+  "dailyCompleted": "Daily Completed",
+  "perfectCompletions": "Perfect",
+  "multiplayerGames": "Multiplayer",
   
   "achFirstSteps": "First Steps",
   "achFirstStepsDesc": "Complete your first level",

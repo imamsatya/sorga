@@ -1100,6 +1100,30 @@ abstract class AppLocalizations {
   /// **'Secret achievement'**
   String get secretAchievement;
 
+  /// No description provided for @dailyChallenges.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Challenges'**
+  String get dailyChallenges;
+
+  /// No description provided for @dailyCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Completed'**
+  String get dailyCompleted;
+
+  /// No description provided for @perfectCompletions.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect'**
+  String get perfectCompletions;
+
+  /// No description provided for @multiplayerGames.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiplayer'**
+  String get multiplayerGames;
+
   /// No description provided for @achFirstSteps.
   ///
   /// In en, this message translates to:

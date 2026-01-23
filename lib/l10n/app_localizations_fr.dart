@@ -530,6 +530,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get secretAchievement => 'Succès secret';
 
   @override
+  String get dailyChallenges => 'Défis Quotidiens';
+
+  @override
+  String get dailyCompleted => 'Terminés';
+
+  @override
+  String get perfectCompletions => 'Parfait';
+
+  @override
+  String get multiplayerGames => 'Multijoueur';
+
+  @override
   String get achFirstSteps => 'Premiers Pas';
 
   @override

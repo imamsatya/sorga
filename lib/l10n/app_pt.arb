@@ -182,6 +182,10 @@
   "unlocked": "desbloqueado",
   "locked": "Bloqueado",
   "secretAchievement": "Conquista secreta",
+  "dailyChallenges": "Desafios Diários",
+  "dailyCompleted": "Completados",
+  "perfectCompletions": "Perfeito",
+  "multiplayerGames": "Multijogador",
   
   "achFirstSteps": "Primeiros Passos",
   "achFirstStepsDesc": "Complete seu primeiro nível",

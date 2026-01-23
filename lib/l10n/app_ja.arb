@@ -182,6 +182,10 @@
   "unlocked": "解除済み",
   "locked": "未解除",
   "secretAchievement": "シークレット実績",
+  "dailyChallenges": "デイリーチャレンジ",
+  "dailyCompleted": "完了数",
+  "perfectCompletions": "パーフェクト",
+  "multiplayerGames": "マルチプレイ",
   
   "achFirstSteps": "はじめの一歩",
   "achFirstStepsDesc": "最初のレベルをクリア",

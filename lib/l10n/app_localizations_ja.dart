@@ -522,6 +522,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get secretAchievement => 'シークレット実績';
 
   @override
+  String get dailyChallenges => 'デイリーチャレンジ';
+
+  @override
+  String get dailyCompleted => '完了数';
+
+  @override
+  String get perfectCompletions => 'パーフェクト';
+
+  @override
+  String get multiplayerGames => 'マルチプレイ';
+
+  @override
   String get achFirstSteps => 'はじめの一歩';
 
   @override

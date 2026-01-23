@@ -522,6 +522,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get secretAchievement => '비밀 업적';
 
   @override
+  String get dailyChallenges => '일일 도전';
+
+  @override
+  String get dailyCompleted => '완료 횟수';
+
+  @override
+  String get perfectCompletions => '퍼펙트';
+
+  @override
+  String get multiplayerGames => '멀티플레이어';
+
+  @override
   String get achFirstSteps => '첫 걸음';
 
   @override

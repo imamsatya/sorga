@@ -182,6 +182,10 @@
   "unlocked": "잠금 해제",
   "locked": "잠김",
   "secretAchievement": "비밀 업적",
+  "dailyChallenges": "일일 도전",
+  "dailyCompleted": "완료 횟수",
+  "perfectCompletions": "퍼펙트",
+  "multiplayerGames": "멀티플레이어",
   
   "achFirstSteps": "첫 걸음",
   "achFirstStepsDesc": "첫 레벨 완료",

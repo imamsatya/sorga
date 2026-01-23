@@ -529,6 +529,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get secretAchievement => 'Geheime Errungenschaft';
 
   @override
+  String get dailyChallenges => 'Tägliche Aufgaben';
+
+  @override
+  String get dailyCompleted => 'Abgeschlossen';
+
+  @override
+  String get perfectCompletions => 'Perfekt';
+
+  @override
+  String get multiplayerGames => 'Mehrspieler';
+
+  @override
   String get achFirstSteps => 'Erste Schritte';
 
   @override

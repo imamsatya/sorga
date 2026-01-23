@@ -89,6 +89,41 @@ class StatisticsScreen extends ConsumerWidget {
                       _buildSectionTitle(l10n.categoryProgress),
                       const SizedBox(height: 12),
                       _buildCategoryBreakdown(categoryStats, l10n),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Daily Challenge & Multiplayer Stats
+                      _buildSectionTitle(l10n.dailyChallenges),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              emoji: '📅',
+                              value: '${gameStats.dailyCompletions}',
+                              label: l10n.dailyCompleted,
+                              color: const Color(0xFF3498DB),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              emoji: '⭐',
+                              value: '${gameStats.dailyPerfectCount}',
+                              label: l10n.perfectCompletions,
+                              color: const Color(0xFFE67E22),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildStatCard(
+                        emoji: '👥',
+                        value: '${gameStats.multiplayerGamesHosted}',
+                        label: l10n.multiplayerGames,
+                        color: const Color(0xFF1ABC9C),
+                        fullWidth: true,
+                      ),
                     ],
                   ),
                 ),

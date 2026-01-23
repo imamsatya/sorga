@@ -528,6 +528,18 @@ class AppLocalizationsId extends AppLocalizations {
   String get secretAchievement => 'Pencapaian rahasia';
 
   @override
+  String get dailyChallenges => 'Tantangan Harian';
+
+  @override
+  String get dailyCompleted => 'Harian Selesai';
+
+  @override
+  String get perfectCompletions => 'Sempurna';
+
+  @override
+  String get multiplayerGames => 'Multiplayer';
+
+  @override
   String get achFirstSteps => 'Langkah Pertama';
 
   @override
