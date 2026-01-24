@@ -253,19 +253,31 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   }
   
   Widget _buildAchievementGrid(AppLocalizations l10n) {
-    return GridView.builder(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.85, // Shorter cards for centered content
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
-      itemCount: _achievements.length,
-      itemBuilder: (context, index) {
-        final item = _achievements[index];
-        return _buildAchievementCard(item.achievement, item.unlocked, l10n);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Responsive columns: Phone 2, Tablet 3, Large 4
+        int crossAxisCount = 2;
+        if (constraints.maxWidth > 800) {
+          crossAxisCount = 4;
+        } else if (constraints.maxWidth > 500) {
+          crossAxisCount = 3;
+        }
+        
+        return GridView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 0.85,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          ),
+          itemCount: _achievements.length,
+          itemBuilder: (context, index) {
+            final item = _achievements[index];
+            return _buildAchievementCard(item.achievement, item.unlocked, l10n);
+          },
+        );
       },
     );
   }

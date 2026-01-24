@@ -557,13 +557,23 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // User requested max 5 items per row to make them larger
-          const int crossAxisCount = 5;
+          final double availableWidth = constraints.maxWidth;
+          
+          // Responsive column count based on screen width
+          // Phone: 5 columns, Tablet: 7 columns, Large tablet: 8 columns
+          int crossAxisCount;
+          if (availableWidth > 800) {
+            crossAxisCount = 8;
+          } else if (availableWidth > 500) {
+            crossAxisCount = 7;
+          } else {
+            crossAxisCount = 5;
+          }
+          
           const double spacing = 8.0;
           
           // Calculate width based on available space and column count
           final double totalSpacing = (crossAxisCount - 1) * spacing;
-          final double availableWidth = constraints.maxWidth;
           final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
           
           // Dynamic height and font size

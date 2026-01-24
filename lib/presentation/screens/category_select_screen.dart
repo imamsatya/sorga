@@ -61,6 +61,15 @@ class CategorySelectScreen extends ConsumerWidget {
   Widget _buildCategoryGrid(BuildContext context, WidgetRef ref) {
     final categories = LevelCategory.values;
     
+    // Responsive columns based on screen width
+    final screenWidth = MediaQuery.of(context).size.width;
+    int categoryColumns = 2;
+    if (screenWidth > 800) {
+      categoryColumns = 4;
+    } else if (screenWidth > 500) {
+      categoryColumns = 3;
+    }
+    
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -71,8 +80,8 @@ class CategorySelectScreen extends ConsumerWidget {
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: categoryColumns,
               childAspectRatio: 0.9,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
@@ -166,20 +175,28 @@ class CategorySelectScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           
-          // Memory category cards grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-            ),
-            itemCount: memoryCategories.length,
-            itemBuilder: (context, index) {
-              final cat = memoryCategories[index];
-              return _buildMemoryCategoryCard(context, ref, cat.$1, cat.$2);
+          // Memory category cards grid - responsive columns
+          LayoutBuilder(
+            builder: (context, constraints) {
+              int memoryColumns = 3;
+              if (constraints.maxWidth > 600) {
+                memoryColumns = 5; // Show all 5 in one row on tablet
+              }
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: memoryColumns,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: memoryCategories.length,
+                itemBuilder: (context, index) {
+                  final cat = memoryCategories[index];
+                  return _buildMemoryCategoryCard(context, ref, cat.$1, cat.$2);
+                },
+              );
             },
           ),
         ],
