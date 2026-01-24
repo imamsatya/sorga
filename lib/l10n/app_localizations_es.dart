@@ -540,6 +540,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get multiplayerGames => 'Multijugador';
 
   @override
+  String get memoryProgress => 'Progreso Memoria';
+
+  @override
   String get achFirstSteps => 'Primeros Pasos';
 
   @override

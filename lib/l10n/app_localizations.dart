@@ -1124,6 +1124,12 @@ abstract class AppLocalizations {
   /// **'Multiplayer'**
   String get multiplayerGames;
 
+  /// No description provided for @memoryProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Progress'**
+  String get memoryProgress;
+
   /// No description provided for @achFirstSteps.
   ///
   /// In en, this message translates to:

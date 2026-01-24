@@ -534,6 +534,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get multiplayerGames => '멀티플레이어';
 
   @override
+  String get memoryProgress => '메모리 진행';
+
+  @override
   String get achFirstSteps => '첫 걸음';
 
   @override

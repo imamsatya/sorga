@@ -23,14 +23,32 @@ class StatisticsScreen extends ConsumerWidget {
     int memoryCompleted = 0;
     int totalAttempts = 0;
     final categoryStats = <LevelCategory, CategoryStat>{};
+    final memoryCategoryStats = <LevelCategory, CategoryStat>{};
     
     for (final progress in allProgress) {
       if (progress.completed) {
         totalCompleted++;
         
-        // Track Memory mode completions
+        // Track Memory mode completions by category
         if (progress.isMemoryProgress) {
           memoryCompleted++;
+          
+          // Skip daily challenge levels for category tracking
+          if (progress.levelId > 1000) continue;
+          
+          try {
+            final level = levelGenerator.getLevel(progress.levelId);
+            // Skip Knowledge category for Memory (not available in Memory mode)
+            if (level.category != LevelCategory.knowledge) {
+              if (!memoryCategoryStats.containsKey(level.category)) {
+                memoryCategoryStats[level.category] = CategoryStat();
+              }
+              memoryCategoryStats[level.category]!.completed++;
+            }
+          } catch (e) {
+            // Skip levels that don't exist
+          }
+          continue; // Don't count Memory progress in regular stats
         }
         
         // Skip daily challenge levels (IDs > 1000 are date-based)
@@ -124,6 +142,13 @@ class StatisticsScreen extends ConsumerWidget {
                         color: const Color(0xFF1ABC9C),
                         fullWidth: true,
                       ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Memory Mode Progress
+                      _buildSectionTitle(l10n.memoryProgress),
+                      const SizedBox(height: 12),
+                      _buildCategoryBreakdown(memoryCategoryStats, l10n, isMemory: true),
                     ],
                   ),
                 ),
@@ -292,15 +317,19 @@ class StatisticsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats, AppLocalizations l10n) {
-    final categories = [
+  Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats, AppLocalizations l10n, {bool isMemory = false}) {
+    var categories = [
       (LevelCategory.basic, l10n.basicNumbers, AppConstants.basicNumbersEnd - AppConstants.basicNumbersStart + 1, AppTheme.basicColor),
       (LevelCategory.formatted, l10n.formattedNumbers, AppConstants.formattedNumbersEnd - AppConstants.formattedNumbersStart + 1, AppTheme.formattedColor),
       (LevelCategory.time, l10n.timeFormats, AppConstants.timeFormatsEnd - AppConstants.timeFormatsStart + 1, AppTheme.timeColor),
       (LevelCategory.names, l10n.nameSorting, AppConstants.nameSortingEnd - AppConstants.nameSortingStart + 1, AppTheme.namesColor),
       (LevelCategory.mixed, l10n.mixedFormats, AppConstants.mixedFormatsEnd - AppConstants.mixedFormatsStart + 1, AppTheme.mixedColor),
-      (LevelCategory.knowledge, l10n.knowledge, AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor),
     ];
+    
+    // Only include Knowledge category for regular mode
+    if (!isMemory) {
+      categories.add((LevelCategory.knowledge, l10n.knowledge, AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor));
+    }
 
     return Column(
       children: categories.map((cat) {
