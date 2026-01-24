@@ -34,10 +34,14 @@ class StatisticsScreen extends ConsumerWidget {
           memoryCompleted++;
           
           // Skip daily challenge levels for category tracking
-          if (progress.levelId > 1000) continue;
+          if (progress.levelId > 1000 && progress.levelId < 10000) continue;
           
           try {
-            final level = levelGenerator.getLevel(progress.levelId);
+            // Memory levelIds have +10000 offset, so subtract to get actual levelId
+            final actualLevelId = progress.levelId >= 10000 
+                ? progress.levelId - 10000 
+                : progress.levelId;
+            final level = levelGenerator.getLevel(actualLevelId);
             // Skip Knowledge category for Memory (not available in Memory mode)
             if (level.category != LevelCategory.knowledge) {
               if (!memoryCategoryStats.containsKey(level.category)) {
