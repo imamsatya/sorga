@@ -40,6 +40,7 @@ class GameScreen extends ConsumerStatefulWidget {
 class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
   int? _bounceIndex; // Track card that needs bounce animation after failed drop
+  int? _successIndex; // Track card that received successful drop for success pulse
   DragMode _dragMode = DragMode.shift; // Default to shift mode
   bool _showTutorial = false;
   
@@ -628,14 +629,20 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
     }
     
-    // Bounce animation: scale 1.0 -> 1.1 -> 1.0 when drop rejected
+    // Animation states: bounce (failed drop) or success (accepted drop)
     final isBouncing = _bounceIndex == index;
+    final isSuccess = _successIndex == index;
+    
+    // Determine scale: bounce scales up, success also scales up briefly
+    double targetScale = 1.0;
+    if (isBouncing) targetScale = 1.1;
+    if (isSuccess) targetScale = 1.08;
     
     return TweenAnimationBuilder<double>(
-      key: ValueKey('bounce_$index${isBouncing ? '_active' : ''}'),
-      tween: Tween(begin: 1.0, end: isBouncing ? 1.1 : 1.0),
-      duration: Duration(milliseconds: isBouncing ? 150 : 150),
-      curve: isBouncing ? Curves.easeOut : Curves.elasticOut,
+      key: ValueKey('anim_$index${isBouncing ? '_bounce' : ''}${isSuccess ? '_success' : ''}'),
+      tween: Tween(begin: 1.0, end: targetScale),
+      duration: Duration(milliseconds: (isBouncing || isSuccess) ? 150 : 150),
+      curve: isBouncing ? Curves.easeOut : (isSuccess ? Curves.easeOutBack : Curves.elasticOut),
       builder: (context, scale, child) {
         return Transform.scale(
           scale: scale,
@@ -683,6 +690,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               final fromIndex = details.data;
               _hapticService.mediumTap();
               _audioService.playPop();
+              // Trigger success pulse animation
+              setState(() => _successIndex = index);
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) setState(() => _successIndex = null);
+              });
               if (_dragMode == DragMode.swap) {
                 ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
               } else {
