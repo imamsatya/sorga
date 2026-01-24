@@ -52,7 +52,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
     _audioService.init();
     
     // Check if user has seen tutorial
@@ -175,7 +175,34 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               },
             ),
             
-          // Confetti Widget - positioned at top center
+          // Enhanced Confetti - Multiple Emitters for impressive celebration!
+          // Left corner emitter
+          Align(
+            alignment: Alignment.topLeft,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: -0.5,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
+            ),
+          ),
+          // Center emitter
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -190,12 +217,41 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 Colors.yellow,
                 Colors.orange,
                 Colors.pink,
+                Colors.purple,
+                Colors.cyan,
               ],
-              numberOfParticles: 30,
-              gravity: 0.2,
-              emissionFrequency: 0.05,
-              maxBlastForce: 20,
-              minBlastForce: 8,
+              numberOfParticles: 50,
+              gravity: 0.1,
+              emissionFrequency: 0.02,
+              maxBlastForce: 30,
+              minBlastForce: 15,
+              particleDrag: 0.05,
+            ),
+          ),
+          // Right corner emitter
+          Align(
+            alignment: Alignment.topRight,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: 3.6,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
             ),
           ),
           
