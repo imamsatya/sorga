@@ -655,41 +655,41 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   labelsVisible: labelsVisible, displayIndex: displayIndex),
             ),
           ),
-        childWhenDragging: Opacity(
-          opacity: 0.3,
-          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
-              labelsVisible: labelsVisible, displayIndex: displayIndex),
-        ),
-        onDragStarted: () {
-          setState(() => _draggedIndex = index);
-          _hapticService.lightTap();
-          _audioService.playPop();
-        },
-        onDragEnd: (details) {
-          setState(() => _draggedIndex = null);
-          // Trigger bounce animation if drop was rejected
-          if (!details.wasAccepted) {
-            setState(() => _bounceIndex = index);
-            // Clear bounce after animation completes
-            Future.delayed(const Duration(milliseconds: 300), () {
-              if (mounted) setState(() => _bounceIndex = null);
-            });
-          }
-        },
-        child: DragTarget<int>(
-          hitTestBehavior: HitTestBehavior.opaque,
-          onWillAcceptWithDetails: (details) => details.data != index,
-          onAcceptWithDetails: (details) {
-            final fromIndex = details.data;
-            _hapticService.mediumTap();
+          childWhenDragging: Opacity(
+            opacity: 0.3,
+            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
+                labelsVisible: labelsVisible, displayIndex: displayIndex),
+          ),
+          onDragStarted: () {
+            setState(() => _draggedIndex = index);
+            _hapticService.lightTap();
             _audioService.playPop();
-            if (_dragMode == DragMode.swap) {
-              ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
-            } else {
-              ref.read(gameStateProvider.notifier).insertItem(fromIndex, index);
+          },
+          onDragEnd: (details) {
+            setState(() => _draggedIndex = null);
+            // Trigger bounce animation if drop was rejected
+            if (!details.wasAccepted) {
+              setState(() => _bounceIndex = index);
+              // Clear bounce after animation completes
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) setState(() => _bounceIndex = null);
+              });
             }
           },
-          builder: (context, candidateData, rejectedData) {
+          child: DragTarget<int>(
+            hitTestBehavior: HitTestBehavior.opaque,
+            onWillAcceptWithDetails: (details) => details.data != index,
+            onAcceptWithDetails: (details) {
+              final fromIndex = details.data;
+              _hapticService.mediumTap();
+              _audioService.playPop();
+              if (_dragMode == DragMode.swap) {
+                ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
+              } else {
+                ref.read(gameStateProvider.notifier).insertItem(fromIndex, index);
+              }
+            },
+            builder: (context, candidateData, rejectedData) {
             final isHovering = candidateData.isNotEmpty;
             
             // Visual feedback based on mode
