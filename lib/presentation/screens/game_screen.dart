@@ -39,6 +39,7 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
+  int? _bounceIndex; // Track card that needs bounce animation after failed drop
   DragMode _dragMode = DragMode.shift; // Default to shift mode
   bool _showTutorial = false;
   
@@ -627,19 +628,33 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
     }
     
-    return SizedBox(
-      width: cardWidth,
-      height: cardHeight,
-      child: Draggable<int>(
-        data: index,
-        feedback: Material(
-          color: Colors.transparent,
-          child: Opacity(
-            opacity: 0.9,
-            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, 
-                labelsVisible: labelsVisible, displayIndex: displayIndex),
+    // Bounce animation: scale 1.0 -> 1.1 -> 1.0 when drop rejected
+    final isBouncing = _bounceIndex == index;
+    
+    return TweenAnimationBuilder<double>(
+      key: ValueKey('bounce_$index${isBouncing ? '_active' : ''}'),
+      tween: Tween(begin: 1.0, end: isBouncing ? 1.1 : 1.0),
+      duration: Duration(milliseconds: isBouncing ? 150 : 150),
+      curve: isBouncing ? Curves.easeOut : Curves.elasticOut,
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: SizedBox(
+        width: cardWidth,
+        height: cardHeight,
+        child: Draggable<int>(
+          data: index,
+          feedback: Material(
+            color: Colors.transparent,
+            child: Opacity(
+              opacity: 0.9,
+              child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, 
+                  labelsVisible: labelsVisible, displayIndex: displayIndex),
+            ),
           ),
-        ),
         childWhenDragging: Opacity(
           opacity: 0.3,
           child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
@@ -650,8 +665,16 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           _hapticService.lightTap();
           _audioService.playPop();
         },
-        onDragEnd: (_) {
+        onDragEnd: (details) {
           setState(() => _draggedIndex = null);
+          // Trigger bounce animation if drop was rejected
+          if (!details.wasAccepted) {
+            setState(() => _bounceIndex = index);
+            // Clear bounce after animation completes
+            Future.delayed(const Duration(milliseconds: 300), () {
+              if (mounted) setState(() => _bounceIndex = null);
+            });
+          }
         },
         child: DragTarget<int>(
           hitTestBehavior: HitTestBehavior.opaque,
