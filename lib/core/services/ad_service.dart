@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -14,6 +15,14 @@ class AdService {
   BannerAd? _bannerAd;
   RewardedAd? _rewardedAd;
   bool _isRewardedAdLoading = false;
+  int _loadAttempts = 0;
+  static const int _maxLoadAttempts = 3;
+  
+  // Debug info for troubleshooting
+  String _lastError = '';
+  String get lastError => _lastError;
+  bool get isInitialized => _isInitialized;
+  bool get isLoading => _isRewardedAdLoading;
   
   /// Check if ads are supported on current platform
   static bool get isSupported => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
@@ -37,19 +46,45 @@ class AdService {
     return '';
   }
   
+  /// Get debug status for UI display
+  String getDebugStatus() {
+    if (!isSupported) return 'Platform not supported';
+    if (!_isInitialized) return 'Not initialized';
+    if (_isRewardedAdLoading) return 'Loading ad... (attempt $_loadAttempts)';
+    if (_rewardedAd != null) return 'Ad ready ✓';
+    if (_lastError.isNotEmpty) return 'Error: $_lastError';
+    return 'No ad loaded';
+  }
+  
   /// Initialize Mobile Ads SDK
   Future<void> initialize() async {
-    if (!isSupported || _isInitialized) return;
+    if (!isSupported) {
+      debugPrint('📢 AdService: Platform not supported (web)');
+      return;
+    }
+    
+    if (_isInitialized) {
+      debugPrint('📢 AdService: Already initialized');
+      return;
+    }
     
     try {
-      await MobileAds.instance.initialize();
+      debugPrint('📢 AdService: Initializing MobileAds SDK...');
+      final initStatus = await MobileAds.instance.initialize();
+      
+      // Log adapter status
+      initStatus.adapterStatuses.forEach((key, value) {
+        debugPrint('📢 AdService: Adapter $key: ${value.state} - ${value.description}');
+      });
+      
       _isInitialized = true;
-      debugPrint('AdMob initialized successfully');
+      debugPrint('📢 AdService: ✓ Initialized successfully');
       
       // Pre-load rewarded ad
       _loadRewardedAd();
     } catch (e) {
-      debugPrint('AdMob initialization failed: $e');
+      _lastError = e.toString();
+      debugPrint('📢 AdService: ✗ Initialization failed: $e');
     }
   }
   
@@ -65,8 +100,14 @@ class AdService {
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: onAdLoaded,
-        onAdFailedToLoad: onAdFailedToLoad,
+        onAdLoaded: (ad) {
+          debugPrint('📢 AdService: Banner ad loaded');
+          onAdLoaded(ad);
+        },
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('📢 AdService: Banner ad failed: ${error.message}');
+          onAdFailedToLoad(ad, error);
+        },
       ),
     );
     
@@ -76,9 +117,28 @@ class AdService {
   
   /// Load rewarded ad (pre-load for later use)
   void _loadRewardedAd() {
-    if (!isSupported || !_isInitialized || _isRewardedAdLoading) return;
+    if (!isSupported || !_isInitialized) {
+      debugPrint('📢 AdService: Cannot load - not ready');
+      return;
+    }
+    
+    if (_isRewardedAdLoading) {
+      debugPrint('📢 AdService: Already loading rewarded ad');
+      return;
+    }
+    
+    if (_loadAttempts >= _maxLoadAttempts) {
+      debugPrint('📢 AdService: Max load attempts reached');
+      _lastError = 'Max attempts reached';
+      return;
+    }
     
     _isRewardedAdLoading = true;
+    _loadAttempts++;
+    _lastError = '';
+    
+    debugPrint('📢 AdService: Loading rewarded ad (attempt $_loadAttempts)...');
+    debugPrint('📢 AdService: Using ad unit: ${_rewardedAdUnitId}');
     
     RewardedAd.load(
       adUnitId: _rewardedAdUnitId,
@@ -87,15 +147,33 @@ class AdService {
         onAdLoaded: (ad) {
           _rewardedAd = ad;
           _isRewardedAdLoading = false;
-          debugPrint('Rewarded ad loaded');
+          _loadAttempts = 0; // Reset on success
+          debugPrint('📢 AdService: ✓ Rewarded ad loaded successfully!');
         },
         onAdFailedToLoad: (error) {
           _rewardedAd = null;
           _isRewardedAdLoading = false;
-          debugPrint('Rewarded ad failed to load: $error');
+          _lastError = '${error.code}: ${error.message}';
+          debugPrint('📢 AdService: ✗ Rewarded ad failed: ${error.code} - ${error.message}');
+          
+          // Retry after delay if under max attempts
+          if (_loadAttempts < _maxLoadAttempts) {
+            debugPrint('📢 AdService: Will retry in 5 seconds...');
+            Future.delayed(const Duration(seconds: 5), () {
+              _loadRewardedAd();
+            });
+          }
         },
       ),
     );
+  }
+  
+  /// Force reload rewarded ad (for manual retry)
+  void reloadRewardedAd() {
+    _loadAttempts = 0;
+    _rewardedAd?.dispose();
+    _rewardedAd = null;
+    _loadRewardedAd();
   }
   
   /// Check if rewarded ad is ready
@@ -106,31 +184,50 @@ class AdService {
     required void Function() onRewarded,
     void Function()? onAdClosed,
   }) async {
-    if (!isSupported || _rewardedAd == null) {
-      debugPrint('Rewarded ad not ready');
+    if (!isSupported) {
+      debugPrint('📢 AdService: Platform not supported');
       return false;
     }
     
+    if (_rewardedAd == null) {
+      debugPrint('📢 AdService: Rewarded ad not ready');
+      // Try to reload
+      if (!_isRewardedAdLoading) {
+        _loadAttempts = 0;
+        _loadRewardedAd();
+      }
+      return false;
+    }
+    
+    debugPrint('📢 AdService: Showing rewarded ad...');
+    
     _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (ad) {
+        debugPrint('📢 AdService: Ad displayed on screen');
+      },
       onAdDismissedFullScreenContent: (ad) {
+        debugPrint('📢 AdService: Ad dismissed');
         ad.dispose();
         _rewardedAd = null;
         onAdClosed?.call();
         // Pre-load next ad
+        _loadAttempts = 0;
         _loadRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('📢 AdService: Ad failed to show: ${error.message}');
+        _lastError = error.message;
         ad.dispose();
         _rewardedAd = null;
-        debugPrint('Rewarded ad failed to show: $error');
         // Pre-load next ad
+        _loadAttempts = 0;
         _loadRewardedAd();
       },
     );
     
     await _rewardedAd!.show(
       onUserEarnedReward: (ad, reward) {
-        debugPrint('User earned reward: ${reward.amount} ${reward.type}');
+        debugPrint('📢 AdService: ✓ User earned reward: ${reward.amount} ${reward.type}');
         onRewarded();
       },
     );

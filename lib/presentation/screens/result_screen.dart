@@ -985,15 +985,22 @@ Can you beat my time? 💪
                       );
                     }
                   } else {
-                    // Not supported (Web) or ad not ready
+                    // Not supported (Web) or ad not ready - show debug info
+                    final debugStatus = AdService.isSupported 
+                        ? AdService.instance.getDebugStatus()
+                        : 'Ads only available on mobile app';
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(
-                          AdService.isSupported 
-                            ? '⏳ Ad loading... Please wait.'
-                            : '🎬 Ads only available on mobile app.',
-                        ),
-                        duration: const Duration(seconds: 2),
+                        content: Text('🔍 $debugStatus'),
+                        duration: const Duration(seconds: 3),
+                        action: AdService.isSupported && !AdService.instance.isLoading
+                            ? SnackBarAction(
+                                label: 'Retry',
+                                onPressed: () {
+                                  AdService.instance.reloadRewardedAd();
+                                },
+                              )
+                            : null,
                       ),
                     );
                   }
