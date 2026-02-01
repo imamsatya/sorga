@@ -12,8 +12,8 @@ import '../screens/multiplayer_setup_screen.dart';
 import '../screens/multiplayer_transition_screen.dart';
 import '../screens/multiplayer_results_screen.dart';
 
-import 'package:sorga/domain/entities/level.dart';
-import 'package:sorga/levels/level_generator.dart';
+import '../../domain/entities/level.dart';
+import '../../levels/level_generator.dart';
 
 /// App routes
 class AppRoutes {

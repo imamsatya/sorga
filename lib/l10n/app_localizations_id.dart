@@ -9,7 +9,7 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get appTitle => 'Sorga';
+  String get appTitle => 'SORTIQ';
 
   @override
   String get home => 'Beranda';
@@ -220,7 +220,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get about => 'Tentang';
 
   @override
-  String get appDescription => 'Sorga - Game Mengurutkan';
+  String get appDescription => 'SORTIQ - Seberapa cepat otakmu?';
 
   @override
   String get version => 'Versi';
@@ -333,10 +333,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get iCompletedLevel =>
-      'Saya baru saja menyelesaikan level ini di Sorga! Bisakah kamu mengalahkan waktuku?';
+      'Saya baru saja menyelesaikan level ini di SORTIQ! Bisakah kamu mengalahkan waktuku?';
 
   @override
-  String get dailyChallengeShare => '🎯 Sorga Tantangan Harian';
+  String get dailyChallengeShare => '🎯 SORTIQ Tantangan Harian';
 
   @override
   String get shiftAndSwap => 'Geser & Tukar';
