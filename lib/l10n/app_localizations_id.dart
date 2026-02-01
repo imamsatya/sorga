@@ -913,4 +913,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get achShiftMasterDesc => '10 level hanya shift';
+
+  @override
+  String get watchAd => 'Tonton Iklan untuk Kesempatan Ekstra';
+
+  @override
+  String get goPro => 'Jadi Pro - Unlimited Kesalahan';
 }

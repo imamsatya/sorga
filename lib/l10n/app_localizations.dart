@@ -1873,6 +1873,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'10 levels using only shift'**
   String get achShiftMasterDesc;
+
+  /// No description provided for @watchAd.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad for Extra Chance'**
+  String get watchAd;
+
+  /// No description provided for @goPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Pro - Unlimited Mistakes'**
+  String get goPro;
 }
 
 class _AppLocalizationsDelegate

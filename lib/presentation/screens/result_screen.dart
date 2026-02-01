@@ -942,7 +942,102 @@ Can you beat my time? 💪
                 );
               }),
             ] else ...[
-              // Regular game: Retry Level
+              // Regular game: Show monetization options + Retry Level
+              // 1. Watch Ad for extra chance (dummy)
+              GestureDetector(
+                onTap: () {
+                  // TODO: Integrate AdMob rewarded video
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('🎬 Ad feature coming soon!'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.play_circle_filled, color: Colors.white, size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)!.watchAd,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // 2. Go Pro for unlimited mistakes (dummy)
+              GestureDetector(
+                onTap: () {
+                  // TODO: Integrate IAP / payment
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('⭐ Pro upgrade coming soon!'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star, color: Colors.white, size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)!.goPro,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // 3. Retry Level (existing)
               OutlinedButton(
                 onPressed: () {
                    final gameState = ref.read(gameStateProvider);
@@ -968,23 +1063,23 @@ Can you beat my time? 💪
                    }
                 },
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                  side: const BorderSide(color: AppTheme.textMuted, width: 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
+                    Icon(Icons.refresh_rounded, color: AppTheme.textSecondary.withValues(alpha: 0.8)),
                     const SizedBox(width: 8),
                     Text(
                       AppLocalizations.of(context)!.retryLevel,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.8),
                       ),
                     ),
                   ],

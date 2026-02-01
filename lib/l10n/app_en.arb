@@ -325,5 +325,8 @@
   "achSwapMaster": "Swap Master",
   "achSwapMasterDesc": "10 levels using only swap",
   "achShiftMaster": "Shift Master",
-  "achShiftMasterDesc": "10 levels using only shift"
+  "achShiftMasterDesc": "10 levels using only shift",
+  
+  "watchAd": "Watch Ad for Extra Chance",
+  "goPro": "Go Pro - Unlimited Mistakes"
 }
