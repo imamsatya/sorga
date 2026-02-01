@@ -33,10 +33,11 @@ class AdService {
   /// Check if ads are supported on current platform
   static bool get isSupported => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
   
-  // Test Ad Unit IDs
+  // Ad Unit IDs
+  // Android: Production IDs | iOS: Test IDs (update when iOS is set up)
   static String get _bannerAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Android test
+      return 'ca-app-pub-3940256099942544/6300978111'; // Android test (no banner used)
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // iOS test
     }
@@ -45,7 +46,7 @@ class AdService {
   
   static String get _rewardedAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/5224354917'; // Android test
+      return 'ca-app-pub-6136140113407207/6347042499'; // Android PRODUCTION
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // iOS test
     }
@@ -54,7 +55,7 @@ class AdService {
   
   static String get _interstitialAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/1033173712'; // Android test
+      return 'ca-app-pub-6136140113407207/7618987487'; // Android PRODUCTION
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/4411468910'; // iOS test
     }
