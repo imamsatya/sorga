@@ -154,7 +154,7 @@ class CategorySelectScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'SORGAwy',
+                    'Memory Rush',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -162,7 +162,7 @@ class CategorySelectScreen extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    'SORGA with Memory',
+                    'SORTIQ – Memorize & Sort',
                     style: TextStyle(
                       fontSize: 12,
                       color: AppTheme.textMuted,

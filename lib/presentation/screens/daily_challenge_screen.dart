@@ -445,14 +445,14 @@ class DailyChallengeScreen extends ConsumerWidget {
     final timeStr = '$seconds.${ms.toString().padLeft(2, '0')}s';
     
     final shareText = '''
-🎯 Sorga Daily Challenge
+🎯 SORTIQ Daily Challenge
 📅 $dateStr
 
 ⏱️ $timeStr
 🔥 Daily Streak Active!
 
 Can you beat my time? 💪
-#SorgaDaily #PuzzleGame
+#SORTIQDaily #PuzzleGame
 '''.trim();
     
     try {

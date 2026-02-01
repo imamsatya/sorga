@@ -210,7 +210,7 @@ class HomeScreen extends ConsumerWidget {
         end: Alignment.bottomRight,
       ).createShader(bounds),
       child: Text(
-        'SORGA',
+        'SORTIQ',
         style: TextStyle(
           fontSize: 48 * scale,
           fontWeight: FontWeight.bold,

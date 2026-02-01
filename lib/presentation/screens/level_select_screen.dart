@@ -371,7 +371,7 @@ class LevelSelectScreen extends ConsumerWidget {
                   children: [
                     // App branding
                     const Text(
-                      'SORGA',
+                      'SORTIQ',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -394,7 +394,7 @@ class LevelSelectScreen extends ConsumerWidget {
                             Text('✨', style: TextStyle(fontSize: 12)),
                             SizedBox(width: 4),
                             Text(
-                              'SORGAwy',
+                              'Memory Rush',
                               style: TextStyle(
                                 fontSize: 11,
                                 color: Colors.purpleAccent,

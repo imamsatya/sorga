@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Sorga'**
+  /// **'SORTIQ'**
   String get appTitle;
 
   /// No description provided for @home.
@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @appDescription.
   ///
   /// In en, this message translates to:
-  /// **'Sorga - A Sorting Game'**
+  /// **'SORTIQ - How fast is your brain?'**
   String get appDescription;
 
   /// No description provided for @version.
@@ -737,13 +737,13 @@ abstract class AppLocalizations {
   /// No description provided for @iCompletedLevel.
   ///
   /// In en, this message translates to:
-  /// **'I just completed this level in Sorga! Can you beat my time?'**
+  /// **'I just completed this level in SORTIQ! Can you beat my time?'**
   String get iCompletedLevel;
 
   /// No description provided for @dailyChallengeShare.
   ///
   /// In en, this message translates to:
-  /// **'🎯 Sorga Daily Challenge'**
+  /// **'🎯 SORTIQ Daily Challenge'**
   String get dailyChallengeShare;
 
   /// No description provided for @shiftAndSwap.
@@ -1037,7 +1037,7 @@ abstract class AppLocalizations {
   /// No description provided for @localMultiplayer.
   ///
   /// In en, this message translates to:
-  /// **'Local Multiplayer'**
+  /// **'Pass and Play'**
   String get localMultiplayer;
 
   /// No description provided for @players.

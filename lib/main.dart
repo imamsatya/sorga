@@ -35,7 +35,7 @@ void main() async {
   // Initialize AdMob (iOS/Android only)
   await AdService.instance.initialize();
   
-  runApp(const ProviderScope(child: SorgaApp()));
+  runApp(const ProviderScope(child: SortiqApp()));
 }
 
 /// Custom scroll behavior to enable mouse/trackpad drag scrolling on web
@@ -48,8 +48,8 @@ class WebScrollBehavior extends MaterialScrollBehavior {
   };
 }
 
-class SorgaApp extends ConsumerWidget {
-  const SorgaApp({super.key});
+class SortiqApp extends ConsumerWidget {
+  const SortiqApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +57,7 @@ class SorgaApp extends ConsumerWidget {
     final selectedLocale = ref.watch(localeProvider);
     
     return MaterialApp.router(
-      title: 'Sorga',
+      title: 'SORTIQ',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,

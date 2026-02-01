@@ -79,12 +79,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       final xFile = XFile.fromData(
         pngBytes,
         mimeType: 'image/png',
-        name: 'sorga_achievement.png',
+        name: 'sortiq_achievement.png',
       );
 
       await Share.shareXFiles(
         [xFile],
-        text: 'I just completed this level in Sorga! Can you beat my time?',
+        text: 'I just completed this level in SORTIQ! Can you beat my time?',
       );
     } catch (e) {
       debugPrint('Error sharing: $e');
@@ -118,14 +118,14 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     
     // Build share text
     final shareText = '''
-🎯 Sorga Daily Challenge
+🎯 SORTIQ Daily Challenge
 📅 $dateStr
 
 ⏱️ $timeStr
 🔥 $streak Day${streak == 1 ? '' : 's'} Streak!
 
 Can you beat my time? 💪
-#SorgaDaily #PuzzleGame
+#SORTIQDaily #PuzzleGame
 '''.trim();
     
     try {
@@ -554,7 +554,7 @@ Can you beat my time? 💪
                   Text('✨', style: TextStyle(fontSize: 14)),
                   SizedBox(width: 4),
                   Text(
-                    'SORGAwy',
+                    'Memory Rush',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.purpleAccent,
