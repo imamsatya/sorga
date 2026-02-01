@@ -404,6 +404,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get names => 'Noms';
 
   @override
+  String get imReady => 'Je suis prêt 👁️';
+
+  @override
+  String get timeUp => 'Temps écoulé !';
+
+  @override
   String get memorized => 'Mémorisé !';
 
   @override

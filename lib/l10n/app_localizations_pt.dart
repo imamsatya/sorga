@@ -401,6 +401,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get names => 'Nomes';
 
   @override
+  String get imReady => 'Estou Pronto 👁️';
+
+  @override
+  String get timeUp => 'Tempo Esgotado!';
+
+  @override
   String get memorized => 'Memorizei!';
 
   @override

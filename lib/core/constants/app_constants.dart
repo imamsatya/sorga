@@ -52,4 +52,19 @@ class AppConstants {
   
   // In-App Purchase
   static const String iapProductId = 'sortiq_pro';
+  
+  // Memory Mode Timer
+  // Formula: baseTime + (itemCount × timePerItem × complexityMultiplier)
+  static const double memoryBaseTime = 3.0; // seconds
+  static const double memoryTimePerItem = 1.5; // seconds per item
+  
+  // Category complexity multipliers for memory timer
+  static const Map<String, double> categoryComplexity = {
+    'basic': 1.0,      // Simple digits (1, 2, 3)
+    'formatted': 1.5,  // Commas, decimals (1,234.56)
+    'time': 1.8,       // Time formats (08:30 AM)
+    'names': 1.3,      // Alphabetical names
+    'mixed': 2.0,      // Multiple formats mixed
+    'knowledge': 1.4,  // Visual/factual items
+  };
 }

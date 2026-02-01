@@ -395,6 +395,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get names => '名前';
 
   @override
+  String get imReady => '準備OK 👁️';
+
+  @override
+  String get timeUp => '時間切れ！';
+
+  @override
   String get memorized => '覚えた！';
 
   @override

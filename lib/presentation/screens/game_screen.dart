@@ -859,49 +859,185 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   Widget _buildBottomButtons(GameState gameState) {
-    // Memory mode: Memorizing phase shows "I've Memorized" button
+    // Memory mode: Memorizing phase
     if (gameState.phase == GamePhase.memorizing) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: GestureDetector(
-          onTap: () {
-            _hapticService.selectionClick();
-            ref.read(gameStateProvider.notifier).finishMemorizing();
-          },
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+      // Before countdown starts - show "I'm Ready" button
+      if (!gameState.isMemorizeCountdownActive) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Time available indicator
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceColor.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.psychology, color: Colors.white, size: 24),
-                const SizedBox(width: 10),
-                Builder(
-                  builder: (context) => Text(
-                    AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.timer_outlined, color: AppTheme.textMuted, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${gameState.memorizeTimeLimit.inSeconds}s available',
+                      style: const TextStyle(
+                        color: AppTheme.textMuted,
+                        fontSize: 14,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              // I'm Ready button
+              GestureDetector(
+                onTap: () {
+                  _hapticService.selectionClick();
+                  ref.read(gameStateProvider.notifier).startMemorizeCountdown();
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.visibility, color: Colors.white, size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)?.imReady ?? "I'm Ready 👁️",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
-              ],
-            ),
+              ),
+            ],
           ),
+        );
+      }
+      
+      // After countdown starts - show timer + "I've Memorized" button
+      final progress = gameState.memorizeTimeRemaining.inMilliseconds / 
+                       gameState.memorizeTimeLimit.inMilliseconds;
+      final remainingSeconds = gameState.memorizeTimeRemaining.inSeconds;
+      
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Countdown timer display
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceColor,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: remainingSeconds <= 3 
+                      ? AppTheme.errorColor.withValues(alpha: 0.5)
+                      : AppTheme.primaryColor.withValues(alpha: 0.3),
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.timer,
+                        color: remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '$remainingSeconds',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Progress bar
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 6,
+                      backgroundColor: AppTheme.textMuted.withValues(alpha: 0.2),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // I've Memorized button
+            GestureDetector(
+              onTap: () {
+                _hapticService.selectionClick();
+                ref.read(gameStateProvider.notifier).finishMemorizing();
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.psychology, color: Colors.white, size: 24),
+                    const SizedBox(width: 10),
+                    Text(
+                      AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }

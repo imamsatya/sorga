@@ -5,6 +5,7 @@ import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/user_progress.dart';
 import '../../data/datasources/local_database.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/services/achievement_service.dart';
 import '../../core/services/pro_service.dart';
 import 'game_providers.dart';
@@ -37,6 +38,11 @@ class GameState {
   final Duration memorizeTime;    // Time spent memorizing
   final Map<String, int> originalIndices; // Track original position of each item
   
+  // Memory mode countdown timer
+  final Duration memorizeTimeLimit;       // Max time allowed for memorizing
+  final bool isMemorizeCountdownActive;   // Is countdown running
+  final Duration memorizeTimeRemaining;   // Time left in countdown
+  
   const GameState({
     required this.level,
     required this.currentOrder,
@@ -50,6 +56,9 @@ class GameState {
     this.labelsVisible = true,
     this.memorizeTime = Duration.zero,
     this.originalIndices = const {},
+    this.memorizeTimeLimit = Duration.zero,
+    this.isMemorizeCountdownActive = false,
+    this.memorizeTimeRemaining = Duration.zero,
   });
   
   /// Can continue after failure (dynamic based on mode and Pro status)
@@ -79,6 +88,9 @@ class GameState {
     bool? labelsVisible,
     Duration? memorizeTime,
     Map<String, int>? originalIndices,
+    Duration? memorizeTimeLimit,
+    bool? isMemorizeCountdownActive,
+    Duration? memorizeTimeRemaining,
   }) {
     return GameState(
       level: level ?? this.level,
@@ -93,6 +105,9 @@ class GameState {
       labelsVisible: labelsVisible ?? this.labelsVisible,
       memorizeTime: memorizeTime ?? this.memorizeTime,
       originalIndices: originalIndices ?? this.originalIndices,
+      memorizeTimeLimit: memorizeTimeLimit ?? this.memorizeTimeLimit,
+      isMemorizeCountdownActive: isMemorizeCountdownActive ?? this.isMemorizeCountdownActive,
+      memorizeTimeRemaining: memorizeTimeRemaining ?? this.memorizeTimeRemaining,
     );
   }
   
@@ -107,6 +122,23 @@ class GameState {
     final seconds = memorizeTime.inSeconds;
     final ms = (memorizeTime.inMilliseconds % 1000) ~/ 10;
     return '${seconds.toString()}.${ms.toString().padLeft(2, '0')}s';
+  }
+  
+  /// Format remaining memorize countdown time
+  String get formattedMemorizeRemaining {
+    final seconds = memorizeTimeRemaining.inSeconds;
+    return '$seconds';
+  }
+  
+  /// Calculate memorize time based on category and item count
+  static Duration calculateMemorizeTime(LevelCategory category, int itemCount) {
+    final categoryKey = category.name;
+    final multiplier = AppConstants.categoryComplexity[categoryKey] ?? 1.0;
+    
+    final totalSeconds = AppConstants.memoryBaseTime + 
+        (itemCount * AppConstants.memoryTimePerItem * multiplier);
+    
+    return Duration(milliseconds: (totalSeconds * 1000).round());
   }
 }
 
@@ -166,14 +198,23 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   void startPlaying() {
     if (state == null) return;
     
-    // For memory mode, start memorizing phase first
+    // For memory mode, show items and wait for user to click "I'm Ready"
     if (state!.level.isMemory) {
+      // Calculate memorize time based on category and item count
+      final timeLimit = GameState.calculateMemorizeTime(
+        state!.level.category,
+        state!.level.itemCount,
+      );
+      
       state = state!.copyWith(
         isRunning: true,
         phase: GamePhase.memorizing,
         labelsVisible: true,
+        memorizeTimeLimit: timeLimit,
+        memorizeTimeRemaining: timeLimit,
+        isMemorizeCountdownActive: false, // Wait for user to click "I'm Ready"
       );
-      _startTimer();
+      // Don't start timer yet - wait for startMemorizeCountdown()
     } else {
       state = state!.copyWith(
         isRunning: true,
@@ -183,17 +224,58 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     }
   }
   
+  /// Start the memorize countdown timer (called when user clicks "I'm Ready")
+  void startMemorizeCountdown() {
+    if (state == null || !state!.level.isMemory) return;
+    if (state!.phase != GamePhase.memorizing) return;
+    if (state!.isMemorizeCountdownActive) return; // Already started
+    
+    state = state!.copyWith(
+      isMemorizeCountdownActive: true,
+    );
+    _startMemorizeTimer();
+  }
+  
+  /// Timer specifically for memorize countdown
+  Timer? _memorizeTimer;
+  
+  void _startMemorizeTimer() {
+    _memorizeTimer?.cancel();
+    _memorizeTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (state == null || state!.phase != GamePhase.memorizing) {
+        timer.cancel();
+        return;
+      }
+      
+      final newRemaining = state!.memorizeTimeRemaining - const Duration(milliseconds: 100);
+      
+      if (newRemaining.inMilliseconds <= 0) {
+        // Time's up - auto-transition to sorting phase
+        timer.cancel();
+        finishMemorizing();
+      } else {
+        state = state!.copyWith(
+          memorizeTimeRemaining: newRemaining,
+          memorizeTime: state!.memorizeTimeLimit - newRemaining, // Track time spent
+        );
+      }
+    });
+  }
+  
   /// Finish memorizing and start sorting (memory mode only)
   void finishMemorizing() {
     if (state == null || !state!.level.isMemory) return;
     if (state!.phase != GamePhase.memorizing) return;
     
+    _memorizeTimer?.cancel();
+    
     // Record memorize time and switch to sorting phase
     state = state!.copyWith(
       phase: GamePhase.sorting,
       labelsVisible: false, // Hide labels for sorting
-      memorizeTime: state!.elapsedTime,
+      memorizeTime: state!.memorizeTimeLimit - state!.memorizeTimeRemaining,
       elapsedTime: Duration.zero, // Reset timer for sorting phase
+      isMemorizeCountdownActive: false,
     );
     
     // Restart timer for sorting phase

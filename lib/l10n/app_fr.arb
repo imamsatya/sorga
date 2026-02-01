@@ -129,6 +129,8 @@
   "numbers": "nombres",
   "times": "heures",
   "names": "noms",
+  "imReady": "Je suis prêt 👁️",
+  "timeUp": "Temps écoulé !",
   "memorized": "Mémorisé !",
   "memoryMode": "Mémoire",
   "memorizeTime": "Mémoriser",

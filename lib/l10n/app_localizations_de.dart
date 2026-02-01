@@ -402,6 +402,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get names => 'Namen';
 
   @override
+  String get imReady => 'Ich bin bereit 👁️';
+
+  @override
+  String get timeUp => 'Zeit ist um!';
+
+  @override
   String get memorized => 'Auswendig gelernt!';
 
   @override

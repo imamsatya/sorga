@@ -866,6 +866,18 @@ abstract class AppLocalizations {
   /// **'Names'**
   String get names;
 
+  /// No description provided for @imReady.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m Ready 👁️'**
+  String get imReady;
+
+  /// No description provided for @timeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s Up!'**
+  String get timeUp;
+
   /// No description provided for @memorized.
   ///
   /// In en, this message translates to:

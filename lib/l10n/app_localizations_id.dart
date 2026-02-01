@@ -401,6 +401,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get names => 'Nama';
 
   @override
+  String get imReady => 'Saya Siap 👁️';
+
+  @override
+  String get timeUp => 'Waktu Habis!';
+
+  @override
   String get memorized => 'Sudah Dihafal!';
 
   @override

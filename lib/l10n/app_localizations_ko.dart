@@ -396,6 +396,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get names => '이름';
 
   @override
+  String get imReady => '준비됐어요 👁️';
+
+  @override
+  String get timeUp => '시간 초과!';
+
+  @override
   String get memorized => '외웠어요!';
 
   @override

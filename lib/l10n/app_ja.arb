@@ -129,6 +129,8 @@
   "numbers": "数字",
   "times": "時刻",
   "names": "名前",
+  "imReady": "準備OK 👁️",
+  "timeUp": "時間切れ！",
   "memorized": "覚えた！",
   "memoryMode": "記憶",
   "memorizeTime": "記憶",
