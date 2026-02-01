@@ -909,8 +909,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get achShiftMasterDesc => 'シフトのみで10レベル';
 
   @override
-  String get watchAd => 'Watch Ad for Extra Chance';
+  String get watchAd => '広告を見て追加チャンス';
 
   @override
-  String get goPro => 'Go Pro - Unlimited Mistakes';
+  String get goPro => 'プロへ - 無制限ミス';
 }

@@ -323,5 +323,8 @@
   "achSwapMaster": "Maître Échange",
   "achSwapMasterDesc": "10 niveaux swap seul",
   "achShiftMaster": "Maître Décalage",
-  "achShiftMasterDesc": "10 niveaux shift seul"
+  "achShiftMasterDesc": "10 niveaux shift seul",
+  
+  "watchAd": "Regarder pub pour chance supplémentaire",
+  "goPro": "Passer Pro - Erreurs illimitées"
 }

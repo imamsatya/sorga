@@ -39,10 +39,9 @@ class AppConstants {
   // Mistake Limits (attempts before game over)
   // Regular mode: 2 attempts (1 mistake allowed)
   // Memory mode: 3 attempts (2 mistakes allowed)
-  // Pro users: unlimited
+  // Pro users: truly unlimited (handled in ProService)
   static const int maxAttemptsRegular = 2;
   static const int maxAttemptsMemory = 3;
-  static const int maxAttemptsPro = 999; // effectively unlimited
   
   // Database
   static const String progressBoxName = 'user_progress';

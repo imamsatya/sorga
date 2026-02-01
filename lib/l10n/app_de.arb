@@ -323,5 +323,8 @@
   "achSwapMaster": "Tausch-Meister",
   "achSwapMasterDesc": "10 Level nur mit Tausch",
   "achShiftMaster": "Verschiebe-Meister",
-  "achShiftMasterDesc": "10 Level nur mit Verschieben"
+  "achShiftMasterDesc": "10 Level nur mit Verschieben",
+  
+  "watchAd": "Werbung für Extrachance",
+  "goPro": "Pro Version - Unbegrenzte Fehler"
 }

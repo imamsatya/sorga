@@ -26,9 +26,10 @@ class ProService {
   }
   
   /// Get maximum attempts allowed based on game mode and Pro status
+  /// Returns -1 for truly unlimited (Pro)
   int getMaxAttempts({required bool isMemoryMode}) {
     if (isPro) {
-      return AppConstants.maxAttemptsPro;
+      return -1; // Truly unlimited
     }
     return isMemoryMode 
         ? AppConstants.maxAttemptsMemory 
@@ -36,14 +37,28 @@ class ProService {
   }
   
   /// Check if user can continue after failed attempt
+  /// Pro users always return true (truly unlimited)
   bool canContinue({required int failedAttempts, required bool isMemoryMode}) {
+    if (isPro) {
+      return true; // Pro users never run out of chances
+    }
     final maxAttempts = getMaxAttempts(isMemoryMode: isMemoryMode);
     return failedAttempts < maxAttempts;
   }
   
   /// Get remaining attempts
+  /// Returns -1 for unlimited (Pro users)
   int getRemainingAttempts({required int failedAttempts, required bool isMemoryMode}) {
+    if (isPro) {
+      return -1; // Unlimited
+    }
     final maxAttempts = getMaxAttempts(isMemoryMode: isMemoryMode);
     return maxAttempts - failedAttempts;
+  }
+  
+  /// Check if remaining attempts should be displayed
+  /// Returns false for Pro users (unlimited)
+  bool shouldShowRemaining({required int failedAttempts, required bool isMemoryMode}) {
+    return !isPro;
   }
 }

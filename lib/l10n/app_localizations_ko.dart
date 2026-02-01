@@ -910,8 +910,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get achShiftMasterDesc => '시프트만으로 10레벨';
 
   @override
-  String get watchAd => 'Watch Ad for Extra Chance';
+  String get watchAd => '광고 보고 추가 기회';
 
   @override
-  String get goPro => 'Go Pro - Unlimited Mistakes';
+  String get goPro => '프로 버전 - 무제한 실수';
 }

@@ -323,5 +323,8 @@
   "achSwapMaster": "Maestro Intercambio",
   "achSwapMasterDesc": "10 niveles solo swap",
   "achShiftMaster": "Maestro Desplazamiento",
-  "achShiftMasterDesc": "10 niveles solo shift"
+  "achShiftMasterDesc": "10 niveles solo shift",
+  
+  "watchAd": "Ver anuncio por oportunidad extra",
+  "goPro": "Hazte Pro - Errores ilimitados"
 }

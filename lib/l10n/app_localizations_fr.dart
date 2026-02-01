@@ -917,8 +917,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get achShiftMasterDesc => '10 niveaux shift seul';
 
   @override
-  String get watchAd => 'Watch Ad for Extra Chance';
+  String get watchAd => 'Regarder pub pour chance supplémentaire';
 
   @override
-  String get goPro => 'Go Pro - Unlimited Mistakes';
+  String get goPro => 'Passer Pro - Erreurs illimitées';
 }

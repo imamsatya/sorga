@@ -323,5 +323,8 @@
   "achSwapMaster": "스왑 마스터",
   "achSwapMasterDesc": "스왑만으로 10레벨",
   "achShiftMaster": "시프트 마스터",
-  "achShiftMasterDesc": "시프트만으로 10레벨"
+  "achShiftMasterDesc": "시프트만으로 10레벨",
+  
+  "watchAd": "광고 보고 추가 기회",
+  "goPro": "프로 버전 - 무제한 실수"
 }
