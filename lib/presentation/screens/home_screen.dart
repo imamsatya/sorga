@@ -223,7 +223,7 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildSubtitle(BuildContext context, double scale) {
     return Text(
-      'Your Sorting Paradise',
+      'How fast is your brain?',
       style: TextStyle(
         fontSize: 16 * scale,
         color: AppTheme.textSecondary.withOpacity(0.8),
