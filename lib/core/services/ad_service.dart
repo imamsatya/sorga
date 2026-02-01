@@ -14,9 +14,15 @@ class AdService {
   bool _isInitialized = false;
   BannerAd? _bannerAd;
   RewardedAd? _rewardedAd;
+  InterstitialAd? _interstitialAd;
   bool _isRewardedAdLoading = false;
+  bool _isInterstitialAdLoading = false;
   int _loadAttempts = 0;
   static const int _maxLoadAttempts = 3;
+  
+  // Level completion counter for interstitial
+  int _levelCompletionCount = 0;
+  static const int _levelsPerInterstitial = 3;
   
   // Debug info for troubleshooting
   String _lastError = '';
@@ -42,6 +48,15 @@ class AdService {
       return 'ca-app-pub-3940256099942544/5224354917'; // Android test
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // iOS test
+    }
+    return '';
+  }
+  
+  static String get _interstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3940256099942544/1033173712'; // Android test
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/4411468910'; // iOS test
     }
     return '';
   }
@@ -80,8 +95,9 @@ class AdService {
       _isInitialized = true;
       debugPrint('📢 AdService: ✓ Initialized successfully');
       
-      // Pre-load rewarded ad
+      // Pre-load ads
       _loadRewardedAd();
+      _loadInterstitialAd();
     } catch (e) {
       _lastError = e.toString();
       debugPrint('📢 AdService: ✗ Initialization failed: $e');
@@ -241,10 +257,82 @@ class AdService {
     _bannerAd = null;
   }
   
+  /// Load interstitial ad
+  void _loadInterstitialAd() {
+    if (!isSupported || !_isInitialized || _isInterstitialAdLoading) return;
+    
+    _isInterstitialAdLoading = true;
+    debugPrint('📢 AdService: Loading interstitial ad...');
+    
+    InterstitialAd.load(
+      adUnitId: _interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          _interstitialAd = ad;
+          _isInterstitialAdLoading = false;
+          debugPrint('📢 AdService: ✓ Interstitial ad loaded');
+        },
+        onAdFailedToLoad: (error) {
+          _interstitialAd = null;
+          _isInterstitialAdLoading = false;
+          debugPrint('📢 AdService: ✗ Interstitial ad failed: ${error.message}');
+        },
+      ),
+    );
+  }
+  
+  /// Call this when a level is completed successfully
+  /// Returns true if an interstitial ad was shown
+  Future<bool> onLevelCompleted() async {
+    if (!isSupported || !_isInitialized) return false;
+    
+    _levelCompletionCount++;
+    debugPrint('📢 AdService: Level completed ($_levelCompletionCount/$_levelsPerInterstitial)');
+    
+    if (_levelCompletionCount >= _levelsPerInterstitial) {
+      _levelCompletionCount = 0;
+      return await _showInterstitialAd();
+    }
+    
+    return false;
+  }
+  
+  /// Show interstitial ad
+  Future<bool> _showInterstitialAd() async {
+    if (_interstitialAd == null) {
+      debugPrint('📢 AdService: Interstitial not ready');
+      _loadInterstitialAd();
+      return false;
+    }
+    
+    debugPrint('📢 AdService: Showing interstitial ad...');
+    
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        debugPrint('📢 AdService: Interstitial dismissed');
+        ad.dispose();
+        _interstitialAd = null;
+        _loadInterstitialAd(); // Pre-load next
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('📢 AdService: Interstitial failed to show: ${error.message}');
+        ad.dispose();
+        _interstitialAd = null;
+        _loadInterstitialAd();
+      },
+    );
+    
+    await _interstitialAd!.show();
+    return true;
+  }
+  
   /// Dispose all ads
   void dispose() {
     disposeBannerAd();
     _rewardedAd?.dispose();
     _rewardedAd = null;
+    _interstitialAd?.dispose();
+    _interstitialAd = null;
   }
 }

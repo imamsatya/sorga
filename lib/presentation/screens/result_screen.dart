@@ -40,6 +40,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       final gameState = ref.read(gameStateProvider);
       if (gameState?.isCorrect == true) {
         _confettiController.play();
+        
+        // Trigger interstitial ad counter (shows every 3 levels)
+        // Only for non-Pro users
+        if (!ProService.instance.isPro) {
+          AdService.instance.onLevelCompleted();
+        }
       }
     });
   }
