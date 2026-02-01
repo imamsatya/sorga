@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/pro_service.dart';
+import '../../core/services/ad_service.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/multiplayer_session.dart';
 import 'package:flutter/rendering.dart';
@@ -943,16 +944,59 @@ Can you beat my time? 💪
               }),
             ] else ...[
               // Regular game: Show monetization options + Retry Level
-              // 1. Watch Ad for extra chance (dummy)
+              // 1. Watch Ad for extra chance
               GestureDetector(
-                onTap: () {
-                  // TODO: Integrate AdMob rewarded video
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('🎬 Ad feature coming soon!'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
+                onTap: () async {
+                  if (AdService.isSupported && AdService.instance.isRewardedAdReady) {
+                    // Show rewarded ad
+                    final shown = await AdService.instance.showRewardedAd(
+                      onRewarded: () {
+                        // Grant extra chance - reset to continue game
+                        final gameState = ref.read(gameStateProvider);
+                        if (gameState != null) {
+                          // Reset failed attempts to allow one more try
+                          ref.read(gameStateProvider.notifier).resetFailedAttempts();
+                          
+                          // Navigate back to game
+                          if (gameState.level.localId == 0) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => GameScreen(
+                                  levelId: gameState.level.id,
+                                  isDailyChallenge: true,
+                                  dailyLevel: gameState.level,
+                                ),
+                              ),
+                            );
+                          } else {
+                            final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                            context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                          }
+                        }
+                      },
+                    );
+                    
+                    if (!shown) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('❌ Ad not available. Try again later.'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  } else {
+                    // Not supported (Web) or ad not ready
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AdService.isSupported 
+                            ? '⏳ Ad loading... Please wait.'
+                            : '🎬 Ads only available on mobile app.',
+                        ),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   width: double.infinity,

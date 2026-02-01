@@ -486,6 +486,12 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     state = null;
   }
   
+  /// Reset failed attempts (for rewarded ad extra chance)
+  void resetFailedAttempts() {
+    if (state == null) return;
+    state = state!.copyWith(failedAttempts: 0);
+  }
+  
   void _startTimer() {
     _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       if (state != null && state!.isRunning) {

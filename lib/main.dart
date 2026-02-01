@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/achievement_service.dart';
+import 'core/services/ad_service.dart';
 import 'data/datasources/local_database.dart';
 import 'presentation/router/app_router.dart';
 import 'presentation/providers/locale_provider.dart';
@@ -30,6 +31,9 @@ void main() async {
   
   // Initialize achievement service
   await AchievementService.instance.init();
+  
+  // Initialize AdMob (iOS/Android only)
+  await AdService.instance.initialize();
   
   runApp(const ProviderScope(child: SorgaApp()));
 }
