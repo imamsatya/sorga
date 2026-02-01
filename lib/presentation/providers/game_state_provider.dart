@@ -1,9 +1,24 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/user_progress.dart';
+import '../../data/datasources/local_database.dart';
+import '../../core/services/achievement_service.dart';
+import '../../core/services/pro_service.dart';
 import 'game_providers.dart';
+import 'game_stats_provider.dart';
+import 'daily_challenge_provider.dart';
+
+/// Phase of gameplay for memory mode
+enum GamePhase {
+  ready,       // Initial state
+  memorizing,  // User is memorizing items (memory mode only)
+  sorting,     // User is sorting items
+  checking,    // Checking answer
+  completed,   // Game completed
+}
 
 /// State for the active game
 class GameState {
@@ -13,7 +28,14 @@ class GameState {
   final bool isRunning;
   final bool isCompleted;
   final bool isCorrect;
-  final int failedAttempts; // Track failed attempts this session
+  final int failedAttempts;
+  final bool hasUsedAdChance;  // Track if user already used their ad extra chance
+  
+  // Memory mode (SORGAwy) fields
+  final GamePhase phase;
+  final bool labelsVisible;       // Show item values or "?"
+  final Duration memorizeTime;    // Time spent memorizing
+  final Map<String, int> originalIndices; // Track original position of each item
   
   const GameState({
     required this.level,
@@ -23,10 +45,26 @@ class GameState {
     this.isCompleted = false,
     this.isCorrect = false,
     this.failedAttempts = 0,
+    this.hasUsedAdChance = false,
+    this.phase = GamePhase.ready,
+    this.labelsVisible = true,
+    this.memorizeTime = Duration.zero,
+    this.originalIndices = const {},
   });
   
-  /// Can continue after failure (only if less than 2 failed attempts)
-  bool get canContinue => failedAttempts < 2;
+  /// Can continue after failure (dynamic based on mode and Pro status)
+  bool get canContinue => ProService.instance.canContinue(
+    failedAttempts: failedAttempts,
+    isMemoryMode: isMemoryMode,
+  );
+  
+  /// Is this a memory mode game
+  bool get isMemoryMode => level.isMemory;
+  
+  /// Get original index for an item (1-based for display)
+  int getOriginalIndex(LevelItem item) {
+    return (originalIndices[item.id] ?? 0) + 1;
+  }
   
   GameState copyWith({
     Level? level,
@@ -36,6 +74,11 @@ class GameState {
     bool? isCompleted,
     bool? isCorrect,
     int? failedAttempts,
+    bool? hasUsedAdChance,
+    GamePhase? phase,
+    bool? labelsVisible,
+    Duration? memorizeTime,
+    Map<String, int>? originalIndices,
   }) {
     return GameState(
       level: level ?? this.level,
@@ -45,6 +88,11 @@ class GameState {
       isCompleted: isCompleted ?? this.isCompleted,
       isCorrect: isCorrect ?? this.isCorrect,
       failedAttempts: failedAttempts ?? this.failedAttempts,
+      hasUsedAdChance: hasUsedAdChance ?? this.hasUsedAdChance,
+      phase: phase ?? this.phase,
+      labelsVisible: labelsVisible ?? this.labelsVisible,
+      memorizeTime: memorizeTime ?? this.memorizeTime,
+      originalIndices: originalIndices ?? this.originalIndices,
     );
   }
   
@@ -53,6 +101,12 @@ class GameState {
     final seconds = elapsedTime.inSeconds % 60;
     final ms = (elapsedTime.inMilliseconds % 1000) ~/ 10;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${ms.toString().padLeft(2, '0')}';
+  }
+  
+  String get formattedMemorizeTime {
+    final seconds = memorizeTime.inSeconds;
+    final ms = (memorizeTime.inMilliseconds % 1000) ~/ 10;
+    return '${seconds.toString()}.${ms.toString().padLeft(2, '0')}s';
   }
 }
 
@@ -63,18 +117,46 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   
   GameStateNotifier(this._ref) : super(null);
   
-  /// Start a new game with a level
+  /// Start a new game with a level ID
   void startGame(int levelId) {
     _stopTimer();
     
     final level = _ref.read(levelProvider(levelId));
-    // Shuffle items for initial display
+    _initializeGameWithLevel(level);
+  }
+
+  /// Start a new game with a Level object directly (for Daily Challenge)
+  void startGameWithLevel(Level level) {
+    _stopTimer();
+    _initializeGameWithLevel(level);
+  }
+
+  /// Start a MEMORY game (SORGAwy mode) with a level ID
+  void startGameMemory(int levelId) {
+    _stopTimer();
+    
+    // Get memory level (uses different seed for different items)
+    final generator = _ref.read(levelGeneratorProvider);
+    final memoryLevel = generator.getMemoryLevel(levelId);
+    _initializeGameWithLevel(memoryLevel);
+  }
+
+  /// Initialize game state with a level
+  void _initializeGameWithLevel(Level level) {
+    // Store original indices before any reordering (for memory mode display)
+    final Map<String, int> originalIndices = {};
+    for (int i = 0; i < level.items.length; i++) {
+      originalIndices[level.items[i].id] = i;
+    }
+    
+    // Items start in original order (will be shuffled by user or for display)
     final shuffled = List<LevelItem>.from(level.items);
     
     state = GameState(
       level: level,
       currentOrder: shuffled,
       isRunning: false, // Start paused for countdown
+      originalIndices: originalIndices,
     );
     
     // Timer will be started by startPlaying() after countdown
@@ -84,7 +166,38 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   void startPlaying() {
     if (state == null) return;
     
-    state = state!.copyWith(isRunning: true);
+    // For memory mode, start memorizing phase first
+    if (state!.level.isMemory) {
+      state = state!.copyWith(
+        isRunning: true,
+        phase: GamePhase.memorizing,
+        labelsVisible: true,
+      );
+      _startTimer();
+    } else {
+      state = state!.copyWith(
+        isRunning: true,
+        phase: GamePhase.sorting,
+      );
+      _startTimer();
+    }
+  }
+  
+  /// Finish memorizing and start sorting (memory mode only)
+  void finishMemorizing() {
+    if (state == null || !state!.level.isMemory) return;
+    if (state!.phase != GamePhase.memorizing) return;
+    
+    // Record memorize time and switch to sorting phase
+    state = state!.copyWith(
+      phase: GamePhase.sorting,
+      labelsVisible: false, // Hide labels for sorting
+      memorizeTime: state!.elapsedTime,
+      elapsedTime: Duration.zero, // Reset timer for sorting phase
+    );
+    
+    // Restart timer for sorting phase
+    _stopTimer();
     _startTimer();
   }
   
@@ -124,13 +237,27 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     
     _stopTimer();
     
-    final correctOrder = state!.level.correctOrder;
+    final level = state!.level;
+    final currentOrder = state!.currentOrder;
     bool isCorrect = true;
     
-    for (int i = 0; i < state!.currentOrder.length; i++) {
-      if (state!.currentOrder[i].id != correctOrder[i].id) {
-        isCorrect = false;
-        break;
+    // Check if items are correctly sorted by comparing sortValues
+    for (int i = 0; i < currentOrder.length - 1; i++) {
+      final current = currentOrder[i].sortValue;
+      final next = currentOrder[i + 1].sortValue;
+      
+      if (level.sortOrder == SortOrder.ascending) {
+        // For ascending: current should be <= next
+        if (current > next) {
+          isCorrect = false;
+          break;
+        }
+      } else {
+        // For descending: current should be >= next
+        if (current < next) {
+          isCorrect = false;
+          break;
+        }
       }
     }
     
@@ -143,7 +270,12 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     );
     
     // Save progress (update attempts and completion)
-    await _saveProgress(isCorrect);
+    try {
+      await _saveProgress(isCorrect);
+    } catch (e) {
+      debugPrint('Error saving progress: $e');
+      // Continue anyway so game doesn't freeze
+    }
     
     return isCorrect;
   }
@@ -166,45 +298,206 @@ class GameStateNotifier extends StateNotifier<GameState?> {
     if (state == null) return;
     
     final repository = _ref.read(progressRepositoryProvider);
-    final existingProgress = await repository.getProgress(state!.level.id);
+    
+    // Use offset for memory levels to track separately from regular levels
+    // Memory levels: ID = levelId + 10000
+    final int progressId = state!.level.isMemory 
+        ? state!.level.id + 10000 
+        : state!.level.id;
+    
+    final existingProgress = await repository.getProgress(progressId);
+    
+    // For memory mode, calculate total time (memorize + sort)
+    final Duration totalTime = state!.level.isMemory 
+        ? state!.memorizeTime + state!.elapsedTime  // memorize + sort
+        : state!.elapsedTime;
     
     UserProgress newProgress;
     if (existingProgress != null) {
       newProgress = existingProgress.withNewAttempt(
-        state!.elapsedTime,
+        totalTime,
         success: success,
+        memorizeTime: state!.level.isMemory ? state!.memorizeTime : null,
+        sortTime: state!.level.isMemory ? state!.elapsedTime : null,
       );
     } else {
       newProgress = UserProgress(
-        levelId: state!.level.id,
+        levelId: progressId,
         completed: success,
-        bestTimeMs: success ? state!.elapsedTime.inMilliseconds : null,
+        bestTimeMs: success ? totalTime.inMilliseconds : null,
         completedAt: success ? DateTime.now() : null,
         attempts: 1,
+        memorizeTimeMs: success && state!.level.isMemory 
+            ? state!.memorizeTime.inMilliseconds : null,
+        sortTimeMs: success && state!.level.isMemory 
+            ? state!.elapsedTime.inMilliseconds : null,
       );
     }
     
     await repository.saveProgress(newProgress);
     
-    // Invalidate all progress providers to refresh UI
+    // Invalidate all progress providers FIRST to refresh counts
     _ref.invalidate(allProgressProvider);
     _ref.invalidate(completedCountProvider);
     _ref.invalidate(highestUnlockedProvider);
-    // Also invalidate the specific level progress
-    _ref.invalidate(levelProgressProvider(state!.level.id));
+    _ref.invalidate(levelProgressProvider(progressId));
+    
+    // Record play time for streak tracking on successful completion
+    if (success) {
+      await LocalDatabase.instance.recordPlay(
+        playTimeMs: state!.elapsedTime.inMilliseconds,
+      );
+      // Update consecutive perfect counter
+      await LocalDatabase.instance.incrementPerfect();
+      
+      // Track Memory mode perfect completion (assuming no mistakes = success)
+      if (state!.level.isMemory) {
+        await LocalDatabase.instance.incrementMemoryPerfect();
+      }
+      
+      // Refresh game stats provider to update streak badge
+      _ref.read(gameStatsNotifierProvider.notifier).refresh();
+      
+      // Update daily challenge streak if this is a daily challenge (localId == 0)
+      if (state!.level.localId == 0) {
+        // Track daily completion
+        await LocalDatabase.instance.incrementDailyCompletions();
+        // Track daily perfect (success = no mistakes for now)
+        await LocalDatabase.instance.incrementDailyPerfect();
+        
+        await _ref.read(dailyChallengeProvider.notifier).completeChallenge(
+          state!.elapsedTime.inMilliseconds,
+        );
+      }
+      
+      // Check for new achievements AFTER invalidation
+      await _checkAchievements();
+    } else {
+      // Reset consecutive perfect on failure
+      await LocalDatabase.instance.resetPerfect();
+      _ref.read(gameStatsNotifierProvider.notifier).refresh();
+    }
   }
+
+  /// Check and unlock achievements
+  Future<void> _checkAchievements() async {
+    final gameStats = LocalDatabase.instance.getStats();
+    
+    // Count completed levels directly from database
+    final progressBox = LocalDatabase.instance.progressBox;
+    final allProgress = progressBox.values.toList();
+    int completedCount = 0;
+    final completedPerCategory = <LevelCategory, int>{};
+    final levelGenerator = _ref.read(levelGeneratorProvider);
+    
+    for (final progress in allProgress) {
+      if (progress.completed) {
+        completedCount++;
+        try {
+          // Skip daily challenge levels (IDs > 1000 are likely date-based)
+          if (progress.levelId > 1000) continue;
+          final level = levelGenerator.getLevel(progress.levelId);
+          completedPerCategory[level.category] = 
+              (completedPerCategory[level.category] ?? 0) + 1;
+        } catch (e) {
+          // Skip levels that don't exist in generator (e.g., daily challenges)
+        }
+      }
+    }
+    
+    // Count Memory mode completions
+    int memoryCompletions = 0;
+    final memoryCompletedPerCategory = <LevelCategory, int>{};
+    
+    for (final progress in allProgress) {
+      if (progress.completed && progress.isMemoryProgress) {
+        memoryCompletions++;
+        try {
+          // Memory levels have offset of 10000
+          final originalLevelId = progress.levelId > 10000 
+              ? progress.levelId - 10000 
+              : progress.levelId;
+          if (originalLevelId > 1000) continue;
+          final level = levelGenerator.getLevel(originalLevelId);
+          memoryCompletedPerCategory[level.category] = 
+              (memoryCompletedPerCategory[level.category] ?? 0) + 1;
+        } catch (e) {
+          // Skip levels that don't exist
+        }
+      }
+    }
+    
+    // Check achievements
+    final newlyUnlocked = await AchievementService.instance.checkUnlocks(
+      completedLevels: completedCount,
+      currentStreak: gameStats.currentStreak,
+      totalPlayTimeMs: gameStats.totalPlayTimeMs,
+      lastLevelTimeMs: state?.elapsedTime.inMilliseconds,
+      completedPerCategory: completedPerCategory,
+      consecutivePerfect: gameStats.consecutivePerfect,
+      memoryCompletions: memoryCompletions,
+      memoryPerfectCompletions: gameStats.memoryPerfectCount,
+      memoryCompletedPerCategory: memoryCompletedPerCategory,
+      dailyCompletions: gameStats.dailyCompletions,
+      dailyPerfectCompletions: gameStats.dailyPerfectCount,
+      multiplayerGamesHosted: gameStats.multiplayerGamesHosted,
+      completionTime: DateTime.now(),
+      retryCount: gameStats.retryCount,
+    );
+    
+    // Store newly unlocked for display (can be shown in result screen)
+    if (newlyUnlocked.isNotEmpty) {
+      _lastUnlockedAchievements = newlyUnlocked;
+    }
+  }
+
+  /// Get last unlocked achievements (for notification display)
+  static List<dynamic> _lastUnlockedAchievements = [];
+  static List<dynamic> get lastUnlockedAchievements => _lastUnlockedAchievements;
+  static void clearLastUnlockedAchievements() => _lastUnlockedAchievements = [];
+
   
   /// Retry the current level
   void retry() {
     if (state == null) return;
     final levelId = state!.level.id;
-    startGame(levelId);
+    final isMemory = state!.level.isMemory;
+    
+    // Track retry count
+    LocalDatabase.instance.incrementRetryCount();
+    _ref.read(gameStatsNotifierProvider.notifier).refresh();
+    
+    if (isMemory) {
+      startGameMemory(levelId);
+    } else {
+      startGame(levelId);
+    }
+  }
+
+  /// Retry with the same level object (for Daily Challenge)
+  void retryWithLevel(Level level) {
+    if (level.isMemory) {
+      // For memory mode, use startGameMemory
+      startGameMemory(level.id);
+    } else {
+      startGameWithLevel(level);
+    }
   }
   
   /// Stop and clear the game
   void endGame() {
     _stopTimer();
     state = null;
+  }
+  
+  /// Reset failed attempts (for rewarded ad extra chance)
+  /// Also marks that user has used their one-time ad chance
+  void resetFailedAttempts() {
+    if (state == null) return;
+    state = state!.copyWith(
+      failedAttempts: 0,
+      hasUsedAdChance: true,  // Mark as used so Watch Ad won't appear again
+    );
   }
   
   void _startTimer() {

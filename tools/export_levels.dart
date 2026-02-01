@@ -1,6 +1,7 @@
 import 'dart:io';
 import '../lib/levels/level_generator.dart';
 import '../lib/domain/entities/level.dart';
+import '../lib/core/constants/app_constants.dart';
 
 void main() {
   final generator = LevelGenerator();
@@ -9,8 +10,11 @@ void main() {
   // CSV Header
   buffer.writeln('Level ID,Category,Sort Order,Title,Description,Item Count,Items (Display),Items (Correct Order),Hint');
   
-  // Generate all 1000 levels
-  for (int i = 1; i <= 1000; i++) {
+  // Generate all levels
+  final totalLevels = AppConstants.totalLevels;
+  print('Generating $totalLevels levels...');
+  
+  for (int i = 1; i <= totalLevels; i++) {
     try {
       final level = generator.getLevel(i);
       

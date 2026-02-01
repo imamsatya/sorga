@@ -5,17 +5,33 @@ import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/audio_service.dart';
 import '../../core/services/haptic_service.dart';
+import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/multiplayer_provider.dart';
+import '../widgets/tutorial_overlay.dart';
+import 'result_screen.dart';
 
 
 enum DragMode { swap, shift }
 
 class GameScreen extends ConsumerStatefulWidget {
   final int levelId;
+  final bool isDailyChallenge;
+  final bool isMemory; // SORGAwy memory mode
+  final bool isMultiplayer; // Local multiplayer mode
+  final Level? dailyLevel; // For daily challenge, pass the level directly
   
-  const GameScreen({super.key, required this.levelId});
+  const GameScreen({
+    super.key, 
+    required this.levelId,
+    this.isDailyChallenge = false,
+    this.isMemory = false,
+    this.isMultiplayer = false,
+    this.dailyLevel,
+  });
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -23,7 +39,10 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen> {
   int? _draggedIndex;
+  int? _bounceIndex; // Track card that needs bounce animation after failed drop
+  int? _successIndex; // Track card that received successful drop for success pulse
   DragMode _dragMode = DragMode.shift; // Default to shift mode
+  bool _showTutorial = false;
   
   // Services
   final AudioService _audioService = AudioService();
@@ -35,23 +54,77 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
     _audioService.init();
+    
+    // Check if user has seen tutorial
+    final stats = LocalDatabase.instance.getStats();
+    if (!stats.hasSeenTutorial) {
+      _showTutorial = true;
+    }
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentState = ref.read(gameStateProvider);
       // Start new game if:
       // - No existing state
       // - Different level
-      // - Game was completed (not continuing)
-      final shouldStartNewGame = currentState == null || 
+      // - Game was completed AND not currently running (i.e., not Continuing)
+      // Check if we should start a new game:
+      // - For multiplayer: start new ONLY if this is a fresh start (not Continue)
+      // - Continue keeps isRunning=true, isCompleted=false, so we can detect it
+      final isMultiplayerContinue = widget.isMultiplayer && 
+          currentState != null && 
+          currentState.isRunning && 
+          !currentState.isCompleted;
+      
+      final shouldStartNewGame = !isMultiplayerContinue && (
+          widget.isMultiplayer ||
+          currentState == null || 
           currentState.level.id != widget.levelId ||
-          (currentState.isCompleted && !currentState.isRunning);
+          (currentState.isCompleted && !currentState.isRunning)
+      );
       
       if (shouldStartNewGame) {
-        ref.read(gameStateProvider.notifier).startGame(widget.levelId);
+        if (widget.isMultiplayer) {
+          // Start multiplayer game - load level from session
+          final session = ref.read(multiplayerSessionProvider);
+          if (session != null) {
+            // Get player-specific shuffled items
+            final shuffledItems = ref.read(multiplayerSessionProvider.notifier)
+                .getShuffledItemsForPlayer(session.currentPlayer.id);
+            // Create level with shuffled items for this player
+            final playerLevel = Level(
+              id: session.level.id,
+              localId: session.level.localId,
+              category: session.level.category,
+              sortOrder: session.level.sortOrder,
+              title: session.level.title,
+              description: session.level.description,
+              items: shuffledItems,
+              isMemory: session.isMemoryMode,
+            );
+            ref.read(gameStateProvider.notifier).startGameWithLevel(playerLevel);
+            // Auto-start timer for multiplayer (countdown is in transition screen)
+            Future.delayed(const Duration(milliseconds: 100), () {
+              ref.read(gameStateProvider.notifier).startPlaying();
+            });
+          }
+        } else if (widget.isDailyChallenge && widget.dailyLevel != null) {
+          // Use the provided level for daily challenge
+          ref.read(gameStateProvider.notifier).startGameWithLevel(widget.dailyLevel!);
+        } else if (widget.isMemory) {
+          // Start memory game (SORGAwy mode)
+          ref.read(gameStateProvider.notifier).startGameMemory(widget.levelId);
+        } else {
+          ref.read(gameStateProvider.notifier).startGame(widget.levelId);
+        }
       }
     });
+  }
+  
+  void _completeTutorial() {
+    LocalDatabase.instance.markTutorialSeen();
+    setState(() => _showTutorial = false);
   }
   
   @override
@@ -96,15 +169,42 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
           ),
           
-          // Countdown Overlay
-          if (!gameState.isRunning && !gameState.isCompleted)
+          // Countdown Overlay - skip for multiplayer (transition has countdown)
+          if (!widget.isMultiplayer && !gameState.isRunning && !gameState.isCompleted && !_showTutorial)
             _CountdownOverlay(
               onFinished: () {
                 ref.read(gameStateProvider.notifier).startPlaying();
               },
             ),
             
-          // Confetti Widget - positioned at top center
+          // Enhanced Confetti - Multiple Emitters for impressive celebration!
+          // Left corner emitter
+          Align(
+            alignment: Alignment.topLeft,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: -0.5,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
+            ),
+          ),
+          // Center emitter
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -119,14 +219,52 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 Colors.yellow,
                 Colors.orange,
                 Colors.pink,
+                Colors.purple,
+                Colors.cyan,
               ],
-              numberOfParticles: 30,
-              gravity: 0.2,
-              emissionFrequency: 0.05,
-              maxBlastForce: 20,
-              minBlastForce: 8,
+              numberOfParticles: 50,
+              gravity: 0.1,
+              emissionFrequency: 0.02,
+              maxBlastForce: 30,
+              minBlastForce: 15,
+              particleDrag: 0.05,
             ),
           ),
+          // Right corner emitter
+          Align(
+            alignment: Alignment.topRight,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: 3.6,
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
+            ),
+          ),
+          
+          // Tutorial Overlay (for first-time users)
+          if (_showTutorial)
+            TutorialOverlay(
+              onComplete: _completeTutorial,
+              isMemory: gameState.level.isMemory,
+            ),
+          
+
         ],
       ),
     );
@@ -143,9 +281,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildModeButton(DragMode.shift, 'Shift', Icons.swap_horiz),
+          _buildModeButton(DragMode.shift, AppLocalizations.of(context)!.shift, Icons.swap_horiz),
           const SizedBox(width: 4),
-          _buildModeButton(DragMode.swap, 'Swap', Icons.swap_calls),
+          _buildModeButton(DragMode.swap, AppLocalizations.of(context)!.swap, Icons.swap_calls),
         ],
       ),
     );
@@ -162,7 +300,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          gradient: isSelected ? AppTheme.primaryGradient : null,
+          color: isSelected ? AppTheme.primaryColor : null,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -197,7 +335,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           IconButton(
             onPressed: () {
               ref.read(gameStateProvider.notifier).endGame();
-              context.go('/levels');
+              if (widget.isMultiplayer) {
+                // For multiplayer, go back to setup
+                ref.read(multiplayerSessionProvider.notifier).endSession();
+                context.go('/');
+              } else {
+                // Preserve memory mode when going back to level selection
+                final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                context.go('/levels/${gameState.level.category.name}$memoryParam');
+              }
             },
             icon: const Icon(Icons.close, color: AppTheme.textPrimary, size: 28),
           ),
@@ -226,11 +372,19 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(20),
+            color: widget.isMultiplayer
+                ? _getMultiplayerPlayerColor()
+                : widget.isDailyChallenge 
+                    ? AppTheme.warningColor 
+                    : AppTheme.primaryColor,
+            borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Level ${gameState.level.id}',
+              widget.isMultiplayer
+                  ? _getMultiplayerPlayerName()
+                  : widget.isDailyChallenge 
+                      ? '📅 ${AppLocalizations.of(context)!.daily}' 
+                      : '${AppLocalizations.of(context)!.level} ${gameState.level.localId}',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -245,63 +399,114 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
   Widget _buildLevelInfo(Level level) {
     final categoryColor = _getCategoryColor(level.category);
+    final isAscending = level.sortOrder == SortOrder.ascending;
+    
+    // Determine instruction text
+    final l10n = AppLocalizations.of(context)!;
+    String instruction;
+    if (level.category == LevelCategory.knowledge) {
+      instruction = level.description; // Keep full description for knowledge
+    } else if (level.category == LevelCategory.names) {
+      instruction = l10n.sortNames;
+    } else {
+      instruction = l10n.sortItems;
+    }
+    
+    // Determine sort label
+    String sortLabel;
+    if (level.category == LevelCategory.names || level.category == LevelCategory.knowledge) {
+      sortLabel = isAscending ? l10n.aToZ : l10n.zToA;
+    } else {
+      sortLabel = isAscending ? l10n.lowToHigh : l10n.highToLow;
+    }
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: categoryColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: categoryColor.withValues(alpha: 0.3), width: 1),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(level.category.icon, color: categoryColor, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  level.description,
+          // Icon
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: categoryColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(level.category.icon, color: categoryColor, size: 24),
+          ),
+          const SizedBox(width: 12),
+          
+          // Text Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  instruction,
                   style: const TextStyle(
                     color: AppTheme.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                 ),
-              ),
-            ],
+                if (level.hint != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      level.hint!,
+                      style: TextStyle(
+                        color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          if (level.hint != null) ...[
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          
+          const SizedBox(width: 12),
+          
+          // Sort Badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: isAscending 
+                  ? AppTheme.successColor.withValues(alpha: 0.2)
+                  : AppTheme.warningColor.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isAscending 
+                    ? AppTheme.successColor.withValues(alpha: 0.5)
+                    : AppTheme.warningColor.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.lightbulb_outline,
+                  isAscending ? Icons.arrow_upward : Icons.arrow_downward,
                   size: 14,
-                  color: AppTheme.textSecondary.withValues(alpha: 0.8),
+                  color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
                 ),
                 const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    level.hint!,
-                    style: TextStyle(
-                      color: AppTheme.textSecondary.withValues(alpha: 0.8),
-                      fontSize: 11,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                Text(
+                  sortLabel,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isAscending ? AppTheme.successColor : AppTheme.warningColor,
                   ),
                 ),
               ],
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -323,52 +528,95 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         return AppTheme.knowledgeColor;
     }
   }
+  
+  // Helper for multiplayer player name
+  String _getMultiplayerPlayerName() {
+    final session = ref.read(multiplayerSessionProvider);
+    if (session != null) {
+      return session.currentPlayer.name;
+    }
+    return 'Player';
+  }
+  
+  // Helper for multiplayer player color
+  Color _getMultiplayerPlayerColor() {
+    final session = ref.read(multiplayerSessionProvider);
+    if (session != null) {
+      const colors = [Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFFFF9800), Color(0xFF9C27B0)];
+      return colors[session.currentPlayerIndex % colors.length];
+    }
+    return AppTheme.primaryColor;
+  }
 
   Widget _buildSortableGrid(GameState gameState) {
     final items = gameState.currentOrder;
     final categoryColor = _getCategoryColor(gameState.level.category);
     final totalItems = items.length;
     
-    final (cardWidth, cardHeight, fontSize) = _getCardDimensions(totalItems);
-    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: SingleChildScrollView(
-        child: Center(
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.center,
-            children: List.generate(items.length, (index) {
-              final item = items[index];
-              return _buildDraggableCard(
-                item, 
-                index, 
-                categoryColor, 
-                cardWidth, 
-                cardHeight, 
-                fontSize,
-              );
-            }),
-          ),
-        ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double availableWidth = constraints.maxWidth;
+          
+          // Responsive column count based on screen width
+          // Phone: 5 columns, Tablet: 7 columns, Large tablet: 8 columns
+          int crossAxisCount;
+          if (availableWidth > 800) {
+            crossAxisCount = 8;
+          } else if (availableWidth > 500) {
+            crossAxisCount = 7;
+          } else {
+            crossAxisCount = 5;
+          }
+          
+          const double spacing = 8.0;
+          
+          // Calculate width based on available space and column count
+          final double totalSpacing = (crossAxisCount - 1) * spacing;
+          final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
+          
+          // Dynamic height and font size
+          final double cardHeight = cardWidth * 1.2; // 1.2 aspect ratio
+          final double fontSize = cardWidth * 0.22; // Proportional font size
+          
+          return SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              children: [
+                Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  alignment: WrapAlignment.center,
+                  children: List.generate(items.length, (index) {
+                    final item = items[index];
+                    // Disable drag during memorizing phase
+                    final bool canDrag = gameState.phase != GamePhase.memorizing;
+                    // Get original position for display (memory mode: card number moves with card)
+                    final int displayIndex = gameState.getOriginalIndex(item);
+                    return _buildDraggableCard(
+                      item, 
+                      index, 
+                      categoryColor, 
+                      cardWidth, 
+                      cardHeight, 
+                      fontSize,
+                      labelsVisible: gameState.labelsVisible,
+                      canDrag: canDrag,
+                      displayIndex: displayIndex,
+                    );
+                  }),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  (double, double, double) _getCardDimensions(int totalItems) {
-    if (totalItems <= 5) {
-      return (70.0, 80.0, 16.0);
-    } else if (totalItems <= 10) {
-      return (65.0, 75.0, 14.0);
-    } else if (totalItems <= 15) {
-      return (60.0, 70.0, 13.0);
-    } else if (totalItems <= 20) {
-      return (55.0, 65.0, 12.0);
-    } else {
-      return (50.0, 60.0, 11.0);
-    }
-  }
+  // Helper moved inside or calculation is dynamic now
+  // _getCardDimensions is deprecated by dynamic LayoutBuilder logic
 
   Widget _buildDraggableCard(
     LevelItem item, 
@@ -376,46 +624,94 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     Color categoryColor,
     double cardWidth,
     double cardHeight,
-    double fontSize,
-  ) {
-    return SizedBox(
-      width: cardWidth,
-      height: cardHeight,
-      child: Draggable<int>(
-        data: index,
-        feedback: Material(
-          color: Colors.transparent,
-          child: Opacity(
-            opacity: 0.9,
-            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true),
+    double fontSize, {
+    bool labelsVisible = true,
+    bool canDrag = true,
+    int? displayIndex,
+  }) {
+    // During memorizing phase, show non-draggable card
+    if (!canDrag) {
+      return SizedBox(
+        width: cardWidth,
+        height: cardHeight,
+        child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
+            labelsVisible: labelsVisible, displayIndex: displayIndex),
+      );
+    }
+    
+    // Animation states: bounce (failed drop) or success (accepted drop)
+    final isBouncing = _bounceIndex == index;
+    final isSuccess = _successIndex == index;
+    
+    // Determine scale: bounce scales up, success also scales up briefly
+    double targetScale = 1.0;
+    if (isBouncing) targetScale = 1.1;
+    if (isSuccess) targetScale = 1.08;
+    
+    return TweenAnimationBuilder<double>(
+      key: ValueKey('anim_$index${isBouncing ? '_bounce' : ''}${isSuccess ? '_success' : ''}'),
+      tween: Tween(begin: 1.0, end: targetScale),
+      duration: Duration(milliseconds: (isBouncing || isSuccess) ? 150 : 150),
+      curve: isBouncing ? Curves.easeOut : (isSuccess ? Curves.easeOutBack : Curves.elasticOut),
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: SizedBox(
+        width: cardWidth,
+        height: cardHeight,
+        child: Draggable<int>(
+          data: index,
+          feedback: Material(
+            color: Colors.transparent,
+            child: Opacity(
+              opacity: 0.9,
+              child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, true, 
+                  labelsVisible: labelsVisible, displayIndex: displayIndex),
+            ),
           ),
-        ),
-        childWhenDragging: Opacity(
-          opacity: 0.3,
-          child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false),
-        ),
-        onDragStarted: () {
-          setState(() => _draggedIndex = index);
-          _hapticService.lightTap();
-          _audioService.playPop();
-        },
-        onDragEnd: (_) {
-          setState(() => _draggedIndex = null);
-        },
-        child: DragTarget<int>(
-          hitTestBehavior: HitTestBehavior.opaque,
-          onWillAcceptWithDetails: (details) => details.data != index,
-          onAcceptWithDetails: (details) {
-            final fromIndex = details.data;
-            _hapticService.mediumTap();
+          childWhenDragging: Opacity(
+            opacity: 0.3,
+            child: _buildCard(item, index, categoryColor, cardWidth, cardHeight, fontSize, false, 
+                labelsVisible: labelsVisible, displayIndex: displayIndex),
+          ),
+          onDragStarted: () {
+            setState(() => _draggedIndex = index);
+            _hapticService.lightTap();
             _audioService.playPop();
-            if (_dragMode == DragMode.swap) {
-              ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
-            } else {
-              ref.read(gameStateProvider.notifier).insertItem(fromIndex, index);
+          },
+          onDragEnd: (details) {
+            setState(() => _draggedIndex = null);
+            // Trigger bounce animation if drop was rejected
+            if (!details.wasAccepted) {
+              setState(() => _bounceIndex = index);
+              // Clear bounce after animation completes
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) setState(() => _bounceIndex = null);
+              });
             }
           },
-          builder: (context, candidateData, rejectedData) {
+          child: DragTarget<int>(
+            hitTestBehavior: HitTestBehavior.opaque,
+            onWillAcceptWithDetails: (details) => details.data != index,
+            onAcceptWithDetails: (details) {
+              final fromIndex = details.data;
+              _hapticService.mediumTap();
+              _audioService.playPop();
+              // Trigger success pulse animation
+              setState(() => _successIndex = index);
+              Future.delayed(const Duration(milliseconds: 300), () {
+                if (mounted) setState(() => _successIndex = null);
+              });
+              if (_dragMode == DragMode.swap) {
+                ref.read(gameStateProvider.notifier).reorderItems(fromIndex, index);
+              } else {
+                ref.read(gameStateProvider.notifier).insertItem(fromIndex, index);
+              }
+            },
+            builder: (context, candidateData, rejectedData) {
             final isHovering = candidateData.isNotEmpty;
             
             // Visual feedback based on mode
@@ -469,6 +765,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     cardHeight, 
                     fontSize, 
                     false,
+                    labelsVisible: labelsVisible,
+                    displayIndex: displayIndex,
                   ),
                 ),
                 if (overlay != null)
@@ -478,6 +776,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           },
         ),
       ),
+    ),
     );
   }
 
@@ -488,8 +787,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     double width, 
     double height, 
     double fontSize,
-    bool isDragging,
-  ) {
+    bool isDragging, {
+    bool labelsVisible = true,
+    int? displayIndex, // If null, use index+1; if set, use this value (for memory mode)
+  }) {
+    final cardNumber = displayIndex ?? (index + 1);
+    
     return Container(
       width: width,
       height: height,
@@ -527,7 +830,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              '${index + 1}',
+              '$cardNumber',
               style: TextStyle(
                 color: categoryColor,
                 fontSize: 10,
@@ -539,10 +842,10 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Text(
-              item.displayValue,
+              labelsVisible ? item.displayValue : '?',
               style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: fontSize,
+                color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
+                fontSize: labelsVisible ? fontSize : fontSize * 1.5,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,
@@ -556,56 +859,164 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   Widget _buildBottomButtons(GameState gameState) {
+    // Memory mode: Memorizing phase shows "I've Memorized" button
+    if (gameState.phase == GamePhase.memorizing) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: GestureDetector(
+          onTap: () {
+            _hapticService.selectionClick();
+            ref.read(gameStateProvider.notifier).finishMemorizing();
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.psychology, color: Colors.white, size: 24),
+                const SizedBox(width: 10),
+                Builder(
+                  builder: (context) => Text(
+                    AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    
+    // Normal mode: Reset and Check buttons (Reset hidden in multiplayer)
     return Container(
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                _hapticService.selectionClick();
-                ref.read(gameStateProvider.notifier).retry();
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  color: AppTheme.surfaceColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.refresh, color: AppTheme.textSecondary),
-                    SizedBox(width: 8),
-                    Text('Reset', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  ],
+          // Hide Reset button for multiplayer (fairness)
+          if (!widget.isMultiplayer) ...[
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  _hapticService.selectionClick();
+                  ref.read(gameStateProvider.notifier).retry();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceColor,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                  ),
+                  child: Builder(
+                    builder: (context) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.refresh, color: AppTheme.textSecondary, size: 18),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            AppLocalizations.of(context)!.reset, 
+                            style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 16),
+            const SizedBox(width: 16),
+          ],
+          // Check button (full width for multiplayer)
           Expanded(
-            flex: 2,
+            flex: widget.isMultiplayer ? 1 : 2,
             child: GestureDetector(
               onTap: () async {
                 _hapticService.selectionClick();
-                await ref.read(gameStateProvider.notifier).checkAnswer();
-                final state = ref.read(gameStateProvider);
-                if (state?.isCorrect == true) {
-                  _confettiController.play();
+                
+                bool isCorrect = false;
+                try {
+                  await ref.read(gameStateProvider.notifier).checkAnswer();
+                  final state = ref.read(gameStateProvider);
+                  isCorrect = state?.isCorrect == true;
+                } catch (e) {
+                  debugPrint('Error in checkAnswer: $e');
+                  // Fallback: assume wrong if something crashed
+                  isCorrect = false;
+                }
+                
+                // Play feedback
+                if (isCorrect) {
                   _audioService.playSuccess();
                   _hapticService.successVibrate();
                 } else {
                   _audioService.playError();
                   _hapticService.errorVibrate();
                 }
-                if (mounted) context.go('/result');
+                
+                // Debug: verify state before navigation
+                final verifyState = ref.read(gameStateProvider);
+                debugPrint('Before navigation - isCompleted: ${verifyState?.isCompleted}, isCorrect: ${verifyState?.isCorrect}');
+                
+                // Navigate to result screen
+                if (mounted) {
+                  // For multiplayer, submit result and navigate to next player or results
+                  if (widget.isMultiplayer && isCorrect && verifyState != null) {
+                    final session = ref.read(multiplayerSessionProvider);
+                    if (session != null) {
+                      // Submit result
+                      ref.read(multiplayerSessionProvider.notifier).submitResult(
+                        playerId: session.currentPlayer.id,
+                        timeMs: verifyState.elapsedTime.inMilliseconds,
+                        memorizeTimeMs: session.isMemoryMode ? verifyState.memorizeTime.inMilliseconds : null,
+                        sortTimeMs: session.isMemoryMode ? (verifyState.elapsedTime.inMilliseconds - verifyState.memorizeTime.inMilliseconds) : null,
+                        attempts: verifyState.failedAttempts + 1,
+                      );
+                      
+                      // Navigate to next player or results
+                      final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
+                      if (isLastPlayer) {
+                        context.go('/multiplayer/results');
+                      } else {
+                        ref.read(multiplayerSessionProvider.notifier).nextPlayer();
+                        context.go('/multiplayer/transition');
+                      }
+                    }
+                  } else if (widget.isDailyChallenge) {
+                    // For daily challenges, use Navigator directly to bypass GoRouter issues
+                    debugPrint('Daily Challenge: Using Navigator.pushReplacement');
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const ResultScreen()),
+                    );
+                  } else {
+                    context.go('/result');
+                  }
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -615,13 +1026,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     ),
                   ],
                 ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.white),
-                    SizedBox(width: 8),
-                    Text('Check', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                  ],
+                child: Builder(
+                  builder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white),
+                      const SizedBox(width: 8),
+                      Text(AppLocalizations.of(context)!.check, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -670,7 +1083,7 @@ class _CountdownOverlayState extends State<_CountdownOverlay> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Get Ready!',
+              AppLocalizations.of(context)!.getReady,
               style: TextStyle(
                 fontSize: 24,
                 color: AppTheme.textPrimary.withValues(alpha: 0.7),

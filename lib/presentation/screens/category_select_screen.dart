@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 
 class CategorySelectScreen extends ConsumerWidget {
@@ -19,7 +21,7 @@ class CategorySelectScreen extends ConsumerWidget {
           child: Column(
             children: [
               _buildHeader(context),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               Expanded(
                 child: _buildCategoryGrid(context, ref),
               ),
@@ -32,25 +34,25 @@ class CategorySelectScreen extends ConsumerWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           IconButton(
             onPressed: () => context.go('/'),
-            icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary, size: 28),
+            icon: const Icon(Icons.arrow_back, color: AppTheme.textPrimary, size: 24),
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Choose Category',
-              style: TextStyle(
-                fontSize: 24,
+              AppLocalizations.of(context)!.chooseCategory,
+              style: const TextStyle(
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          const SizedBox(width: 48), // Balance for back button
+          const SizedBox(width: 40),
         ],
       ),
     );
@@ -59,20 +61,330 @@ class CategorySelectScreen extends ConsumerWidget {
   Widget _buildCategoryGrid(BuildContext context, WidgetRef ref) {
     final categories = LevelCategory.values;
     
-    return Padding(
+    // Responsive columns based on screen width
+    final screenWidth = MediaQuery.of(context).size.width;
+    int categoryColumns = 2;
+    if (screenWidth > 800) {
+      categoryColumns = 4;
+    } else if (screenWidth > 500) {
+      categoryColumns = 3;
+    }
+    
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.9,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Regular categories grid
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: categoryColumns,
+              childAspectRatio: 0.9,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final category = categories[index];
+              return _buildCategoryCard(context, ref, category);
+            },
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Separator
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              children: [
+                Expanded(child: Divider(color: Colors.purple.withOpacity(0.3))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    '✨',
+                    style: TextStyle(fontSize: 16, color: Colors.purple[300]),
+                  ),
+                ),
+                Expanded(child: Divider(color: Colors.purple.withOpacity(0.3))),
+              ],
+            ),
+          ),
+          
+          // SORGAwy Section
+          _buildSORGAwySection(context, ref),
+          
+          const SizedBox(height: 80), // Bottom padding
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSORGAwySection(BuildContext context, WidgetRef ref) {
+    // Memory categories (exclude knowledge)
+    const memoryCategories = [
+      (LevelCategory.basic, '🔢'),
+      (LevelCategory.formatted, '📐'),
+      (LevelCategory.time, '⏱️'),
+      (LevelCategory.names, '👥'),
+      (LevelCategory.mixed, '🎲'),
+    ];
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Colors.purple.withOpacity(0.4),
+          width: 2,
         ),
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final category = categories[index];
-          return _buildCategoryCard(context, ref, category);
-        },
+      ),
+      child: Column(
+        children: [
+          // Header with branding
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('✨', style: TextStyle(fontSize: 32)),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Memory Rush',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.purple[300],
+                    ),
+                  ),
+                  Text(
+                    'SORTIQ – Memorize & Sort',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textMuted,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // Memory category cards grid - responsive columns
+          LayoutBuilder(
+            builder: (context, constraints) {
+              int memoryColumns = 3;
+              if (constraints.maxWidth > 600) {
+                memoryColumns = 5; // Show all 5 in one row on tablet
+              }
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: memoryColumns,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: memoryCategories.length,
+                itemBuilder: (context, index) {
+                  final cat = memoryCategories[index];
+                  return _buildMemoryCategoryCard(context, ref, cat.$1, cat.$2);
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildMemoryCategoryCard(
+    BuildContext context, 
+    WidgetRef ref,
+    LevelCategory category,
+    String emoji,
+  ) {
+    // Check if unlocked (Level 30 completed in regular category)
+    final allProgress = ref.watch(allProgressProvider);
+    final levels = ref.watch(levelsByCategoryProvider(category));
+    
+    int regularCompleted = 0;
+    int memoryCompleted = 0;
+    
+    allProgress.whenData((progressList) {
+      final levelIds = levels.map((l) => l.id).toSet();
+      final memoryLevelIds = levels.map((l) => l.id + 10000).toSet(); // Memory uses ID + 10000
+      
+      for (final progress in progressList) {
+        // Count regular progress for unlock check
+        if (levelIds.contains(progress.levelId) && progress.completed) {
+          regularCompleted++;
+        }
+        // Count memory progress for progress bar
+        if (memoryLevelIds.contains(progress.levelId) && progress.completed) {
+          memoryCompleted++;
+        }
+      }
+    });
+    
+    // DevMode: unlock all memory levels; Production: unlock when level 30 completed
+    final bool isUnlocked = AppConstants.isDevMode || regularCompleted >= AppConstants.memoryUnlockLevel;
+    final categoryInfo = _getCategoryInfo(category);
+    final double progress = levels.isEmpty ? 0.0 : memoryCompleted / levels.length;
+    
+    return GestureDetector(
+      onTap: () {
+        if (isUnlocked) {
+          // TODO: Navigate to memory level select
+          context.go('/levels/${category.name}?memory=true');
+        } else {
+          // Show unlock tooltip
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.completeLevelToUnlock(
+                  AppConstants.memoryUnlockLevel.toString(),
+                  _getCategoryTitle(context, category),
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.purple[700],
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isUnlocked ? LinearGradient(
+            colors: [
+              Colors.purple.withOpacity(0.3),
+              Colors.purple.withOpacity(0.1),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ) : null,
+          color: isUnlocked ? null : AppTheme.surfaceColor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isUnlocked 
+                ? Colors.purple.withOpacity(0.5)
+                : AppTheme.textMuted.withOpacity(0.2),
+            width: isUnlocked ? 2 : 1,
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon (Emoji with sparkle overlay)
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: (isUnlocked ? categoryInfo.color : Colors.grey).withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          emoji,
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: isUnlocked ? null : Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -2,
+                      right: -2,
+                      child: Text('✨', style: TextStyle(fontSize: 12)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                // Title
+                Text(
+                  _getCategoryTitle(context, category),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isUnlocked ? AppTheme.textPrimary : AppTheme.textMuted,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 1),
+                // Level count
+                Text(
+                  '100 ${AppLocalizations.of(context)!.levels}',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: AppTheme.textSecondary.withOpacity(0.7),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Progress bar + counter
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(3),
+                        child: LinearProgressIndicator(
+                          value: progress,
+                          minHeight: 4,
+                          backgroundColor: AppTheme.backgroundDark.withOpacity(0.5),
+                          valueColor: AlwaysStoppedAnimation(categoryInfo.color),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '$memoryCompleted/${levels.length}',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: categoryInfo.color,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // Lock overlay
+            if (!isUnlocked)
+              Positioned(
+                top: 6,
+                right: 6,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Icon(
+                    Icons.lock,
+                    size: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +453,7 @@ class CategorySelectScreen extends ConsumerWidget {
             const SizedBox(height: 6),
             // Title
             Text(
-              categoryInfo.title,
+              _getCategoryTitle(context, category),
               style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -152,7 +464,7 @@ class CategorySelectScreen extends ConsumerWidget {
             const SizedBox(height: 2),
             // Level count
             Text(
-              '${levels.length} levels',
+              '${levels.length} ${AppLocalizations.of(context)!.levels}',
               style: TextStyle(
                 fontSize: 11,
                 color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -204,7 +516,25 @@ class CategorySelectScreen extends ConsumerWidget {
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
+    }
+  }
+
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
     }
   }
 
@@ -212,32 +542,26 @@ class CategorySelectScreen extends ConsumerWidget {
     switch (category) {
       case LevelCategory.basic:
         return _CategoryInfo(
-          title: 'Basic Numbers',
           color: AppTheme.basicColor,
         );
       case LevelCategory.formatted:
         return _CategoryInfo(
-          title: 'Formatted',
           color: AppTheme.formattedColor,
         );
       case LevelCategory.time:
         return _CategoryInfo(
-          title: 'Time Formats',
           color: AppTheme.timeColor,
         );
       case LevelCategory.names:
         return _CategoryInfo(
-          title: 'Name Sorting',
           color: AppTheme.namesColor,
         );
       case LevelCategory.mixed:
         return _CategoryInfo(
-          title: 'Mixed Formats',
           color: AppTheme.mixedColor,
         );
       case LevelCategory.knowledge:
         return _CategoryInfo(
-          title: 'Knowledge',
           color: AppTheme.knowledgeColor,
         );
     }
@@ -245,11 +569,9 @@ class CategorySelectScreen extends ConsumerWidget {
 }
 
 class _CategoryInfo {
-  final String title;
   final Color color;
   
   _CategoryInfo({
-    required this.title,
     required this.color,
   });
 }

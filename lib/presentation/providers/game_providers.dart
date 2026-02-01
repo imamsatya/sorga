@@ -47,6 +47,12 @@ final levelsByCategoryProvider = Provider.family<List<Level>, LevelCategory>((re
   return repository.getLevelsByCategory(category);
 });
 
+/// Get all MEMORY levels for a category (SORGAwy mode)
+final memoryLevelsByCategoryProvider = Provider.family<List<Level>, LevelCategory>((ref, category) {
+  final generator = ref.watch(levelGeneratorProvider);
+  return generator.getMemoryLevelsByCategory(category);
+});
+
 // ==================== PROGRESS PROVIDERS ====================
 
 /// All progress data

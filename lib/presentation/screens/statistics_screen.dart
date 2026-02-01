@@ -1,0 +1,427 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
+import '../../data/datasources/local_database.dart';
+import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
+import '../providers/game_providers.dart';
+import '../../core/constants/app_constants.dart';
+
+class StatisticsScreen extends ConsumerWidget {
+  const StatisticsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gameStats = LocalDatabase.instance.getStats();
+    final progressBox = LocalDatabase.instance.progressBox;
+    final allProgress = progressBox.values.toList();
+    final levelGenerator = ref.read(levelGeneratorProvider);
+    
+    // Calculate stats
+    int totalCompleted = 0;
+    int memoryCompleted = 0;
+    int totalAttempts = 0;
+    final categoryStats = <LevelCategory, CategoryStat>{};
+    final memoryCategoryStats = <LevelCategory, CategoryStat>{};
+    
+    for (final progress in allProgress) {
+      if (progress.completed) {
+        totalCompleted++;
+        
+        // Track Memory mode completions by category
+        if (progress.isMemoryProgress) {
+          memoryCompleted++;
+          
+          // Skip daily challenge levels for category tracking
+          if (progress.levelId > 1000 && progress.levelId < 10000) continue;
+          
+          try {
+            // Memory levelIds have +10000 offset, so subtract to get actual levelId
+            final actualLevelId = progress.levelId >= 10000 
+                ? progress.levelId - 10000 
+                : progress.levelId;
+            final level = levelGenerator.getLevel(actualLevelId);
+            // Skip Knowledge category for Memory (not available in Memory mode)
+            if (level.category != LevelCategory.knowledge) {
+              if (!memoryCategoryStats.containsKey(level.category)) {
+                memoryCategoryStats[level.category] = CategoryStat();
+              }
+              memoryCategoryStats[level.category]!.completed++;
+            }
+          } catch (e) {
+            // Skip levels that don't exist
+          }
+          continue; // Don't count Memory progress in regular stats
+        }
+        
+        // Skip daily challenge levels (IDs > 1000 are date-based)
+        // They don't exist in the level generator
+        if (progress.levelId > 1000) continue;
+        
+        try {
+          final level = levelGenerator.getLevel(progress.levelId);
+          
+          // Update category stats
+          if (!categoryStats.containsKey(level.category)) {
+            categoryStats[level.category] = CategoryStat();
+          }
+          categoryStats[level.category]!.completed++;
+          if (progress.bestTimeMs != null) {
+            categoryStats[level.category]!.totalTimeMs += progress.bestTimeMs!;
+          }
+        } catch (e) {
+          // Skip levels that don't exist in generator
+        }
+      }
+      totalAttempts += progress.attempts;
+    }
+    
+    final l10n = AppLocalizations.of(context)!;
+    
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(context, l10n),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Overall Stats Cards
+                      _buildOverallStats(
+                        l10n: l10n,
+                        completed: totalCompleted,
+                        streak: gameStats.currentStreak,
+                        longestStreak: gameStats.longestStreak,
+                        totalTime: gameStats.totalPlayTimeFormatted,
+                        totalAttempts: totalAttempts,
+                        memoryCompleted: memoryCompleted,
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Category Breakdown
+                      _buildSectionTitle(l10n.categoryProgress),
+                      const SizedBox(height: 12),
+                      _buildCategoryBreakdown(categoryStats, l10n),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Daily Challenge & Multiplayer Stats
+                      _buildSectionTitle(l10n.dailyChallenges),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              emoji: '📅',
+                              value: '${gameStats.dailyCompletions}',
+                              label: l10n.dailyCompleted,
+                              color: const Color(0xFF3498DB),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              emoji: '⭐',
+                              value: '${gameStats.dailyPerfectCount}',
+                              label: l10n.perfectCompletions,
+                              color: const Color(0xFFE67E22),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildStatCard(
+                        emoji: '👥',
+                        value: '${gameStats.multiplayerGamesHosted}',
+                        label: l10n.multiplayerGames,
+                        color: const Color(0xFF1ABC9C),
+                        fullWidth: true,
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Memory Mode Progress
+                      _buildSectionTitle(l10n.memoryProgress),
+                      const SizedBox(height: 12),
+                      _buildCategoryBreakdown(memoryCategoryStats, l10n, isMemory: true),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => context.pop(),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceColor.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.arrow_back, color: Colors.white),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            l10n.statistics,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOverallStats({
+    required AppLocalizations l10n,
+    required int completed,
+    required int streak,
+    required int longestStreak,
+    required String totalTime,
+    required int totalAttempts,
+    required int memoryCompleted,
+  }) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                emoji: '✅',
+                value: '$completed',
+                label: l10n.completed,
+                color: AppTheme.successColor,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                emoji: '🔥',
+                value: '$streak',
+                label: l10n.currentStreak,
+                color: AppTheme.warningColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                emoji: '⏱️',
+                value: totalTime,
+                label: l10n.totalTime,
+                color: AppTheme.primaryColor,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                emoji: '🧠',
+                value: '$memoryCompleted',
+                label: l10n.memoryMode,
+                color: const Color(0xFF9B59B6),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildStatCard(
+          emoji: '🏆',
+          value: '$longestStreak ${l10n.days}',
+          label: l10n.longestStreak,
+          color: const Color(0xFFFFD700),
+          fullWidth: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatCard({
+    required String emoji,
+    required String value,
+    required String label,
+    required Color color,
+    bool fullWidth = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: fullWidth ? MainAxisAlignment.center : MainAxisAlignment.start,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.textSecondary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildCategoryBreakdown(Map<LevelCategory, CategoryStat> stats, AppLocalizations l10n, {bool isMemory = false}) {
+    var categories = [
+      (LevelCategory.basic, l10n.basicNumbers, AppConstants.basicNumbersEnd - AppConstants.basicNumbersStart + 1, AppTheme.basicColor),
+      (LevelCategory.formatted, l10n.formattedNumbers, AppConstants.formattedNumbersEnd - AppConstants.formattedNumbersStart + 1, AppTheme.formattedColor),
+      (LevelCategory.time, l10n.timeFormats, AppConstants.timeFormatsEnd - AppConstants.timeFormatsStart + 1, AppTheme.timeColor),
+      (LevelCategory.names, l10n.nameSorting, AppConstants.nameSortingEnd - AppConstants.nameSortingStart + 1, AppTheme.namesColor),
+      (LevelCategory.mixed, l10n.mixedFormats, AppConstants.mixedFormatsEnd - AppConstants.mixedFormatsStart + 1, AppTheme.mixedColor),
+    ];
+    
+    // Only include Knowledge category for regular mode
+    if (!isMemory) {
+      categories.add((LevelCategory.knowledge, l10n.knowledge, AppConstants.knowledgeEnd - AppConstants.knowledgeStart + 1, AppTheme.knowledgeColor));
+    }
+
+    return Column(
+      children: categories.map((cat) {
+        final stat = stats[cat.$1];
+        final completed = stat?.completed ?? 0;
+        final total = cat.$3;
+        final progress = total > 0 ? completed / total : 0.0;
+        
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _buildCategoryCard(
+            name: cat.$2,
+            completed: completed,
+            total: total,
+            progress: progress,
+            color: cat.$4,
+            l10n: l10n,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCategoryCard({
+    required String name,
+    required int completed,
+    required int total,
+    required double progress,
+    required Color color,
+    required AppLocalizations l10n,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '$completed / $total',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Progress bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.white.withOpacity(0.1),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+              minHeight: 8,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${(progress * 100).toInt()}% ${l10n.complete}',
+            style: TextStyle(
+              fontSize: 11,
+              color: AppTheme.textMuted,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Helper class for category statistics
+class CategoryStat {
+  int completed = 0;
+  int totalTimeMs = 0;
+}

@@ -7,12 +7,18 @@ import 'dart:ui' as ui;
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../../domain/entities/level.dart';
+import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 
 class LevelSelectScreen extends ConsumerWidget {
   final String categoryName;
+  final bool isMemory;
   
-  const LevelSelectScreen({super.key, required this.categoryName});
+  const LevelSelectScreen({
+    super.key, 
+    required this.categoryName, 
+    this.isMemory = false,
+  });
 
   LevelCategory get category {
     return LevelCategory.values.firstWhere(
@@ -23,7 +29,10 @@ class LevelSelectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final levels = ref.watch(levelsByCategoryProvider(category));
+    // Use memory levels if isMemory is true
+    final levels = isMemory 
+        ? ref.watch(memoryLevelsByCategoryProvider(category))
+        : ref.watch(levelsByCategoryProvider(category));
     
     return Scaffold(
       body: Container(
@@ -50,7 +59,10 @@ class LevelSelectScreen extends ConsumerWidget {
     
     int completed = 0;
     allProgress.whenData((progressList) {
-      final levelIds = levels.map((l) => l.id).toSet();
+      // For memory mode, use memory level IDs (levelId + 10000)
+      final levelIds = isMemory 
+          ? levels.map((l) => l.id + 10000).toSet()
+          : levels.map((l) => l.id).toSet();
       for (final progress in progressList) {
         if (levelIds.contains(progress.levelId) && progress.completed) {
           completed++;
@@ -71,27 +83,36 @@ class LevelSelectScreen extends ConsumerWidget {
               Expanded(
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _getCategoryEmoji(category),
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          category.displayName,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _getCategoryEmoji(category),
+                            style: const TextStyle(fontSize: 24),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          if (isMemory) ...[
+                            const Text('✨', style: TextStyle(fontSize: 20)),
+                            const SizedBox(width: 4),
+                          ],
+                          Text(
+                            isMemory
+                                ? '${AppLocalizations.of(context)!.memoryMode}: ${_getCategoryTitle(context, category)}'
+                                : _getCategoryTitle(context, category),
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$completed / ${levels.length} completed',
+                      AppLocalizations.of(context)!.xOfYCompleted(completed.toString(), levels.length.toString()),
                       style: TextStyle(
                         fontSize: 14,
                         color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -121,7 +142,7 @@ class LevelSelectScreen extends ConsumerWidget {
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 
@@ -142,11 +163,29 @@ class LevelSelectScreen extends ConsumerWidget {
     }
   }
 
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
+    }
+  }
+
   Widget _buildLevelGrid(BuildContext context, WidgetRef ref, List<Level> levels) {
     return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 110,
         childAspectRatio: 1,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
@@ -159,17 +198,41 @@ class LevelSelectScreen extends ConsumerWidget {
   }
 
   Widget _buildLevelCard(BuildContext context, WidgetRef ref, Level level) {
-    final isUnlockedAsync = ref.watch(isLevelUnlockedProvider(level.id));
-    final isUnlocked = AppConstants.isDevMode || (isUnlockedAsync.valueOrNull ?? false);
-    final progressAsync = ref.watch(levelProgressProvider(level.id));
+    // For memory mode, use memory level ID (levelId + 10000) for progress lookup
+    final progressId = isMemory ? level.id + 10000 : level.id;
+    final progressAsync = ref.watch(levelProgressProvider(progressId));
     final progress = progressAsync.valueOrNull;
     final isCompleted = progress?.completed ?? false;
+    
+    // Determine if level is unlocked
+    bool isUnlocked;
+    if (AppConstants.isDevMode) {
+      isUnlocked = true;
+    } else if (isMemory) {
+      // Memory mode: level 1 always unlocked, others require previous memory level completion
+      if (level.localId == 1) {
+        isUnlocked = true;
+      } else {
+        // Check if previous memory level (localId - 1) is completed
+        final prevMemoryId = level.id - 1 + 10000;  // Previous level's memory progress ID
+        final prevProgressAsync = ref.watch(levelProgressProvider(prevMemoryId));
+        final prevCompleted = prevProgressAsync.valueOrNull?.completed ?? false;
+        isUnlocked = prevCompleted;
+      }
+    } else {
+      // Regular mode: use standard unlock provider
+      final isUnlockedAsync = ref.watch(isLevelUnlockedProvider(level.id));
+      isUnlocked = isUnlockedAsync.valueOrNull ?? false;
+    }
     
     final categoryColor = _getCategoryColor(category);
 
     return GestureDetector(
       onTap: isUnlocked
-          ? () => context.go('/game/${level.id}')
+          ? () {
+              final memoryParam = isMemory ? '?memory=true' : '';
+              context.go('/game/${level.category.name}/${level.localId}$memoryParam');
+            }
           : null,
       onLongPress: isCompleted
           ? () => _showShareDialog(context, level, progress!, categoryColor)
@@ -224,7 +287,7 @@ class LevelSelectScreen extends ConsumerWidget {
                       )
                     else ...[
                       Text(
-                        '${level.id}',
+                        '${level.localId}',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -308,7 +371,7 @@ class LevelSelectScreen extends ConsumerWidget {
                   children: [
                     // App branding
                     const Text(
-                      'SORGA',
+                      'SORTIQ',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -316,6 +379,32 @@ class LevelSelectScreen extends ConsumerWidget {
                         letterSpacing: 4,
                       ),
                     ),
+                    // Memory mode badge
+                    if (isMemory) ...[
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('✨', style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 4),
+                            Text(
+                              'Memory Rush',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.purpleAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 16),
                     // Category badge
                     Container(
@@ -331,7 +420,7 @@ class LevelSelectScreen extends ConsumerWidget {
                           Text(_getCategoryEmoji(level.category), style: const TextStyle(fontSize: 16)),
                           const SizedBox(width: 6),
                           Text(
-                            level.category.displayName,
+                            _getCategoryTitle(context, level.category),
                             style: TextStyle(
                               color: categoryColor,
                               fontWeight: FontWeight.bold,
@@ -343,7 +432,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Level ${level.id}',
+                      '${AppLocalizations.of(context)!.level} ${level.localId}',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -352,7 +441,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      level.description,
+                      level.getLocalizedDescription(context),
                       style: const TextStyle(
                         fontSize: 14,
                         color: AppTheme.textSecondary,
@@ -367,19 +456,48 @@ class LevelSelectScreen extends ConsumerWidget {
                         color: AppTheme.surfaceColor.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatColumn('⏱️', progress.bestTimeFormatted, 'Best Time'),
-                          Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
-                          _buildStatColumn('🔄', '${progress.attempts}x', 'Attempts'),
-                        ],
-                      ),
+                      child: isMemory && progress.isMemoryProgress
+                          // Memory mode: show breakdown
+                          ? Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildStatColumn(context, '✨', progress.memorizeTimeFormatted, AppLocalizations.of(context)!.memorizeTime),
+                                    Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                    _buildStatColumn(context, '🔀', progress.sortTimeFormatted, AppLocalizations.of(context)!.sortTime),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildStatColumn(context, '⏱️', progress.bestTimeFormatted, AppLocalizations.of(context)!.totalTime),
+                                    Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                    _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
+                                  ],
+                                ),
+                              ],
+                            )
+                          // Regular mode: show best time and attempts
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildStatColumn(
+                                  context, 
+                                  '⏱️', 
+                                  progress.bestTimeFormatted, 
+                                  isMemory ? 'Total Time' : AppLocalizations.of(context)!.bestTime,
+                                ),
+                                Container(height: 40, width: 1, color: AppTheme.textMuted.withValues(alpha: 0.3)),
+                                _buildStatColumn(context, '🔄', '${progress.attempts}x', AppLocalizations.of(context)!.attempts),
+                              ],
+                            ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Can you beat my time?',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.canYouBeatMyTime,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppTheme.textMuted,
                         fontStyle: FontStyle.italic,
@@ -395,23 +513,23 @@ class LevelSelectScreen extends ConsumerWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () async {
-                      await _captureAndShare(shareKey, level, progress);
+                      await _captureAndShare(context, shareKey, level, progress);
                       if (context.mounted) Navigator.pop(context);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
+                        color: AppTheme.primaryColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.share, color: Colors.white, size: 20),
-                          SizedBox(width: 8),
+                          const Icon(Icons.share, color: Colors.white, size: 20),
+                          const SizedBox(width: 8),
                           Text(
-                            'Share',
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.share,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
@@ -432,9 +550,9 @@ class LevelSelectScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppTheme.textMuted.withValues(alpha: 0.3)),
                       ),
-                      child: const Text(
-                        'Close',
-                        style: TextStyle(
+                      child: Text(
+                        AppLocalizations.of(context)!.close,
+                        style: const TextStyle(
                           color: AppTheme.textSecondary,
                           fontWeight: FontWeight.bold,
                         ),
@@ -452,7 +570,7 @@ class LevelSelectScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _captureAndShare(GlobalKey key, Level level, dynamic progress) async {
+  Future<void> _captureAndShare(BuildContext context, GlobalKey key, Level level, dynamic progress) async {
     try {
       final boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       if (boundary == null) return;
@@ -467,13 +585,8 @@ class LevelSelectScreen extends ConsumerWidget {
         name: 'sorga_level_${level.id}.png',
       );
 
-      final message = '''🎮 Sorga - Level ${level.id} Completed!
-
-📝 ${level.description}
-⏱️ Best Time: ${progress.bestTimeFormatted}
-🔄 Attempts: ${progress.attempts}x
-
-Can you beat my time? Download Sorga now!''';
+      final l10n = AppLocalizations.of(context)!;
+      final message = l10n.iCompletedLevel;
 
       await Share.shareXFiles(
         [xFile],
@@ -484,7 +597,7 @@ Can you beat my time? Download Sorga now!''';
     }
   }
 
-  Widget _buildStatColumn(String emoji, String value, String label) {
+  Widget _buildStatColumn(BuildContext context, String emoji, String value, String label) {
     return Column(
       children: [
         Text(emoji, style: const TextStyle(fontSize: 24)),

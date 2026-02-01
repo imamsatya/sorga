@@ -1,0 +1,186 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
+import '../../domain/entities/multiplayer_session.dart';
+import '../providers/multiplayer_provider.dart';
+import '../../l10n/app_localizations.dart';
+
+class MultiplayerResultsScreen extends ConsumerWidget {
+  const MultiplayerResultsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(multiplayerSessionProvider);
+    if (session == null) {
+      return const Scaffold(backgroundColor: AppTheme.backgroundDark, body: Center(child: Text('No session', style: TextStyle(color: Colors.white))));
+    }
+
+    final leaderboard = ref.read(multiplayerSessionProvider.notifier).getLeaderboard();
+    final winnerTime = leaderboard.isNotEmpty ? leaderboard.first.timeMs : 0;
+    final isDraw = winnerTime >= 999999; // All players DNF
+    
+    // Determine Draw subtitle based on result statuses
+    String getDrawSubtitle() {
+      final allFailed = leaderboard.every((r) => r.status == ResultStatus.failed);
+      final allGaveUp = leaderboard.every((r) => r.status == ResultStatus.gaveUp);
+      if (allFailed) return AppLocalizations.of(context)!.everyoneFailed;
+      if (allGaveUp) return AppLocalizations.of(context)!.everyoneGaveUp;
+      return AppLocalizations.of(context)!.noOneCompleted; // Mixed
+    }
+
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundDark,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 24),
+            // Show different title for draw
+            if (isDraw) ...[
+              Text('🤝 ${AppLocalizations.of(context)!.draw}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(getDrawSubtitle(), style: const TextStyle(color: AppTheme.warningColor, fontSize: 16)),
+            ] else ...[
+              Text('🏆 ${AppLocalizations.of(context)!.leaderboard}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 32, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(session.isMemoryMode ? '✨ ${AppLocalizations.of(context)!.memoryMode}' : '${session.itemCount} ${AppLocalizations.of(context)!.items}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
+            ],
+            const SizedBox(height: 32),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: leaderboard.length,
+                itemBuilder: (context, index) {
+                  final result = leaderboard[index];
+                  final playerName = ref.read(multiplayerSessionProvider.notifier).getPlayerName(result.playerId);
+                  final timeDiff = result.timeMs - winnerTime;
+                  final isDNF = result.timeMs >= 999999;
+                  return _buildLeaderboardItem(context, rank: index + 1, playerName: playerName, result: result, timeDiff: timeDiff, isWinner: index == 0 && !isDraw, isDNF: isDNF, session: session);
+                },
+              ),
+            ),
+            _buildActionButtons(context, ref),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLeaderboardItem(BuildContext context, {required int rank, required String playerName, required PlayerResult result, required int timeDiff, required bool isWinner, required bool isDNF, required MultiplayerSession session}) {
+    final rankColors = {1: const Color(0xFFFFD700), 2: const Color(0xFFC0C0C0), 3: const Color(0xFFCD7F32)};
+    final rankColor = isDNF ? AppTheme.errorColor : (rankColors[rank] ?? AppTheme.textSecondary);
+    final playerColor = _getPlayerColor(session.players.indexWhere((p) => p.id == result.playerId));
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDNF ? AppTheme.errorColor.withOpacity(0.1) : (isWinner ? rankColor.withOpacity(0.15) : AppTheme.surfaceColor),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDNF ? AppTheme.errorColor.withOpacity(0.5) : (isWinner ? rankColor : AppTheme.primaryColor.withOpacity(0.3)), width: isWinner ? 2 : 1),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50, height: 50,
+            decoration: BoxDecoration(color: rankColor.withOpacity(isDNF ? 0.3 : (isWinner ? 1 : 0.2)), borderRadius: BorderRadius.circular(12)),
+            child: Center(
+              child: isDNF
+                  ? const Text('🚫', style: TextStyle(fontSize: 24))
+                  : isWinner && rank == 1
+                      ? const Text('👑', style: TextStyle(fontSize: 24))
+                      : Text('#$rank', style: TextStyle(color: isWinner ? Colors.black : rankColor, fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(children: [
+                  Container(width: 10, height: 10, decoration: BoxDecoration(color: playerColor, shape: BoxShape.circle)),
+                  const SizedBox(width: 8),
+                  Text(playerName, style: TextStyle(color: isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), fontSize: 18, fontWeight: FontWeight.bold)),
+                ]),
+                const SizedBox(height: 4),
+                if (!isDNF && session.isMemoryMode && result.memorizeTimeMs != null)
+                  Text('Memorize: ${_formatTime(result.memorizeTimeMs!)} • Sort: ${_formatTime(result.sortTimeMs ?? 0)}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                _getStatusText(context, result),
+                style: TextStyle(
+                  color: result.isDNF ? AppTheme.errorColor : (isWinner ? rankColor : AppTheme.textPrimary), 
+                  fontSize: result.isDNF ? 16 : 20, 
+                  fontWeight: FontWeight.bold, 
+                  fontFamily: result.isDNF ? null : 'monospace',
+                ),
+              ),
+              if (!result.isDNF && timeDiff > 0)
+                Text('+${_formatTime(timeDiff)}', style: const TextStyle(color: AppTheme.errorColor, fontSize: 12)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatTime(int ms) {
+    final totalSeconds = ms / 1000;
+    final minutes = (totalSeconds / 60).floor();
+    final seconds = (totalSeconds % 60).floor();
+    final centiseconds = ((totalSeconds * 100) % 100).floor();
+    if (minutes > 0) return '${minutes}m ${seconds.toString().padLeft(2, '0')}s';
+    return '${seconds}.${centiseconds.toString().padLeft(2, '0')}s';
+  }
+
+  Widget _buildActionButtons(BuildContext context, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: () { ref.read(multiplayerSessionProvider.notifier).endSession(); context.go('/'); },
+              icon: const Icon(Icons.home),
+              label: Text(AppLocalizations.of(context)!.home),
+              style: OutlinedButton.styleFrom(foregroundColor: AppTheme.textSecondary, side: BorderSide(color: AppTheme.primaryColor.withOpacity(0.3)), padding: const EdgeInsets.symmetric(vertical: 16)),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            flex: 2,
+            child: ElevatedButton.icon(
+              onPressed: () { ref.read(multiplayerSessionProvider.notifier).playAgain(); context.go('/multiplayer/transition'); },
+              icon: const Icon(Icons.replay),
+              label: Text(AppLocalizations.of(context)!.playAgain),
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryColor, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getPlayerColor(int index) {
+    const colors = [Color(0xFF4CAF50), Color(0xFF2196F3), Color(0xFFFF9800), Color(0xFF9C27B0)];
+    return colors[index % colors.length];
+  }
+  
+  /// Get localized status text for result
+  String _getStatusText(BuildContext context, PlayerResult result) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (result.status) {
+      case ResultStatus.success:
+        return result.formattedTime;
+      case ResultStatus.failed:
+        return l10n.failed;
+      case ResultStatus.gaveUp:
+        return l10n.giveUp;
+    }
+  }
+}

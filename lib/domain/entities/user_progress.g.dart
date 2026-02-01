@@ -22,13 +22,15 @@ class UserProgressAdapter extends TypeAdapter<UserProgress> {
       bestTimeMs: fields[2] as int?,
       completedAt: fields[3] as DateTime?,
       attempts: fields[4] as int,
+      memorizeTimeMs: fields[5] as int?,
+      sortTimeMs: fields[6] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProgress obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.levelId)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class UserProgressAdapter extends TypeAdapter<UserProgress> {
       ..writeByte(3)
       ..write(obj.completedAt)
       ..writeByte(4)
-      ..write(obj.attempts);
+      ..write(obj.attempts)
+      ..writeByte(5)
+      ..write(obj.memorizeTimeMs)
+      ..writeByte(6)
+      ..write(obj.sortTimeMs);
   }
 
   @override

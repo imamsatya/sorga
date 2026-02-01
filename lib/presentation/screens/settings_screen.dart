@@ -1,0 +1,346 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/services/pro_service.dart';
+import '../../l10n/app_localizations.dart';
+import '../providers/locale_provider.dart';
+
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isPro = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _isPro = ProService.instance.isPro;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = ref.watch(localeProvider);
+    
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.backgroundGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(context),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _buildLanguageSection(context, ref, currentLocale),
+                    const SizedBox(height: 24),
+                    if (AppConstants.isDevMode) ...[
+                      _buildDeveloperSection(context),
+                      const SizedBox(height: 24),
+                    ],
+                    _buildAboutSection(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () => context.go('/'),
+            icon: const Icon(Icons.arrow_back_ios, color: AppTheme.textPrimary),
+          ),
+          Expanded(
+            child: Text(
+              AppLocalizations.of(context)!.settings,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 48), // Balance back button
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSection(BuildContext context, WidgetRef ref, Locale? currentLocale) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.textMuted),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.language,
+                  color: AppTheme.primaryColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                AppLocalizations.of(context)!.language,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceColor,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppTheme.textMuted),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: currentLocale?.languageCode ?? 'system',
+                isExpanded: true,
+                dropdownColor: AppTheme.surfaceColor,
+                style: const TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 16,
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'system',
+                    child: Row(
+                      children: [
+                        const Icon(Icons.phone_android, color: AppTheme.textSecondary, size: 20),
+                        const SizedBox(width: 12),
+                        Text(AppLocalizations.of(context)!.systemDefault),
+                      ],
+                    ),
+                  ),
+                  ...supportedLocales.map((locale) {
+                    final name = localeDisplayNames[locale.languageCode] ?? locale.languageCode;
+                    return DropdownMenuItem(
+                      value: locale.languageCode,
+                      child: Row(
+                        children: [
+                          _getFlagEmoji(locale.languageCode),
+                          const SizedBox(width: 12),
+                          Text(name),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+                onChanged: (value) {
+                  if (value == null || value == 'system') {
+                    ref.read(localeProvider.notifier).clearLocale();
+                  } else {
+                    ref.read(localeProvider.notifier).setLocale(Locale(value));
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getFlagEmoji(String langCode) {
+    const flags = {
+      'en': '🇺🇸',
+      'es': '🇪🇸',
+      'pt': '🇧🇷',
+      'de': '🇩🇪',
+      'fr': '🇫🇷',
+      'ja': '🇯🇵',
+      'ko': '🇰🇷',
+      'id': '🇮🇩',
+    };
+    return Text(
+      flags[langCode] ?? '🌐',
+      style: const TextStyle(fontSize: 20),
+    );
+  }
+  
+  Widget _buildDeveloperSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.warningColor.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.warningColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.developer_mode,
+                  color: AppTheme.warningColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Developer Options',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Pro Status Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pro Status',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    _isPro ? 'Unlimited mistakes' : 'Limited mistakes',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ),
+              Switch(
+                value: _isPro,
+                onChanged: (value) async {
+                  await ProService.instance.setProStatus(value);
+                  setState(() {
+                    _isPro = value;
+                  });
+                },
+                activeColor: AppTheme.successColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Regular: ${AppConstants.maxAttemptsRegular - 1} mistake(s) | Memory: ${AppConstants.maxAttemptsMemory - 1} mistake(s) | Pro: Unlimited',
+            style: TextStyle(
+              fontSize: 11,
+              color: AppTheme.textMuted.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAboutSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.textMuted),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.successColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.info_outline,
+                  color: AppTheme.successColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                AppLocalizations.of(context)!.about,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.appDescription,
+            style: const TextStyle(
+              fontSize: 16,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${AppLocalizations.of(context)!.version} 1.0.0',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppTheme.textSecondary.withValues(alpha: 0.7),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            AppLocalizations.of(context)!.levelsDescription,
+            style: TextStyle(
+              fontSize: 14,
+              color: AppTheme.textSecondary.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

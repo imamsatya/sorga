@@ -4,13 +4,20 @@ import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/services/pro_service.dart';
+import '../../core/services/ad_service.dart';
 import '../../domain/entities/level.dart';
+import '../../domain/entities/multiplayer_session.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:share_plus/share_plus.dart';
 import '../providers/game_providers.dart';
 import '../providers/game_state_provider.dart';
+import '../providers/daily_challenge_provider.dart';
+import '../providers/multiplayer_provider.dart';
 import '../widgets/game_button.dart';
+import '../../l10n/app_localizations.dart';
+import 'game_screen.dart';
 
 class ResultScreen extends ConsumerStatefulWidget {
   const ResultScreen({super.key});
@@ -26,13 +33,19 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
     
     // Trigger confetti on success after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final gameState = ref.read(gameStateProvider);
       if (gameState?.isCorrect == true) {
         _confettiController.play();
+        
+        // Trigger interstitial ad counter (shows every 3 levels)
+        // Only for non-Pro users
+        if (!ProService.instance.isPro) {
+          AdService.instance.onLevelCompleted();
+        }
       }
     });
   }
@@ -41,6 +54,17 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
   void dispose() {
     _confettiController.dispose();
     super.dispose();
+  }
+  
+  /// Helper to navigate to next player or results in multiplayer
+  void _navigateToNextPlayer(BuildContext context, WidgetRef ref, MultiplayerSession session) {
+    final isLastPlayer = session.currentPlayerIndex == session.players.length - 1;
+    if (isLastPlayer) {
+      context.go('/multiplayer/results');
+    } else {
+      ref.read(multiplayerSessionProvider.notifier).nextPlayer();
+      context.go('/multiplayer/transition');
+    }
   }
 
   Future<void> _captureAndShare() async {
@@ -55,18 +79,62 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       final xFile = XFile.fromData(
         pngBytes,
         mimeType: 'image/png',
-        name: 'sorga_achievement.png',
+        name: 'sortiq_achievement.png',
       );
 
       await Share.shareXFiles(
         [xFile],
-        text: 'I just completed this level in Sorga! Can you beat my time?',
+        text: 'I just completed this level in SORTIQ! Can you beat my time?',
       );
     } catch (e) {
       debugPrint('Error sharing: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to share image')),
+        );
+      }
+    }
+  }
+
+  /// Share Daily Challenge result as viral text format
+  Future<void> _shareDailyChallenge() async {
+    final gameState = ref.read(gameStateProvider);
+    if (gameState == null) return;
+
+    final dailyState = ref.read(dailyChallengeProvider);
+    final streak = ref.read(dailyStreakProvider);
+    
+    // Format date
+    final now = DateTime.now();
+    final monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final dateStr = '${now.day} ${monthNames[now.month - 1]} ${now.year}';
+    
+    // Format time
+    final time = gameState.elapsedTime;
+    final minutes = time.inMinutes.toString().padLeft(2, '0');
+    final seconds = (time.inSeconds % 60).toString().padLeft(2, '0');
+    final milliseconds = ((time.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
+    final timeStr = '$minutes:$seconds.$milliseconds';
+    
+    // Build share text
+    final shareText = '''
+🎯 SORTIQ Daily Challenge
+📅 $dateStr
+
+⏱️ $timeStr
+🔥 $streak Day${streak == 1 ? '' : 's'} Streak!
+
+Can you beat my time? 💪
+#SORTIQDaily #PuzzleGame
+'''.trim();
+    
+    try {
+      await Share.share(shareText);
+    } catch (e) {
+      debugPrint('Error sharing daily challenge: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share')),
         );
       }
     }
@@ -102,8 +170,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                   Expanded(
                     child: Center(
                       child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 80),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -144,11 +213,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                               if (isSuccess) ...[
                                 const SizedBox(height: 20),
                                 TextButton.icon(
-                                  onPressed: _captureAndShare,
+                                  // Use different share method for daily challenges
+                                  onPressed: gameState.level.localId == 0 
+                                      ? _shareDailyChallenge 
+                                      : _captureAndShare,
                                   icon: const Icon(Icons.share_rounded, color: AppTheme.accentColor),
-                                  label: const Text(
-                                    'Share Achievement',
-                                    style: TextStyle(
+                                  label: Text(
+                                    gameState.level.localId == 0 
+                                        ? '${AppLocalizations.of(context)!.shareResult} 🎯' 
+                                        : AppLocalizations.of(context)!.shareAchievement,
+                                    style: const TextStyle(
                                       color: AppTheme.accentColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -171,7 +245,34 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               ),
             ),
           ),
-          // Confetti Widget
+          // Enhanced Confetti - Multiple Emitters for impressive celebration!
+          // Left corner emitter
+          Align(
+            alignment: Alignment.topLeft,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: -0.5, // Diagonal right
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
+            ),
+          ),
+          // Center emitter
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -186,12 +287,41 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                 Colors.yellow,
                 Colors.orange,
                 Colors.pink,
+                Colors.purple,
+                Colors.cyan,
               ],
-              numberOfParticles: 30,
-              gravity: 0.2,
-              emissionFrequency: 0.05,
-              maxBlastForce: 20,
-              minBlastForce: 8,
+              numberOfParticles: 50,
+              gravity: 0.1,
+              emissionFrequency: 0.02,
+              maxBlastForce: 30,
+              minBlastForce: 15,
+              particleDrag: 0.05,
+            ),
+          ),
+          // Right corner emitter
+          Align(
+            alignment: Alignment.topRight,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirection: 3.6, // Diagonal left (pi + 0.5)
+              shouldLoop: false,
+              colors: const [
+                AppTheme.primaryColor,
+                AppTheme.secondaryColor,
+                AppTheme.accentColor,
+                AppTheme.successColor,
+                Colors.yellow,
+                Colors.orange,
+                Colors.pink,
+                Colors.purple,
+                Colors.cyan,
+              ],
+              numberOfParticles: 40,
+              gravity: 0.15,
+              emissionFrequency: 0.03,
+              maxBlastForce: 25,
+              minBlastForce: 10,
+              particleDrag: 0.05,
             ),
           ),
         ],
@@ -233,7 +363,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
   Widget _buildResultTitle(bool isSuccess) {
     return Text(
-      isSuccess ? 'PERFECT!' : 'TRY AGAIN',
+      isSuccess ? AppLocalizations.of(context)!.perfect : AppLocalizations.of(context)!.tryAgain,
       style: TextStyle(
         fontSize: 36,
         fontWeight: FontWeight.bold,
@@ -260,7 +390,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               ),
               const SizedBox(width: 6),
               Text(
-                category.displayName,
+                _getCategoryTitle(context, category),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -271,7 +401,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Level ${gameState.level.id} completed!',
+            gameState.level.localId == 0 
+                ? '${AppLocalizations.of(context)!.dailyChallenge} ${AppLocalizations.of(context)!.completed}!' 
+                : AppLocalizations.of(context)!.levelCompleted(gameState.level.localId.toString()),
             style: TextStyle(
               fontSize: 16,
               color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -285,7 +417,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'Attempt #$attempts',
+              '${AppLocalizations.of(context)!.attempt} #$attempts',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -297,12 +429,16 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       );
     }
     
-    // Show attempts remaining
-    final attemptsRemaining = 2 - gameState.failedAttempts;
+    // Show attempts remaining (dynamic based on mode and Pro status)
+    final isMemory = gameState.isMemoryMode;
+    final attemptsRemaining = ProService.instance.getRemainingAttempts(
+      failedAttempts: gameState.failedAttempts,
+      isMemoryMode: isMemory,
+    );
     return Column(
       children: [
         Text(
-          'The order was not quite right.',
+          AppLocalizations.of(context)!.orderNotRight,
           style: TextStyle(
             fontSize: 16,
             color: AppTheme.textSecondary.withValues(alpha: 0.8),
@@ -316,7 +452,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               const Icon(Icons.lightbulb_outline, color: AppTheme.warningColor, size: 16),
               const SizedBox(width: 8),
               Text(
-                'You have $attemptsRemaining chance${attemptsRemaining > 1 ? 's' : ''} left!',
+                AppLocalizations.of(context)!.chancesLeft(attemptsRemaining.toString()),
                 style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.warningColor,
@@ -326,14 +462,14 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             ],
           )
         else
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.cancel_outlined, color: AppTheme.errorColor, size: 16),
-              SizedBox(width: 8),
+              const Icon(Icons.cancel_outlined, color: AppTheme.errorColor, size: 16),
+              const SizedBox(width: 8),
               Text(
-                'No more chances. Try again!',
-                style: TextStyle(
+                AppLocalizations.of(context)!.noMoreChances,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.errorColor,
                   fontWeight: FontWeight.w500,
@@ -404,9 +540,38 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       ),
       child: Column(
         children: [
-          const Text(
-            'YOUR TIME',
-            style: TextStyle(
+          // Memory mode badge
+          if (gameState.level.isMemory) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.purple.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('✨', style: TextStyle(fontSize: 14)),
+                  SizedBox(width: 4),
+                  Text(
+                    'Memory Rush',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.purpleAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+          
+          Text(
+            gameState.level.isMemory 
+                ? 'TOTAL TIME' 
+                : AppLocalizations.of(context)!.yourTime,
+            style: const TextStyle(
               fontSize: 12,
               color: AppTheme.textMuted,
               letterSpacing: 2,
@@ -419,7 +584,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               const Icon(Icons.timer, color: AppTheme.accentColor, size: 28),
               const SizedBox(width: 12),
               Text(
-                gameState.formattedTime,
+                gameState.level.isMemory
+                    ? _formatTotalTime(gameState.memorizeTime + gameState.elapsedTime)
+                    : gameState.formattedTime,
                 style: const TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
@@ -429,8 +596,66 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               ),
             ],
           ),
+          
+          // Memory mode: Show breakdown
+          if (gameState.level.isMemory) ...[
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildTimeBreakdown(
+                  '✨',
+                  'Memorize',
+                  gameState.formattedMemorizeTime,
+                ),
+                Container(
+                  width: 1,
+                  height: 40,
+                  color: AppTheme.textMuted.withOpacity(0.3),
+                ),
+                _buildTimeBreakdown(
+                  '🔀',
+                  'Sort',
+                  gameState.formattedTime,
+                ),
+              ],
+            ),
+          ],
         ],
       ),
+    );
+  }
+  
+  String _formatTotalTime(Duration total) {
+    final minutes = total.inMinutes.toString().padLeft(2, '0');
+    final seconds = (total.inSeconds % 60).toString().padLeft(2, '0');
+    final ms = ((total.inMilliseconds % 1000) ~/ 10).toString().padLeft(2, '0');
+    return '$minutes:$seconds.$ms';
+  }
+  
+  Widget _buildTimeBreakdown(String emoji, String label, String time) {
+    return Column(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 20)),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            color: AppTheme.textMuted,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          time,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textSecondary,
+            fontFamily: 'monospace',
+          ),
+        ),
+      ],
     );
   }
 
@@ -452,13 +677,23 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             // Next Level button
             GestureDetector(
               onTap: () {
-                context.go('/game/${currentLevelId + 1}');
+                try {
+                  final nextLevelId = currentLevelId + 1;
+                  // Get next level info for navigation
+                  final nextLevel = ref.read(levelRepositoryProvider).getLevel(nextLevelId);
+                  // Preserve memory mode when going to next level
+                  final memoryParam = (gameState?.level.isMemory ?? false) ? '?memory=true' : '';
+                  context.go('/game/${nextLevel.category.name}/${nextLevel.localId}$memoryParam');
+                } catch (e) {
+                  // Fallback or end of game
+                  context.go('/');
+                }
               },
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
@@ -468,12 +703,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'NEXT LEVEL',
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.nextLevel.toUpperCase(),
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -488,104 +723,464 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
             ),
             const SizedBox(height: 16),
           ] else if (!isSuccess && canContinue) ...[
-            // Continue (Resume) button
-            GestureDetector(
-              onTap: () {
-                final levelId = ref.read(gameStateProvider)?.level.id;
-                ref.read(gameStateProvider.notifier).continueGame();
-                if (levelId != null) {
-                  context.go('/game/$levelId');
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppTheme.warningColor, Color(0xFFFFB347)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.warningColor.withValues(alpha: 0.4),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
+            // Check if this is a multiplayer game
+            if (ref.read(multiplayerSessionProvider) != null) ...[
+              // Multiplayer: Check attempts (dynamic based on mode and Pro)
+              Builder(builder: (context) {
+                final gameState = ref.read(gameStateProvider);
+                final session = ref.read(multiplayerSessionProvider);
+                final failedAttempts = gameState?.failedAttempts ?? 0;
+                final isMemory = gameState?.isMemoryMode ?? false;
+                final isOutOfChances = !ProService.instance.canContinue(
+                  failedAttempts: failedAttempts, 
+                  isMemoryMode: isMemory,
+                );
+                final remaining = ProService.instance.getRemainingAttempts(
+                  failedAttempts: failedAttempts,
+                  isMemoryMode: isMemory,
+                );
+                
+                return Column(
+                  children: [
+                    if (isOutOfChances) ...[
+                      // Failed completely (used all chances)
+                      GestureDetector(
+                        onTap: () {
+                          if (session != null && gameState != null) {
+                            ref.read(multiplayerSessionProvider.notifier).submitResult(
+                              playerId: session.currentPlayer.id,
+                              timeMs: 999999,
+                              attempts: gameState.failedAttempts + 1,
+                              status: ResultStatus.failed,
+                            );
+                            _navigateToNextPlayer(context, ref, session);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.close, color: Colors.white, size: 28),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.failedNextPlayer, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ] else ...[
+                      // Still has chances - Continue button
+                      GestureDetector(
+                        onTap: () {
+                          if (gameState != null) {
+                            ref.read(gameStateProvider.notifier).continueGame();
+                            context.go('/multiplayer/game');
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [AppTheme.warningColor, Color(0xFFFFB347)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.continueLeft(remaining), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Give Up button (optional)
+                      GestureDetector(
+                        onTap: () {
+                          if (session != null && gameState != null) {
+                            ref.read(multiplayerSessionProvider.notifier).submitResult(
+                              playerId: session.currentPlayer.id,
+                              timeMs: 999999,
+                              attempts: gameState.failedAttempts + 1,
+                              status: ResultStatus.gaveUp,
+                            );
+                            _navigateToNextPlayer(context, ref, session);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppTheme.errorColor.withValues(alpha: 0.5)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.flag, color: AppTheme.errorColor, size: 22),
+                              const SizedBox(width: 8),
+                              Text(AppLocalizations.of(context)!.giveUp, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.errorColor)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
+                );
+              }),
+              const SizedBox(height: 16),
+            ] else ...[
+              // Normal Continue (Resume) button
+              GestureDetector(
+                onTap: () {
+                  final gameState = ref.read(gameStateProvider);
+                  if (gameState != null) {
+                    ref.read(gameStateProvider.notifier).continueGame();
+                    // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
+                    if (gameState.level.localId == 0) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => GameScreen(
+                            levelId: gameState.level.id,
+                            isDailyChallenge: true,
+                            dailyLevel: gameState.level,
+                          ),
+                        ),
+                      );
+                    } else {
+                      // Preserve memory mode
+                      final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                      context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                    }
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppTheme.warningColor, Color(0xFFFFB347)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.warningColor.withValues(alpha: 0.4),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
+                      const SizedBox(width: 8),
+                      Text(
+                        AppLocalizations.of(context)!.continueGame,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: const Row(
+              ),
+              const SizedBox(height: 16),
+            ],
+          ] else if (!isSuccess) ...[
+            // Failed completely - check if multiplayer
+            if (ref.read(multiplayerSessionProvider) != null) ...[
+              // Multiplayer: Failed completely, move to next player
+              Builder(builder: (context) {
+                final session = ref.read(multiplayerSessionProvider);
+                final gameState = ref.read(gameStateProvider);
+                return GestureDetector(
+                  onTap: () {
+                    if (session != null && gameState != null) {
+                      ref.read(multiplayerSessionProvider.notifier).submitResult(
+                        playerId: session.currentPlayer.id,
+                        timeMs: 999999,
+                        attempts: gameState.failedAttempts + 1,
+                        status: ResultStatus.failed,
+                      );
+                      _navigateToNextPlayer(context, ref, session);
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [AppTheme.errorColor, Color(0xFFFF6B6B)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.close, color: Colors.white, size: 28),
+                        const SizedBox(width: 8),
+                        Text(AppLocalizations.of(context)!.failedNextPlayer, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ] else ...[
+              // Regular game: Show monetization options + Retry Level
+              // 1. Watch Ad for extra chance (only if not already used)
+              if (!(ref.read(gameStateProvider)?.hasUsedAdChance ?? false)) ...[
+                GestureDetector(
+                  onTap: () async {
+                    if (AdService.isSupported && AdService.instance.isRewardedAdReady) {
+                      // Show rewarded ad
+                      final shown = await AdService.instance.showRewardedAd(
+                        onRewarded: () {
+                          // Grant extra chance - reset to continue game
+                          final gameState = ref.read(gameStateProvider);
+                          if (gameState != null) {
+                            // Reset failed attempts to allow one more try
+                            ref.read(gameStateProvider.notifier).resetFailedAttempts();
+                            
+                            // Navigate back to game
+                            if (gameState.level.localId == 0) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => GameScreen(
+                                    levelId: gameState.level.id,
+                                    isDailyChallenge: true,
+                                    dailyLevel: gameState.level,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                              context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                            }
+                          }
+                        },
+                      );
+                      
+                      if (!shown) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('❌ Ad not available. Try again later.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    } else {
+                      // Not supported (Web) or ad not ready - show debug info
+                      final debugStatus = AdService.isSupported 
+                          ? AdService.instance.getDebugStatus()
+                          : 'Ads only available on mobile app';
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('🔍 $debugStatus'),
+                          duration: const Duration(seconds: 3),
+                          action: AdService.isSupported && !AdService.instance.isLoading
+                              ? SnackBarAction(
+                                  label: 'Retry',
+                                  onPressed: () {
+                                    AdService.instance.reloadRewardedAd();
+                                  },
+                                )
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.play_circle_filled, color: Colors.white, size: 24),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.watchAd,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+              // 2. Go Pro for unlimited mistakes (dummy)
+              GestureDetector(
+                onTap: () {
+                  // TODO: Integrate IAP / payment
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('⭐ Pro upgrade coming soon!'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star, color: Colors.white, size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)!.goPro,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // 3. Retry Level (existing)
+              OutlinedButton(
+                onPressed: () {
+                   final gameState = ref.read(gameStateProvider);
+                   if (gameState != null) {
+                     // For daily challenges (localId == 0), use Navigator instead of URL routing
+                     if (gameState.level.localId == 0) {
+                       ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
+                       Navigator.of(context).pushReplacement(
+                         MaterialPageRoute(
+                           builder: (context) => GameScreen(
+                             levelId: gameState.level.id,
+                             isDailyChallenge: true,
+                             dailyLevel: gameState.level,
+                           ),
+                         ),
+                       );
+                     } else {
+                       ref.read(gameStateProvider.notifier).retry();
+                       // Preserve memory mode
+                       final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                       context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                     }
+                   }
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppTheme.textMuted, width: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
-                    SizedBox(width: 8),
+                    Icon(Icons.refresh_rounded, color: AppTheme.textSecondary.withValues(alpha: 0.8)),
+                    const SizedBox(width: 8),
                     Text(
-                      'CONTINUE',
+                      AppLocalizations.of(context)!.retryLevel,
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppTheme.textSecondary.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-          ] else if (!isSuccess) ...[
-            // Failed - Retry Level
-            OutlinedButton(
-              onPressed: () {
-                 final levelId = ref.read(gameStateProvider)?.level.id;
-                 ref.read(gameStateProvider.notifier).retry();
-                 if (levelId != null) {
-                   context.go('/game/$levelId');
-                 }
-              },
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: AppTheme.primaryColor, width: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 18),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.refresh_rounded, color: AppTheme.textPrimary),
-                  SizedBox(width: 8),
-                  Text(
-                    'RETRY LEVEL',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ],
           const SizedBox(height: 16),
           
+          // Hide Retry/Home row for multiplayer (it has its own navigation)
+          if (ref.read(multiplayerSessionProvider) == null)
           Row(
             children: [
               if (isSuccess || !canContinue)
                 Expanded(
                   child: TextButton.icon(
                     onPressed: () {
-                      final levelId = ref.read(gameStateProvider)?.level.id;
-                      ref.read(gameStateProvider.notifier).retry();
-                      if (levelId != null) {
-                        context.go('/game/$levelId');
+                      if (gameState != null) {
+                        // For daily challenges (localId == 0), use Navigator to bypass GoRouter issues
+                        if (gameState.level.localId == 0) {
+                          ref.read(gameStateProvider.notifier).retryWithLevel(gameState.level);
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(
+                                levelId: gameState.level.id,
+                                isDailyChallenge: true,
+                                dailyLevel: gameState.level,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ref.read(gameStateProvider.notifier).retry();
+                          // Preserve memory mode
+                          final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                          context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                        }
                       }
                     },
                     icon: const Icon(Icons.refresh_rounded, color: AppTheme.textSecondary),
-                    label: const Text(
-                      'Retry', 
-                      style: TextStyle(color: AppTheme.textSecondary),
+                    label: Text(
+                      AppLocalizations.of(context)!.retry, 
+                      style: const TextStyle(color: AppTheme.textSecondary),
                     ),
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -607,9 +1202,9 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
                     context.go('/');
                   },
                   icon: const Icon(Icons.home_rounded, color: AppTheme.textSecondary),
-                  label: const Text(
-                    'Home', 
-                    style: TextStyle(color: AppTheme.textSecondary),
+                  label: Text(
+                    AppLocalizations.of(context)!.home, 
+                    style: const TextStyle(color: AppTheme.textSecondary),
                   ),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -640,7 +1235,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       case LevelCategory.mixed:
         return '🎲';
       case LevelCategory.knowledge:
-        return '🧠';
+        return '✨';
     }
   }
 
@@ -658,6 +1253,24 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         return AppTheme.mixedColor;
       case LevelCategory.knowledge:
         return AppTheme.knowledgeColor;
+    }
+  }
+
+  String _getCategoryTitle(BuildContext context, LevelCategory category) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (category) {
+      case LevelCategory.basic:
+        return l10n.basicNumbers;
+      case LevelCategory.formatted:
+        return l10n.formattedNumbers;
+      case LevelCategory.time:
+        return l10n.timeFormats;
+      case LevelCategory.names:
+        return l10n.nameSorting;
+      case LevelCategory.mixed:
+        return l10n.mixedFormats;
+      case LevelCategory.knowledge:
+        return l10n.knowledge;
     }
   }
 }

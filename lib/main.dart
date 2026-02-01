@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'core/theme/app_theme.dart';
+import 'core/services/achievement_service.dart';
+import 'core/services/ad_service.dart';
 import 'data/datasources/local_database.dart';
 import 'presentation/router/app_router.dart';
+import 'presentation/providers/locale_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,19 +29,50 @@ void main() async {
   // Initialize database
   await LocalDatabase.instance.init();
   
-  runApp(const ProviderScope(child: SorgaApp()));
+  // Initialize achievement service
+  await AchievementService.instance.init();
+  
+  // Initialize AdMob (iOS/Android only)
+  await AdService.instance.initialize();
+  
+  runApp(const ProviderScope(child: SortiqApp()));
 }
 
-class SorgaApp extends StatelessWidget {
-  const SorgaApp({super.key});
+/// Custom scroll behavior to enable mouse/trackpad drag scrolling on web
+class WebScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
+}
+
+class SortiqApp extends ConsumerWidget {
+  const SortiqApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch locale provider for in-app language switching
+    final selectedLocale = ref.watch(localeProvider);
+    
     return MaterialApp.router(
-      title: 'Sorga',
+      title: 'SORTIQ',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
+      // Enable mouse/trackpad drag scrolling on web
+      scrollBehavior: WebScrollBehavior(),
+      // Use selected locale if set, otherwise use system default
+      locale: selectedLocale,
+      // Localization Configuration
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: supportedLocales,
     );
   }
 }
