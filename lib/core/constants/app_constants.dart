@@ -38,10 +38,10 @@ class AppConstants {
   
   // Mistake Limits (attempts before game over)
   // Regular mode: 2 attempts (1 mistake allowed)
-  // Memory mode: 4 attempts (3 mistakes allowed)
+  // Memory mode: 3 attempts (2 mistakes allowed)
   // Pro users: unlimited
   static const int maxAttemptsRegular = 2;
-  static const int maxAttemptsMemory = 4;
+  static const int maxAttemptsMemory = 3;
   static const int maxAttemptsPro = 999; // effectively unlimited
   
   // Database
