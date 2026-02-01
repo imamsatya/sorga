@@ -131,6 +131,7 @@
   "names": "nombres",
   "imReady": "Estoy Listo 👁️",
   "timeUp": "¡Se acabó el tiempo!",
+  "tapReadyToReveal": "Toca \"Estoy Listo\" para revelar los items",
   "memorized": "¡Lo Memoricé!",
   "memoryMode": "Memoria",
   "memorizeTime": "Memorizar",

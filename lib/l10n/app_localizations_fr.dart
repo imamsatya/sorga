@@ -410,6 +410,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get timeUp => 'Temps écoulé !';
 
   @override
+  String get tapReadyToReveal => 'Appuyez sur \"Je suis prêt\" pour révéler';
+
+  @override
   String get memorized => 'Mémorisé !';
 
   @override

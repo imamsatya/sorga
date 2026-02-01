@@ -401,6 +401,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get timeUp => '時間切れ！';
 
   @override
+  String get tapReadyToReveal => '\"準備OK\" をタップしてアイテムを表示';
+
+  @override
   String get memorized => '覚えた！';
 
   @override

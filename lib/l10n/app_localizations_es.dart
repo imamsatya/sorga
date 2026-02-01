@@ -407,6 +407,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timeUp => '¡Se acabó el tiempo!';
 
   @override
+  String get tapReadyToReveal => 'Toca \"Estoy Listo\" para revelar los items';
+
+  @override
   String get memorized => '¡Lo Memoricé!';
 
   @override

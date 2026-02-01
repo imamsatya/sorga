@@ -408,6 +408,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get timeUp => 'Zeit ist um!';
 
   @override
+  String get tapReadyToReveal =>
+      'Tippe auf \"Ich bin bereit\" um Items anzuzeigen';
+
+  @override
   String get memorized => 'Auswendig gelernt!';
 
   @override

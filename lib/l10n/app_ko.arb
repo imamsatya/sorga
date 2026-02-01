@@ -131,6 +131,7 @@
   "names": "이름",
   "imReady": "준비됐어요 👁️",
   "timeUp": "시간 초과!",
+  "tapReadyToReveal": "\"준비됐어요\" 를 누르면 항목이 표시됨",
   "memorized": "외웠어요!",
   "memoryMode": "기억",
   "memorizeTime": "암기",

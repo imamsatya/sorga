@@ -402,6 +402,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get timeUp => '시간 초과!';
 
   @override
+  String get tapReadyToReveal => '\"준비됐어요\" 를 누르면 항목이 표시됨';
+
+  @override
   String get memorized => '외웠어요!';
 
   @override

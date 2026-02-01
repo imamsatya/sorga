@@ -878,6 +878,12 @@ abstract class AppLocalizations {
   /// **'Time\'s Up!'**
   String get timeUp;
 
+  /// No description provided for @tapReadyToReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"I\'m Ready\" to reveal items'**
+  String get tapReadyToReveal;
+
   /// No description provided for @memorized.
   ///
   /// In en, this message translates to:

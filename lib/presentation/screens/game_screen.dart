@@ -553,6 +553,43 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final categoryColor = _getCategoryColor(gameState.level.category);
     final totalItems = items.length;
     
+    // Hide items during "I'm Ready" phase (before countdown starts)
+    if (gameState.phase == GamePhase.memorizing && !gameState.isMemorizeCountdownActive) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.visibility_off,
+                size: 64,
+                color: AppTheme.textMuted.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '$totalItems items',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: categoryColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(context)?.tapReadyToReveal ?? 'Tap "I\'m Ready" to reveal',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.textMuted.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: LayoutBuilder(

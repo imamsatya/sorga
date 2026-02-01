@@ -407,6 +407,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get timeUp => 'Waktu Habis!';
 
   @override
+  String get tapReadyToReveal => 'Ketuk \"Saya Siap\" untuk melihat item';
+
+  @override
   String get memorized => 'Sudah Dihafal!';
 
   @override
