@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/services/pro_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/game_providers.dart';
 import '../providers/feedback_settings_provider.dart';
@@ -92,6 +93,50 @@ class HomeScreen extends ConsumerWidget {
                           feedbackSettings.hapticEnabled ? Icons.vibration : Icons.phone_android,
                           color: feedbackSettings.hapticEnabled ? AppTheme.accentColor : AppTheme.textMuted,
                           size: 24,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Pro Badge / Go Pro Button
+                    GestureDetector(
+                      onTap: () => context.push('/pro'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          gradient: ProService.instance.isPro
+                              ? const LinearGradient(
+                                  colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
+                                )
+                              : null,
+                          color: ProService.instance.isPro ? null : AppTheme.surfaceColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: ProService.instance.isPro
+                              ? [
+                                  BoxShadow(
+                                    color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              ProService.instance.isPro ? '👑' : '✨',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              ProService.instance.isPro ? 'PRO' : 'Go Pro',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: ProService.instance.isPro ? Colors.white : AppTheme.primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
