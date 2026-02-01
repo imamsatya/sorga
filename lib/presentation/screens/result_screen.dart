@@ -944,103 +944,105 @@ Can you beat my time? 💪
               }),
             ] else ...[
               // Regular game: Show monetization options + Retry Level
-              // 1. Watch Ad for extra chance
-              GestureDetector(
-                onTap: () async {
-                  if (AdService.isSupported && AdService.instance.isRewardedAdReady) {
-                    // Show rewarded ad
-                    final shown = await AdService.instance.showRewardedAd(
-                      onRewarded: () {
-                        // Grant extra chance - reset to continue game
-                        final gameState = ref.read(gameStateProvider);
-                        if (gameState != null) {
-                          // Reset failed attempts to allow one more try
-                          ref.read(gameStateProvider.notifier).resetFailedAttempts();
-                          
-                          // Navigate back to game
-                          if (gameState.level.localId == 0) {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => GameScreen(
-                                  levelId: gameState.level.id,
-                                  isDailyChallenge: true,
-                                  dailyLevel: gameState.level,
+              // 1. Watch Ad for extra chance (only if not already used)
+              if (!(ref.read(gameStateProvider)?.hasUsedAdChance ?? false)) ...[
+                GestureDetector(
+                  onTap: () async {
+                    if (AdService.isSupported && AdService.instance.isRewardedAdReady) {
+                      // Show rewarded ad
+                      final shown = await AdService.instance.showRewardedAd(
+                        onRewarded: () {
+                          // Grant extra chance - reset to continue game
+                          final gameState = ref.read(gameStateProvider);
+                          if (gameState != null) {
+                            // Reset failed attempts to allow one more try
+                            ref.read(gameStateProvider.notifier).resetFailedAttempts();
+                            
+                            // Navigate back to game
+                            if (gameState.level.localId == 0) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => GameScreen(
+                                    levelId: gameState.level.id,
+                                    isDailyChallenge: true,
+                                    dailyLevel: gameState.level,
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
-                            context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                              );
+                            } else {
+                              final memoryParam = gameState.level.isMemory ? '?memory=true' : '';
+                              context.go('/game/${gameState.level.category.name}/${gameState.level.localId}$memoryParam');
+                            }
                           }
-                        }
-                      },
-                    );
-                    
-                    if (!shown) {
+                        },
+                      );
+                      
+                      if (!shown) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('❌ Ad not available. Try again later.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    } else {
+                      // Not supported (Web) or ad not ready - show debug info
+                      final debugStatus = AdService.isSupported 
+                          ? AdService.instance.getDebugStatus()
+                          : 'Ads only available on mobile app';
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('❌ Ad not available. Try again later.'),
-                          duration: Duration(seconds: 2),
+                        SnackBar(
+                          content: Text('🔍 $debugStatus'),
+                          duration: const Duration(seconds: 3),
+                          action: AdService.isSupported && !AdService.instance.isLoading
+                              ? SnackBarAction(
+                                  label: 'Retry',
+                                  onPressed: () {
+                                    AdService.instance.reloadRewardedAd();
+                                  },
+                                )
+                              : null,
                         ),
                       );
                     }
-                  } else {
-                    // Not supported (Web) or ad not ready - show debug info
-                    final debugStatus = AdService.isSupported 
-                        ? AdService.instance.getDebugStatus()
-                        : 'Ads only available on mobile app';
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('🔍 $debugStatus'),
-                        duration: const Duration(seconds: 3),
-                        action: AdService.isSupported && !AdService.instance.isLoading
-                            ? SnackBarAction(
-                                label: 'Retry',
-                                onPressed: () {
-                                  AdService.instance.reloadRewardedAd();
-                                },
-                              )
-                            : null,
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    );
-                  }
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.play_circle_filled, color: Colors.white, size: 24),
-                      const SizedBox(width: 10),
-                      Text(
-                        AppLocalizations.of(context)!.watchAd,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.play_circle_filled, color: Colors.white, size: 24),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.watchAd,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
+              ],
               // 2. Go Pro for unlimited mistakes (dummy)
               GestureDetector(
                 onTap: () {

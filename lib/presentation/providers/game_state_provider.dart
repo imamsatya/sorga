@@ -29,6 +29,7 @@ class GameState {
   final bool isCompleted;
   final bool isCorrect;
   final int failedAttempts;
+  final bool hasUsedAdChance;  // Track if user already used their ad extra chance
   
   // Memory mode (SORGAwy) fields
   final GamePhase phase;
@@ -44,6 +45,7 @@ class GameState {
     this.isCompleted = false,
     this.isCorrect = false,
     this.failedAttempts = 0,
+    this.hasUsedAdChance = false,
     this.phase = GamePhase.ready,
     this.labelsVisible = true,
     this.memorizeTime = Duration.zero,
@@ -72,6 +74,7 @@ class GameState {
     bool? isCompleted,
     bool? isCorrect,
     int? failedAttempts,
+    bool? hasUsedAdChance,
     GamePhase? phase,
     bool? labelsVisible,
     Duration? memorizeTime,
@@ -85,6 +88,7 @@ class GameState {
       isCompleted: isCompleted ?? this.isCompleted,
       isCorrect: isCorrect ?? this.isCorrect,
       failedAttempts: failedAttempts ?? this.failedAttempts,
+      hasUsedAdChance: hasUsedAdChance ?? this.hasUsedAdChance,
       phase: phase ?? this.phase,
       labelsVisible: labelsVisible ?? this.labelsVisible,
       memorizeTime: memorizeTime ?? this.memorizeTime,
@@ -487,9 +491,13 @@ class GameStateNotifier extends StateNotifier<GameState?> {
   }
   
   /// Reset failed attempts (for rewarded ad extra chance)
+  /// Also marks that user has used their one-time ad chance
   void resetFailedAttempts() {
     if (state == null) return;
-    state = state!.copyWith(failedAttempts: 0);
+    state = state!.copyWith(
+      failedAttempts: 0,
+      hasUsedAdChance: true,  // Mark as used so Watch Ad won't appear again
+    );
   }
   
   void _startTimer() {
