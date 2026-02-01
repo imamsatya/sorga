@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/services/pro_service.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/multiplayer_session.dart';
 import 'package:flutter/rendering.dart';
@@ -421,8 +422,12 @@ Can you beat my time? 💪
       );
     }
     
-    // Show attempts remaining
-    final attemptsRemaining = 2 - gameState.failedAttempts;
+    // Show attempts remaining (dynamic based on mode and Pro status)
+    final isMemory = gameState.isMemoryMode;
+    final attemptsRemaining = ProService.instance.getRemainingAttempts(
+      failedAttempts: gameState.failedAttempts,
+      isMemoryMode: isMemory,
+    );
     return Column(
       children: [
         Text(
@@ -713,12 +718,20 @@ Can you beat my time? 💪
           ] else if (!isSuccess && canContinue) ...[
             // Check if this is a multiplayer game
             if (ref.read(multiplayerSessionProvider) != null) ...[
-              // Multiplayer: Check attempts (same as normal game - 2 attempts allowed)
+              // Multiplayer: Check attempts (dynamic based on mode and Pro)
               Builder(builder: (context) {
                 final gameState = ref.read(gameStateProvider);
                 final session = ref.read(multiplayerSessionProvider);
                 final failedAttempts = gameState?.failedAttempts ?? 0;
-                final isOutOfChances = failedAttempts >= 2; // Same as normal game
+                final isMemory = gameState?.isMemoryMode ?? false;
+                final isOutOfChances = !ProService.instance.canContinue(
+                  failedAttempts: failedAttempts, 
+                  isMemoryMode: isMemory,
+                );
+                final remaining = ProService.instance.getRemainingAttempts(
+                  failedAttempts: failedAttempts,
+                  isMemoryMode: isMemory,
+                );
                 
                 return Column(
                   children: [
@@ -782,7 +795,7 @@ Can you beat my time? 💪
                             children: [
                               const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 28),
                               const SizedBox(width: 8),
-                              Text(AppLocalizations.of(context)!.continueLeft(2 - failedAttempts), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Text(AppLocalizations.of(context)!.continueLeft(remaining), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                         ),

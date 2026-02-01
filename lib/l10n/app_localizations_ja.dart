@@ -226,7 +226,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get version => 'バージョン';
 
   @override
-  String get levelsDescription => '6カテゴリ800レベル。数字、時間、名前などで脳を鍛えよう！';
+  String get levelsDescription => '11カテゴリ1100レベル。数字、時間、名前などで脳を鍛えよう！';
 
   @override
   String get dragAndDrop => 'ドラッグ＆ドロップ';

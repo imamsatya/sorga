@@ -6,7 +6,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
-  static const bool isDevMode = false;
+  static const bool isDevMode = true;
   
   // Level Constants
   static const int totalLevels = 600; // 500 regular + 100 knowledge
@@ -36,7 +36,18 @@ class AppConstants {
   // Timer
   static const int maxTimerSeconds = 3600; // 1 hour max
   
+  // Mistake Limits (attempts before game over)
+  // Regular mode: 2 attempts (1 mistake allowed)
+  // Memory mode: 4 attempts (3 mistakes allowed)
+  // Pro users: unlimited
+  static const int maxAttemptsRegular = 2;
+  static const int maxAttemptsMemory = 4;
+  static const int maxAttemptsPro = 999; // effectively unlimited
+  
   // Database
   static const String progressBoxName = 'user_progress';
   static const String settingsBoxName = 'settings';
+  
+  // Settings Keys
+  static const String isProKey = 'is_pro';
 }

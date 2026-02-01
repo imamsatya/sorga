@@ -227,7 +227,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get levelsDescription =>
-      '800 niveles en 6 categorías. ¡Entrena tu cerebro con números, tiempo, nombres y más!';
+      '1100 niveles en 11 categorías. ¡Entrena tu cerebro con números, tiempo, nombres y más!';
 
   @override
   String get dragAndDrop => 'Arrastrar y Soltar';

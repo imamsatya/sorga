@@ -2,14 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/services/pro_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _isPro = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _isPro = ProService.instance.isPro;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final currentLocale = ref.watch(localeProvider);
     
     return Scaffold(
@@ -27,6 +42,10 @@ class SettingsScreen extends ConsumerWidget {
                   children: [
                     _buildLanguageSection(context, ref, currentLocale),
                     const SizedBox(height: 24),
+                    if (AppConstants.isDevMode) ...[
+                      _buildDeveloperSection(context),
+                      const SizedBox(height: 24),
+                    ],
                     _buildAboutSection(context),
                   ],
                 ),
@@ -171,6 +190,92 @@ class SettingsScreen extends ConsumerWidget {
     return Text(
       flags[langCode] ?? '🌐',
       style: const TextStyle(fontSize: 20),
+    );
+  }
+  
+  Widget _buildDeveloperSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.warningColor.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppTheme.warningColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.developer_mode,
+                  color: AppTheme.warningColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Developer Options',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Pro Status Toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pro Status',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    _isPro ? 'Unlimited mistakes' : 'Limited mistakes',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
+              ),
+              Switch(
+                value: _isPro,
+                onChanged: (value) async {
+                  await ProService.instance.setProStatus(value);
+                  setState(() {
+                    _isPro = value;
+                  });
+                },
+                activeColor: AppTheme.successColor,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Regular: ${AppConstants.maxAttemptsRegular - 1} mistake(s) | Memory: ${AppConstants.maxAttemptsMemory - 1} mistake(s) | Pro: Unlimited',
+            style: TextStyle(
+              fontSize: 11,
+              color: AppTheme.textMuted.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

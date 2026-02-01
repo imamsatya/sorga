@@ -227,7 +227,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get levelsDescription =>
-      '800 level dalam 6 kategori. Latih otak Anda dengan angka, waktu, nama, dan lainnya!';
+      '1100 level dalam 11 kategori. Latih otak Anda dengan angka, waktu, nama, dan lainnya!';
 
   @override
   String get dragAndDrop => 'Seret & Lepas';

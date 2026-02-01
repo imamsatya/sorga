@@ -539,7 +539,7 @@ abstract class AppLocalizations {
   /// No description provided for @levelsDescription.
   ///
   /// In en, this message translates to:
-  /// **'800 levels across 6 categories. Train your brain with numbers, time, names, and more!'**
+  /// **'1100 levels across 11 categories. Train your brain with numbers, time, names, and more!'**
   String get levelsDescription;
 
   /// No description provided for @dragAndDrop.

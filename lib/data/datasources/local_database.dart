@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/entities/user_progress.dart';
 import '../../domain/entities/game_stats.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/services/pro_service.dart';
 
 /// Local database service using Hive
 class LocalDatabase {
@@ -34,6 +35,9 @@ class LocalDatabase {
     _progressBox = await Hive.openBox<UserProgress>(AppConstants.progressBoxName);
     _statsBox = await Hive.openBox<GameStats>(_statsBoxName);
     _settingsBox = await Hive.openBox<dynamic>(_settingsBoxName);
+    
+    // Initialize ProService with settings box
+    ProService.instance.init(_settingsBox);
   }
   
   /// Get the progress box

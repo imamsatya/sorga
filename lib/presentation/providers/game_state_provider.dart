@@ -6,6 +6,7 @@ import '../../domain/entities/level_item.dart';
 import '../../domain/entities/user_progress.dart';
 import '../../data/datasources/local_database.dart';
 import '../../core/services/achievement_service.dart';
+import '../../core/services/pro_service.dart';
 import 'game_providers.dart';
 import 'game_stats_provider.dart';
 import 'daily_challenge_provider.dart';
@@ -49,8 +50,11 @@ class GameState {
     this.originalIndices = const {},
   });
   
-  /// Can continue after failure (only if less than 2 failed attempts)
-  bool get canContinue => failedAttempts < 2;
+  /// Can continue after failure (dynamic based on mode and Pro status)
+  bool get canContinue => ProService.instance.canContinue(
+    failedAttempts: failedAttempts,
+    isMemoryMode: isMemoryMode,
+  );
   
   /// Is this a memory mode game
   bool get isMemoryMode => level.isMemory;

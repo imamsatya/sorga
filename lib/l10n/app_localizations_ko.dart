@@ -226,7 +226,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get version => '버전';
 
   @override
-  String get levelsDescription => '6개 카테고리에 800개 레벨. 숫자, 시간, 이름 등으로 두뇌를 훈련하세요!';
+  String get levelsDescription =>
+      '11개 카테고리에 1100개 레벨. 숫자, 시간, 이름 등으로 두뇌를 훈련하세요!';
 
   @override
   String get dragAndDrop => '드래그 앤 드롭';

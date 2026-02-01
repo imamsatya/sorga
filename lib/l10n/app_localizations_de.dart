@@ -228,7 +228,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get levelsDescription =>
-      '800 Level in 6 Kategorien. Trainiere dein Gehirn mit Zahlen, Zeit, Namen und mehr!';
+      '1100 Level in 11 Kategorien. Trainiere dein Gehirn mit Zahlen, Zeit, Namen und mehr!';
 
   @override
   String get dragAndDrop => 'Ziehen & Ablegen';
