@@ -912,5 +912,53 @@ class AppLocalizationsJa extends AppLocalizations {
   String get watchAd => '広告を見て追加チャンス';
 
   @override
-  String get goPro => 'プロへ - 無制限ミス';
+  String get goPro => 'プロへ';
+
+  @override
+  String get noAds => '広告なし';
+
+  @override
+  String get noAdsDesc => 'すべてのバナーとインタースティシャル広告を削除';
+
+  @override
+  String get unlimitedAttempts => '無制限の試行';
+
+  @override
+  String get unlimitedAttemptsDesc => 'チャンスが尽きることがありません';
+
+  @override
+  String get proBadge => 'プロバッジ';
+
+  @override
+  String get proBadgeDesc => 'プレミアムステータスを表示';
+
+  @override
+  String get supportDev => '開発者を支援';
+
+  @override
+  String get supportDevDesc => 'より多くのコンテンツ作成にご協力ください';
+
+  @override
+  String get whatYouGet => '特典内容';
+
+  @override
+  String get processing => '処理中...';
+
+  @override
+  String get purchaseSuccess => 'プロへようこそ！';
+
+  @override
+  String get youAreNowPro => 'すべての機能に無制限にアクセスできます！';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get restorePurchases => '購入を復元';
+
+  @override
+  String get noPurchasesToRestore => '以前の購入が見つかりません';
+
+  @override
+  String get alreadyPro => 'すでにプロです！';
 }

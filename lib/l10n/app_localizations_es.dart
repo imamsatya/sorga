@@ -918,5 +918,54 @@ class AppLocalizationsEs extends AppLocalizations {
   String get watchAd => 'Ver anuncio por oportunidad extra';
 
   @override
-  String get goPro => 'Hazte Pro - Errores ilimitados';
+  String get goPro => 'Hazte Pro';
+
+  @override
+  String get noAds => 'Sin anuncios';
+
+  @override
+  String get noAdsDesc => 'Elimina todos los banners y anuncios intersticiales';
+
+  @override
+  String get unlimitedAttempts => 'Intentos ilimitados';
+
+  @override
+  String get unlimitedAttemptsDesc => 'Nunca te quedas sin oportunidades';
+
+  @override
+  String get proBadge => 'Insignia Pro';
+
+  @override
+  String get proBadgeDesc => 'Muestra tu estado premium';
+
+  @override
+  String get supportDev => 'Apoya al desarrollador';
+
+  @override
+  String get supportDevDesc => 'Ayúdanos a crear más contenido';
+
+  @override
+  String get whatYouGet => 'Lo que obtienes';
+
+  @override
+  String get processing => 'Procesando...';
+
+  @override
+  String get purchaseSuccess => '¡Bienvenido a Pro!';
+
+  @override
+  String get youAreNowPro =>
+      '¡Ahora tienes acceso ilimitado a todas las funciones!';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get restorePurchases => 'Restaurar compras';
+
+  @override
+  String get noPurchasesToRestore => 'No se encontraron compras anteriores';
+
+  @override
+  String get alreadyPro => '¡Ya eres Pro!';
 }

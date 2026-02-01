@@ -1883,8 +1883,104 @@ abstract class AppLocalizations {
   /// No description provided for @goPro.
   ///
   /// In en, this message translates to:
-  /// **'Go Pro - Unlimited Mistakes'**
+  /// **'Go Pro'**
   String get goPro;
+
+  /// No description provided for @noAds.
+  ///
+  /// In en, this message translates to:
+  /// **'No Ads'**
+  String get noAds;
+
+  /// No description provided for @noAdsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all banner and interstitial ads'**
+  String get noAdsDesc;
+
+  /// No description provided for @unlimitedAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited Attempts'**
+  String get unlimitedAttempts;
+
+  /// No description provided for @unlimitedAttemptsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Never run out of chances'**
+  String get unlimitedAttemptsDesc;
+
+  /// No description provided for @proBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro Badge'**
+  String get proBadge;
+
+  /// No description provided for @proBadgeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Show your premium status'**
+  String get proBadgeDesc;
+
+  /// No description provided for @supportDev.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Developer'**
+  String get supportDev;
+
+  /// No description provided for @supportDevDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Help us create more content'**
+  String get supportDevDesc;
+
+  /// No description provided for @whatYouGet.
+  ///
+  /// In en, this message translates to:
+  /// **'What You Get'**
+  String get whatYouGet;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @purchaseSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Pro!'**
+  String get purchaseSuccess;
+
+  /// No description provided for @youAreNowPro.
+  ///
+  /// In en, this message translates to:
+  /// **'You now have unlimited access to all features!'**
+  String get youAreNowPro;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restorePurchases;
+
+  /// No description provided for @noPurchasesToRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'No previous purchases found'**
+  String get noPurchasesToRestore;
+
+  /// No description provided for @alreadyPro.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re Already Pro!'**
+  String get alreadyPro;
 }
 
 class _AppLocalizationsDelegate

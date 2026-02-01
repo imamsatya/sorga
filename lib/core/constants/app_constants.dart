@@ -2,7 +2,7 @@
 class AppConstants {
   AppConstants._();
 
-  static const String appName = 'Sorga';
+  static const String appName = 'SORTIQ';
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
@@ -49,4 +49,7 @@ class AppConstants {
   
   // Settings Keys
   static const String isProKey = 'is_pro';
+  
+  // In-App Purchase
+  static const String iapProductId = 'sortiq_pro';
 }

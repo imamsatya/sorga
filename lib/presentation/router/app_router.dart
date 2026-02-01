@@ -11,6 +11,7 @@ import '../screens/daily_challenge_screen.dart';
 import '../screens/multiplayer_setup_screen.dart';
 import '../screens/multiplayer_transition_screen.dart';
 import '../screens/multiplayer_results_screen.dart';
+import '../screens/go_pro_screen.dart';
 
 import '../../domain/entities/level.dart';
 import '../../levels/level_generator.dart';
@@ -26,6 +27,7 @@ class AppRoutes {
   static const String statistics = '/statistics';
   static const String settings = '/settings';
   static const String dailyChallenge = '/daily';
+  static const String goPro = '/pro';
 }
 
 /// App router configuration
@@ -124,6 +126,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/multiplayer/results',
       builder: (context, state) => const MultiplayerResultsScreen(),
+    ),
+    // Go Pro
+    GoRoute(
+      path: AppRoutes.goPro,
+      builder: (context, state) => const GoProScreen(),
     ),
   ],
 );

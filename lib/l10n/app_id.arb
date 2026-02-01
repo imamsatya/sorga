@@ -327,5 +327,23 @@
   "achShiftMasterDesc": "10 level hanya shift",
   
   "watchAd": "Tonton Iklan untuk Kesempatan Ekstra",
-  "goPro": "Jadi Pro - Unlimited Kesalahan"
+  "goPro": "Jadi Pro",
+  
+  "noAds": "Tanpa Iklan",
+  "noAdsDesc": "Hapus semua iklan banner dan interstitial",
+  "unlimitedAttempts": "Kesempatan Tak Terbatas",
+  "unlimitedAttemptsDesc": "Tidak pernah kehabisan kesempatan",
+  "proBadge": "Lencana Pro",
+  "proBadgeDesc": "Tunjukkan status premium Anda",
+  "supportDev": "Dukung Developer",
+  "supportDevDesc": "Bantu kami membuat lebih banyak konten",
+  
+  "whatYouGet": "Apa yang Anda Dapat",
+  "processing": "Memproses...",
+  "purchaseSuccess": "Selamat Datang di Pro!",
+  "youAreNowPro": "Anda sekarang memiliki akses tak terbatas ke semua fitur!",
+  "ok": "OK",
+  "restorePurchases": "Pulihkan Pembelian",
+  "noPurchasesToRestore": "Tidak ada pembelian sebelumnya",
+  "alreadyPro": "Anda Sudah Pro!"
 }

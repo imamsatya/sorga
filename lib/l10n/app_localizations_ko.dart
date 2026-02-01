@@ -913,5 +913,53 @@ class AppLocalizationsKo extends AppLocalizations {
   String get watchAd => '광고 보고 추가 기회';
 
   @override
-  String get goPro => '프로 버전 - 무제한 실수';
+  String get goPro => '프로 버전';
+
+  @override
+  String get noAds => '광고 없음';
+
+  @override
+  String get noAdsDesc => '모든 배너 및 전면 광고 제거';
+
+  @override
+  String get unlimitedAttempts => '무제한 시도';
+
+  @override
+  String get unlimitedAttemptsDesc => '기회가 절대 끊기지 않습니다';
+
+  @override
+  String get proBadge => '프로 배지';
+
+  @override
+  String get proBadgeDesc => '프리미엄 상태 표시';
+
+  @override
+  String get supportDev => '개발자 지원';
+
+  @override
+  String get supportDevDesc => '더 많은 콘텐츠 제작에 도움을 주세요';
+
+  @override
+  String get whatYouGet => '제공 내용';
+
+  @override
+  String get processing => '처리 중...';
+
+  @override
+  String get purchaseSuccess => '프로에 오신 것을 환영합니다!';
+
+  @override
+  String get youAreNowPro => '이제 모든 기능에 무제한으로 액세스할 수 있습니다!';
+
+  @override
+  String get ok => '확인';
+
+  @override
+  String get restorePurchases => '구매 복원';
+
+  @override
+  String get noPurchasesToRestore => '이전 구매를 찾을 수 없습니다';
+
+  @override
+  String get alreadyPro => '이미 프로입니다!';
 }

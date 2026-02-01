@@ -918,5 +918,54 @@ class AppLocalizationsId extends AppLocalizations {
   String get watchAd => 'Tonton Iklan untuk Kesempatan Ekstra';
 
   @override
-  String get goPro => 'Jadi Pro - Unlimited Kesalahan';
+  String get goPro => 'Jadi Pro';
+
+  @override
+  String get noAds => 'Tanpa Iklan';
+
+  @override
+  String get noAdsDesc => 'Hapus semua iklan banner dan interstitial';
+
+  @override
+  String get unlimitedAttempts => 'Kesempatan Tak Terbatas';
+
+  @override
+  String get unlimitedAttemptsDesc => 'Tidak pernah kehabisan kesempatan';
+
+  @override
+  String get proBadge => 'Lencana Pro';
+
+  @override
+  String get proBadgeDesc => 'Tunjukkan status premium Anda';
+
+  @override
+  String get supportDev => 'Dukung Developer';
+
+  @override
+  String get supportDevDesc => 'Bantu kami membuat lebih banyak konten';
+
+  @override
+  String get whatYouGet => 'Apa yang Anda Dapat';
+
+  @override
+  String get processing => 'Memproses...';
+
+  @override
+  String get purchaseSuccess => 'Selamat Datang di Pro!';
+
+  @override
+  String get youAreNowPro =>
+      'Anda sekarang memiliki akses tak terbatas ke semua fitur!';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get restorePurchases => 'Pulihkan Pembelian';
+
+  @override
+  String get noPurchasesToRestore => 'Tidak ada pembelian sebelumnya';
+
+  @override
+  String get alreadyPro => 'Anda Sudah Pro!';
 }

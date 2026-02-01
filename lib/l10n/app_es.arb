@@ -326,5 +326,23 @@
   "achShiftMasterDesc": "10 niveles solo shift",
   
   "watchAd": "Ver anuncio por oportunidad extra",
-  "goPro": "Hazte Pro - Errores ilimitados"
+  "goPro": "Hazte Pro",
+  
+  "noAds": "Sin anuncios",
+  "noAdsDesc": "Elimina todos los banners y anuncios intersticiales",
+  "unlimitedAttempts": "Intentos ilimitados",
+  "unlimitedAttemptsDesc": "Nunca te quedas sin oportunidades",
+  "proBadge": "Insignia Pro",
+  "proBadgeDesc": "Muestra tu estado premium",
+  "supportDev": "Apoya al desarrollador",
+  "supportDevDesc": "Ayúdanos a crear más contenido",
+  
+  "whatYouGet": "Lo que obtienes",
+  "processing": "Procesando...",
+  "purchaseSuccess": "¡Bienvenido a Pro!",
+  "youAreNowPro": "¡Ahora tienes acceso ilimitado a todas las funciones!",
+  "ok": "OK",
+  "restorePurchases": "Restaurar compras",
+  "noPurchasesToRestore": "No se encontraron compras anteriores",
+  "alreadyPro": "¡Ya eres Pro!"
 }

@@ -326,5 +326,23 @@
   "achShiftMasterDesc": "시프트만으로 10레벨",
   
   "watchAd": "광고 보고 추가 기회",
-  "goPro": "프로 버전 - 무제한 실수"
+  "goPro": "프로 버전",
+  
+  "noAds": "광고 없음",
+  "noAdsDesc": "모든 배너 및 전면 광고 제거",
+  "unlimitedAttempts": "무제한 시도",
+  "unlimitedAttemptsDesc": "기회가 절대 끊기지 않습니다",
+  "proBadge": "프로 배지",
+  "proBadgeDesc": "프리미엄 상태 표시",
+  "supportDev": "개발자 지원",
+  "supportDevDesc": "더 많은 콘텐츠 제작에 도움을 주세요",
+  
+  "whatYouGet": "제공 내용",
+  "processing": "처리 중...",
+  "purchaseSuccess": "프로에 오신 것을 환영합니다!",
+  "youAreNowPro": "이제 모든 기능에 무제한으로 액세스할 수 있습니다!",
+  "ok": "확인",
+  "restorePurchases": "구매 복원",
+  "noPurchasesToRestore": "이전 구매를 찾을 수 없습니다",
+  "alreadyPro": "이미 프로입니다!"
 }

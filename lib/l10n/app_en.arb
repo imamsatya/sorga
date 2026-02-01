@@ -328,5 +328,23 @@
   "achShiftMasterDesc": "10 levels using only shift",
   
   "watchAd": "Watch Ad for Extra Chance",
-  "goPro": "Go Pro - Unlimited Mistakes"
+  "goPro": "Go Pro",
+  
+  "noAds": "No Ads",
+  "noAdsDesc": "Remove all banner and interstitial ads",
+  "unlimitedAttempts": "Unlimited Attempts",
+  "unlimitedAttemptsDesc": "Never run out of chances",
+  "proBadge": "Pro Badge",
+  "proBadgeDesc": "Show your premium status",
+  "supportDev": "Support Developer",
+  "supportDevDesc": "Help us create more content",
+  
+  "whatYouGet": "What You Get",
+  "processing": "Processing...",
+  "purchaseSuccess": "Welcome to Pro!",
+  "youAreNowPro": "You now have unlimited access to all features!",
+  "ok": "OK",
+  "restorePurchases": "Restore Purchases",
+  "noPurchasesToRestore": "No previous purchases found",
+  "alreadyPro": "You're Already Pro!"
 }

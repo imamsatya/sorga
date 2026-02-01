@@ -326,5 +326,23 @@
   "achShiftMasterDesc": "シフトのみで10レベル",
   
   "watchAd": "広告を見て追加チャンス",
-  "goPro": "プロへ - 無制限ミス"
+  "goPro": "プロへ",
+  
+  "noAds": "広告なし",
+  "noAdsDesc": "すべてのバナーとインタースティシャル広告を削除",
+  "unlimitedAttempts": "無制限の試行",
+  "unlimitedAttemptsDesc": "チャンスが尽きることがありません",
+  "proBadge": "プロバッジ",
+  "proBadgeDesc": "プレミアムステータスを表示",
+  "supportDev": "開発者を支援",
+  "supportDevDesc": "より多くのコンテンツ作成にご協力ください",
+  
+  "whatYouGet": "特典内容",
+  "processing": "処理中...",
+  "purchaseSuccess": "プロへようこそ！",
+  "youAreNowPro": "すべての機能に無制限にアクセスできます！",
+  "ok": "OK",
+  "restorePurchases": "購入を復元",
+  "noPurchasesToRestore": "以前の購入が見つかりません",
+  "alreadyPro": "すでにプロです！"
 }

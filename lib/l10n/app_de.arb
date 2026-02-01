@@ -326,5 +326,23 @@
   "achShiftMasterDesc": "10 Level nur mit Verschieben",
   
   "watchAd": "Werbung für Extrachance",
-  "goPro": "Pro Version - Unbegrenzte Fehler"
+  "goPro": "Pro Version",
+  
+  "noAds": "Keine Werbung",
+  "noAdsDesc": "Alle Banner- und Interstitial-Anzeigen entfernen",
+  "unlimitedAttempts": "Unbegrenzte Versuche",
+  "unlimitedAttemptsDesc": "Chancen gehen nie aus",
+  "proBadge": "Pro-Abzeichen",
+  "proBadgeDesc": "Zeige deinen Premium-Status",
+  "supportDev": "Entwickler unterstützen",
+  "supportDevDesc": "Hilf uns, mehr Inhalte zu erstellen",
+  
+  "whatYouGet": "Was du bekommst",
+  "processing": "Verarbeitung...",
+  "purchaseSuccess": "Willkommen bei Pro!",
+  "youAreNowPro": "Du hast jetzt unbegrenzten Zugang zu allen Funktionen!",
+  "ok": "OK",
+  "restorePurchases": "Käufe wiederherstellen",
+  "noPurchasesToRestore": "Keine vorherigen Käufe gefunden",
+  "alreadyPro": "Du bist bereits Pro!"
 }
