@@ -410,6 +410,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get tapReadyToReveal => 'Ketuk \"Saya Siap\" untuk melihat item';
 
   @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => 'Sudah Dihafal!';
 
   @override

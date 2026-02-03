@@ -410,6 +410,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tapReadyToReveal => 'Toque em \"Estou Pronto\" para revelar itens';
 
   @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => 'Memorizei!';
 
   @override

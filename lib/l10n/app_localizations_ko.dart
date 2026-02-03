@@ -405,6 +405,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tapReadyToReveal => '\"준비됐어요\" 를 누르면 항목이 표시됨';
 
   @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => '외웠어요!';
 
   @override

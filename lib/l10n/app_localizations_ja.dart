@@ -404,6 +404,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tapReadyToReveal => '\"準備OK\" をタップしてアイテムを表示';
 
   @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => '覚えた！';
 
   @override

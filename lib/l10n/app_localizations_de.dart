@@ -412,6 +412,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Tippe auf \"Ich bin bereit\" um Items anzuzeigen';
 
   @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => 'Auswendig gelernt!';
 
   @override

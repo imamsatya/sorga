@@ -884,6 +884,18 @@ abstract class AppLocalizations {
   /// **'Tap \"I\'m Ready\" to reveal items'**
   String get tapReadyToReveal;
 
+  /// No description provided for @exitGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Game?'**
+  String get exitGame;
+
+  /// No description provided for @exitGameConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be lost.'**
+  String get exitGameConfirm;
+
   /// No description provided for @memorized.
   ///
   /// In en, this message translates to:

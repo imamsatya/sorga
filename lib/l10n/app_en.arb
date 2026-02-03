@@ -133,6 +133,8 @@
   "imReady": "I'm Ready 👁️",
   "timeUp": "Time's Up!",
   "tapReadyToReveal": "Tap \"I'm Ready\" to reveal items",
+  "exitGame": "Exit Game?",
+  "exitGameConfirm": "Your progress will be lost.",
   "memorized": "I've Memorized!",
   "memoryMode": "Memory",
   "memorizeTime": "Memorize",

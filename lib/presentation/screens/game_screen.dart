@@ -145,7 +145,49 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
     }
     
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        // Show confirmation dialog before leaving game
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppTheme.surfaceColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              'Exit Game?',
+              style: TextStyle(color: AppTheme.textPrimary),
+            ),
+            content: const Text(
+              'Your progress will be lost.',
+              style: TextStyle(color: AppTheme.textSecondary),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppTheme.textMuted),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Exit',
+                  style: TextStyle(color: AppTheme.errorColor),
+                ),
+              ),
+            ],
+          ),
+        );
+        if (shouldPop == true && context.mounted) {
+          context.pop();
+        }
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           Container(
@@ -267,8 +309,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildModeToggle() {
     return Container(

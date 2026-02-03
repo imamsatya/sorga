@@ -248,7 +248,8 @@ class ProService {
       return -1; // Unlimited
     }
     final maxAttempts = getMaxAttempts(isMemoryMode: isMemoryMode);
-    return maxAttempts - failedAttempts;
+    final remaining = maxAttempts - failedAttempts;
+    return remaining < 0 ? 0 : remaining; // Never return negative
   }
   
   /// Check if remaining attempts should be displayed
