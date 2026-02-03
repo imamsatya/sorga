@@ -149,10 +149,22 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
+        
+        // Check if we can actually pop (have a route to go back to)
+        final navigator = Navigator.of(context);
+        if (!navigator.canPop()) {
+          // No route to pop to - go to home instead
+          if (context.mounted) {
+            context.go('/');
+          }
+          return;
+        }
+        
         // Show confirmation dialog before leaving game
         final shouldPop = await showDialog<bool>(
           context: context,
-          builder: (context) => AlertDialog(
+          barrierDismissible: false,
+          builder: (dialogContext) => AlertDialog(
             backgroundColor: AppTheme.surfaceColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
@@ -167,14 +179,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             ),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () => Navigator.of(dialogContext).pop(false),
                 child: const Text(
                   'Cancel',
                   style: TextStyle(color: AppTheme.textMuted),
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => Navigator.of(dialogContext).pop(true),
                 child: const Text(
                   'Exit',
                   style: TextStyle(color: AppTheme.errorColor),
@@ -184,7 +196,12 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           ),
         );
         if (shouldPop == true && context.mounted) {
-          context.pop();
+          // Use go_router's pop or go to home
+          if (navigator.canPop()) {
+            context.pop();
+          } else {
+            context.go('/');
+          }
         }
       },
       child: Scaffold(
@@ -649,12 +666,14 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             crossAxisCount = totalItems > 20 ? 8 : 7;
           } else {
             // Phone: adapt based on item count
-            if (totalItems > 25) {
-              crossAxisCount = 6; // More columns for 25+ items
-            } else if (totalItems > 15) {
-              crossAxisCount = 5; // Standard for 15-25 items
+            if (totalItems >= 30) {
+              crossAxisCount = 7; // Maximum columns for 30+ items
+            } else if (totalItems > 20) {
+              crossAxisCount = 6; // More columns for 20-29 items
+            } else if (totalItems > 12) {
+              crossAxisCount = 5; // Standard for 12-20 items
             } else {
-              crossAxisCount = 5; // Standard for less items
+              crossAxisCount = 4; // Fewer columns for small levels (bigger cards)
             }
           }
           
@@ -662,18 +681,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           final int rowCount = (totalItems / crossAxisCount).ceil();
           
           // Reduce spacing for large grids
-          final double spacing = totalItems > 20 ? 6.0 : 8.0;
+          final double spacing = totalItems >= 30 ? 4.0 : (totalItems > 20 ? 6.0 : 8.0);
           
           // Calculate width based on available space and column count
           final double totalSpacing = (crossAxisCount - 1) * spacing;
           final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
           
           // Dynamic height - reduce aspect ratio for large grids to fit more rows
-          final double aspectRatio = totalItems > 20 ? 1.1 : 1.2;
+          final double aspectRatio = totalItems >= 30 ? 1.0 : (totalItems > 20 ? 1.1 : 1.2);
           final double cardHeight = cardWidth * aspectRatio;
           
           // Proportional font size - smaller for large grids
-          final double fontSize = cardWidth * (totalItems > 20 ? 0.20 : 0.22);
+          final double fontSize = cardWidth * (totalItems >= 30 ? 0.18 : (totalItems > 20 ? 0.20 : 0.22));
           
           return SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 20),
