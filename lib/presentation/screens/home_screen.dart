@@ -317,6 +317,77 @@ class HomeScreen extends ConsumerWidget {
               valueColor: const AlwaysStoppedAnimation(AppTheme.primaryColor),
             ),
           ),
+          SizedBox(height: 12 * scale),
+          // Quick access links
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () => context.push('/statistics'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16 * scale,
+                    vertical: 8 * scale,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20 * scale),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.bar_chart,
+                        size: 16 * scale,
+                        color: AppTheme.primaryColor,
+                      ),
+                      SizedBox(width: 6 * scale),
+                      Text(
+                        l10n.statistics,
+                        style: TextStyle(
+                          fontSize: 12 * scale,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => context.push('/achievements'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16 * scale,
+                    vertical: 8 * scale,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.warningColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20 * scale),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.emoji_events,
+                        size: 16 * scale,
+                        color: AppTheme.warningColor,
+                      ),
+                      SizedBox(width: 6 * scale),
+                      Text(
+                        l10n.achievements,
+                        style: TextStyle(
+                          fontSize: 12 * scale,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.warningColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
