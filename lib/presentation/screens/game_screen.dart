@@ -638,27 +638,42 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final double availableWidth = constraints.maxWidth;
+          final double availableHeight = constraints.maxHeight;
           
-          // Responsive column count based on screen width
-          // Phone: 5 columns, Tablet: 7 columns, Large tablet: 8 columns
+          // Adaptive column count based on screen width AND item count
+          // For levels with many items, use more columns to fit everything
           int crossAxisCount;
           if (availableWidth > 800) {
-            crossAxisCount = 8;
+            crossAxisCount = totalItems > 20 ? 10 : 8;
           } else if (availableWidth > 500) {
-            crossAxisCount = 7;
+            crossAxisCount = totalItems > 20 ? 8 : 7;
           } else {
-            crossAxisCount = 5;
+            // Phone: adapt based on item count
+            if (totalItems > 25) {
+              crossAxisCount = 6; // More columns for 25+ items
+            } else if (totalItems > 15) {
+              crossAxisCount = 5; // Standard for 15-25 items
+            } else {
+              crossAxisCount = 5; // Standard for less items
+            }
           }
           
-          const double spacing = 8.0;
+          // Calculate rows needed
+          final int rowCount = (totalItems / crossAxisCount).ceil();
+          
+          // Reduce spacing for large grids
+          final double spacing = totalItems > 20 ? 6.0 : 8.0;
           
           // Calculate width based on available space and column count
           final double totalSpacing = (crossAxisCount - 1) * spacing;
           final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
           
-          // Dynamic height and font size
-          final double cardHeight = cardWidth * 1.2; // 1.2 aspect ratio
-          final double fontSize = cardWidth * 0.22; // Proportional font size
+          // Dynamic height - reduce aspect ratio for large grids to fit more rows
+          final double aspectRatio = totalItems > 20 ? 1.1 : 1.2;
+          final double cardHeight = cardWidth * aspectRatio;
+          
+          // Proportional font size - smaller for large grids
+          final double fontSize = cardWidth * (totalItems > 20 ? 0.20 : 0.22);
           
           return SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 20),
