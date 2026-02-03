@@ -441,10 +441,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get descending => 'DESC';
 
   @override
-  String get multiplayer => 'Multijugador';
+  String get multiplayer => 'Pasa y Juega';
 
   @override
-  String get multiplayerSetup => 'Configuración Multijugador';
+  String get multiplayerSetup => 'Configuración Pasa y Juega';
 
   @override
   String get selectCategory => 'Seleccionar categoría';
@@ -546,7 +546,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get perfectCompletions => 'Perfecto';
 
   @override
-  String get multiplayerGames => 'Multijugador';
+  String get multiplayerGames => 'Pasa y Juega';
 
   @override
   String get memoryProgress => 'Progreso Memoria';

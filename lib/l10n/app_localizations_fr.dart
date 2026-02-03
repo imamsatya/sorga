@@ -444,10 +444,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get descending => 'décroissant';
 
   @override
-  String get multiplayer => 'Multijoueur';
+  String get multiplayer => 'Passe à Jouer';
 
   @override
-  String get multiplayerSetup => 'Configuration Multijoueur';
+  String get multiplayerSetup => 'Configuration Passe à Jouer';
 
   @override
   String get selectCategory => 'Choisir une catégorie';
@@ -549,7 +549,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get perfectCompletions => 'Parfait';
 
   @override
-  String get multiplayerGames => 'Multijoueur';
+  String get multiplayerGames => 'Passe à Jouer';
 
   @override
   String get memoryProgress => 'Progrès Mémoire';

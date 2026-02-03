@@ -441,10 +441,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descending => 'DESC';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'Pass & Play';
 
   @override
-  String get multiplayerSetup => 'Multiplayer Setup';
+  String get multiplayerSetup => 'Pass & Play Setup';
 
   @override
   String get selectCategory => 'Select Category';
@@ -546,7 +546,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perfectCompletions => 'Perfect';
 
   @override
-  String get multiplayerGames => 'Multiplayer';
+  String get multiplayerGames => 'Pass & Play';
 
   @override
   String get memoryProgress => 'Memory Progress';

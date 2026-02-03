@@ -443,10 +443,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get descending => 'abst.';
 
   @override
-  String get multiplayer => 'Mehrspieler';
+  String get multiplayer => 'Abwechselnd spielen';
 
   @override
-  String get multiplayerSetup => 'Mehrspieler-Einrichtung';
+  String get multiplayerSetup => 'Abwechseln-Setup';
 
   @override
   String get selectCategory => 'Kategorie wählen';
@@ -548,7 +548,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get perfectCompletions => 'Perfekt';
 
   @override
-  String get multiplayerGames => 'Mehrspieler';
+  String get multiplayerGames => 'Abwechselnd';
 
   @override
   String get memoryProgress => 'Gedächtnis-Fortschritt';

@@ -435,10 +435,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get descending => '降順';
 
   @override
-  String get multiplayer => 'マルチプレイヤー';
+  String get multiplayer => 'パス＆プレイ';
 
   @override
-  String get multiplayerSetup => 'マルチプレイヤー設定';
+  String get multiplayerSetup => 'パス＆プレイ設定';
 
   @override
   String get selectCategory => 'カテゴリ選択';
@@ -540,7 +540,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get perfectCompletions => 'パーフェクト';
 
   @override
-  String get multiplayerGames => 'マルチプレイ';
+  String get multiplayerGames => 'パス＆プレイ';
 
   @override
   String get memoryProgress => 'メモリー進捗';

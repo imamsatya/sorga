@@ -441,10 +441,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get descending => 'Turun';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'Pass & Play';
 
   @override
-  String get multiplayerSetup => 'Pengaturan Multiplayer';
+  String get multiplayerSetup => 'Pengaturan Pass & Play';
 
   @override
   String get selectCategory => 'Pilih Kategori';
@@ -546,7 +546,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get perfectCompletions => 'Sempurna';
 
   @override
-  String get multiplayerGames => 'Multiplayer';
+  String get multiplayerGames => 'Pass & Play';
 
   @override
   String get memoryProgress => 'Progres Memory';

@@ -941,13 +941,13 @@ abstract class AppLocalizations {
   /// No description provided for @multiplayer.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer'**
+  /// **'Pass & Play'**
   String get multiplayer;
 
   /// No description provided for @multiplayerSetup.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer Setup'**
+  /// **'Pass & Play Setup'**
   String get multiplayerSetup;
 
   /// No description provided for @selectCategory.
@@ -1139,7 +1139,7 @@ abstract class AppLocalizations {
   /// No description provided for @multiplayerGames.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer'**
+  /// **'Pass & Play'**
   String get multiplayerGames;
 
   /// No description provided for @memoryProgress.

@@ -436,10 +436,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get descending => '내림차순';
 
   @override
-  String get multiplayer => '멀티플레이어';
+  String get multiplayer => '교대로 플레이';
 
   @override
-  String get multiplayerSetup => '멀티플레이어 설정';
+  String get multiplayerSetup => '교대로 플레이 설정';
 
   @override
   String get selectCategory => '카테고리 선택';
@@ -541,7 +541,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get perfectCompletions => '퍼펙트';
 
   @override
-  String get multiplayerGames => '멀티플레이어';
+  String get multiplayerGames => '교대로 플레이';
 
   @override
   String get memoryProgress => '메모리 진행';
