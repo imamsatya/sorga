@@ -8,6 +8,9 @@ class AppConstants {
   // 🔧 Development Mode - set to false for production
   static const bool isDevMode = true;
   
+  // 📢 Ads Toggle - set to false to disable all ads (AdMob suspended)
+  // Set to true when AdMob account is active again
+  static const bool adsEnabled = false;  
   // Level Constants
   static const int totalLevels = 600; // 500 regular + 100 knowledge
   
