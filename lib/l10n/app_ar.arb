@@ -1,0 +1,345 @@
+{
+  "@@locale": "ar",
+  "appTitle": "SORTIQ",
+  "home": "الرئيسية",
+  "play": "العب",
+  "achievements": "الإنجازات",
+  "statistics": "الإحصائيات",
+  "chooseCategory": "اختر الفئة",
+  "levelCompleted": "المستوى {id} مكتمل!",
+  "@levelCompleted": { "placeholders": { "id": {} } },
+  "sortItems": "رتب العناصر",
+  "sortNames": "رتب الأسماء",
+  "lowToHigh": "من الأقل للأكثر",
+  "highToLow": "من الأكثر للأقل",
+  "aToZ": "أ → ي",
+  "zToA": "ي → أ",
+  "nextLevel": "المستوى التالي",
+  "retry": "إعادة المحاولة",
+  "dailyChallenge": "التحدي اليومي",
+  "streak": "متتالي",
+  "perfect": "مثالي!",
+  "tryAgain": "حاول مجدداً",
+  "completed": "مكتمل",
+  "basicNumbers": "أرقام أساسية",
+  "formattedNumbers": "أرقام منسقة",
+  "timeFormats": "صيغ الوقت",
+  "nameSorting": "ترتيب الأسماء",
+  "mixedFormats": "صيغ مختلطة",
+  "knowledge": "معرفة",
+  "levels": "مستويات",
+  "share": "مشاركة",
+  "close": "إغلاق",
+  "yourTime": "وقتك",
+  "continueGame": "استمر",
+  "retryLevel": "إعادة المستوى",
+  "yourSortingParadise": "جنة الترتيب الخاصة بك",
+  "done": "تم",
+  "progress": "التقدم",
+  "time": "الوقت",
+  "day": "يوم",
+  "days": "أيام",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "systemDefault": "افتراضي النظام",
+  "soundEffects": "المؤثرات الصوتية",
+  "vibration": "الاهتزاز",
+  "check": "تحقق",
+  "level": "المستوى",
+  "items": "عناصر",
+  "sortAscending": "تصاعدي",
+  "sortDescending": "تنازلي",
+  "best": "الأفضل",
+  "sortXItems": "رتب {count} {type} {direction}",
+  "@sortXItems": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "playAgain": "العب مجدداً",
+  "startChallenge": "ابدأ التحدي",
+  "completedToday": "مكتمل اليوم!",
+  "comeBackTomorrow": "عد غداً لتحدٍ جديد",
+  "shareResult": "شارك النتيجة",
+  "shareAchievement": "شارك الإنجاز",
+  "canYouBeatMyTime": "هل يمكنك التغلب على وقتي؟",
+  "dailyStreak": "التتابع اليومي",
+  "dailyStreakActive": "التتابع اليومي نشط!",
+  "categoryProgress": "تقدم الفئة",
+  "completedLevels": "المستويات المكتملة",
+  "currentStreak": "التتابع الحالي",
+  "longestStreak": "أطول تتابع",
+  "totalPlayTime": "إجمالي وقت اللعب",
+  "totalAttempts": "إجمالي المحاولات",
+  "achievementsTitle": "الإنجازات",
+  "statisticsTitle": "الإحصائيات",
+  "selectLevel": "اختر المستوى",
+  "about": "حول",
+  "appDescription": "SORTIQ - ما مدى سرعة عقلك؟",
+  "version": "الإصدار",
+  "levelsDescription": "1100 مستوى في 11 فئة. درّب عقلك بالأرقام والوقت والأسماء والمزيد!",
+  "dragAndDrop": "اسحب وأفلت",
+  "dragItemsDescription": "اسحب العناصر لترتيبها بالترتيب الصحيح",
+  "skip": "تخطي",
+  "next": "التالي",
+  "shift": "إزاحة",
+  "swap": "تبديل",
+  "reset": "إعادة تعيين",
+  "daily": "يومي",
+  "orderNotRight": "الترتيب لم يكن صحيحاً تماماً.",
+  "chancesLeft": "لديك {count} فرصة متبقية!",
+  "@chancesLeft": { "placeholders": { "count": {} } },
+  "sort": "رتب",
+  "asc": "تصاعدي",
+  "desc": "تنازلي",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "sunday": "الأحد",
+  "monday": "الاثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "getReady": "استعد!",
+  "attempt": "محاولة",
+  "noMoreChances": "لا مزيد من الفرص. حاول مجدداً!",
+  "xOfYCompleted": "{x} / {y} مكتمل",
+  "@xOfYCompleted": { "placeholders": { "x": {}, "y": {} } },
+  "sortTheItems": "رتب العناصر",
+  "tapCheckWhenDone": "اضغط تحقق عند الانتهاء.",
+  "useDragMode": "استخدم وضع الإزاحة أو التبديل",
+  "shiftModeDescription": "وضع الإزاحة يحرك العناصر. وضع التبديل يغير المواقع.",
+  "youreReady": "أنت جاهز!",
+  "startSorting": "ابدأ الترتيب واهزم أفضل وقتك!",
+  "bestTime": "أفضل وقت",
+  "attempts": "المحاولات",
+  "iCompletedLevel": "أكملت هذا المستوى في SORTIQ! هل يمكنك التغلب على وقتي؟",
+  "dailyChallengeShare": "🎯 تحدي SORTIQ اليومي",
+  "shiftAndSwap": "إزاحة وتبديل",
+  "shiftAndSwapDescription": "استخدم وضع الإزاحة لتحريك العناصر خطوة بخطوة، أو التبديل لتغيير المواقع",
+  "checkAnswer": "تحقق من الإجابة",
+  "checkAnswerDescription": "عندما تكون جاهزاً، اضغط تحقق للتأكد من إجابتك. حظاً سعيداً!",
+  "startPlaying": "ابدأ اللعب",
+  "january": "يناير",
+  "february": "فبراير",
+  "march": "مارس",
+  "april": "أبريل",
+  "may": "مايو",
+  "june": "يونيو",
+  "july": "يوليو",
+  "august": "أغسطس",
+  "september": "سبتمبر",
+  "october": "أكتوبر",
+  "november": "نوفمبر",
+  "december": "ديسمبر",
+  "numbers": "أرقام",
+  "times": "أوقات",
+  "names": "أسماء",
+  "imReady": "أنا جاهز 👁️",
+  "timeUp": "انتهى الوقت!",
+  "tapReadyToReveal": "اضغط \"أنا جاهز\" لإظهار العناصر",
+  "exitGame": "الخروج من اللعبة؟",
+  "exitGameConfirm": "سيتم فقدان تقدمك.",
+  "memorized": "حفظتها!",
+  "memoryMode": "الذاكرة",
+  "memorizeTime": "احفظ",
+  "sortTime": "رتب",
+  "totalTime": "الوقت الإجمالي",
+  "completeLevelToUnlock": "أكمل المستوى {level} في {category} لفتح القفل",
+  "@completeLevelToUnlock": { "placeholders": { "level": {}, "category": {} } },
+  "sortDescription": "رتب {count} {type} {direction}",
+  "@sortDescription": { "placeholders": { "count": {}, "type": {}, "direction": {} } },
+  "ascending": "تصاعدي",
+  "descending": "تنازلي",
+  "multiplayer": "تمرير واللعب",
+  "multiplayerSetup": "إعداد تمرير واللعب",
+  "selectCategory": "اختر الفئة",
+  "itemCount": "عدد العناصر",
+  "playerCount": "عدد اللاعبين",
+  "playerName": "اسم اللاعب {number}",
+  "@playerName": { "placeholders": { "number": {} } },
+  "startGame": "ابدأ اللعبة",
+  "getReadyPlayer": "استعد يا {name}!",
+  "@getReadyPlayer": { "placeholders": { "name": {} } },
+  "yourTurn": "دورك",
+  "tapToStart": "اضغط للبدء",
+  "giveUp": "استسلم",
+  "failed": "فشل",
+  "failedNextPlayer": "فشل! التالي...",
+  "continueLeft": "استمر ({count} متبقي)",
+  "@continueLeft": { "placeholders": { "count": {} } },
+  "draw": "تعادل!",
+  "everyoneGaveUp": "الجميع استسلم!",
+  "everyoneFailed": "الجميع فشل!",
+  "noOneCompleted": "لم يكمل أحد!",
+  "leaderboard": "قائمة المتصدرين",
+  "localMultiplayer": "تمرير واللعب",
+  "players": "اللاعبون",
+  "addPlayer": "إضافة لاعب",
+  "removePlayer": "إزالة",
+  "category": "الفئة",
+  "ready": "جاهز؟",
+  "go": "انطلق!",
+  "complete": "مكتمل",
+  "unlocked": "مفتوح",
+  "locked": "مغلق",
+  "secretAchievement": "إنجاز سري",
+  "dailyChallenges": "التحديات اليومية",
+  "dailyCompleted": "اليومي مكتمل",
+  "perfectCompletions": "مثالي",
+  "multiplayerGames": "تمرير واللعب",
+  "memoryProgress": "تقدم الذاكرة",
+  
+  "achFirstSteps": "الخطوات الأولى",
+  "achFirstStepsDesc": "أكمل مستواك الأول",
+  "achGettingStarted": "البداية",
+  "achGettingStartedDesc": "أكمل 10 مستويات",
+  "achOnARoll": "على المسار الصحيح",
+  "achOnARollDesc": "أكمل 50 مستوى",
+  "achCenturyClub": "نادي المئة",
+  "achCenturyClubDesc": "أكمل 100 مستوى",
+  "achHalfwayThere": "في منتصف الطريق",
+  "achHalfwayThereDesc": "أكمل 500 مستوى",
+  "achSortingMaster": "سيد الترتيب",
+  "achSortingMasterDesc": "أكمل جميع 600 مستوى",
+  
+  "achConsistent": "مستمر",
+  "achConsistentDesc": "العب 3 أيام متتالية",
+  "achWeekWarrior": "محارب الأسبوع",
+  "achWeekWarriorDesc": "العب 7 أيام متتالية",
+  "achMonthlyMaster": "سيد الشهر",
+  "achMonthlyMasterDesc": "العب 30 يوماً متتالياً",
+  "achLegendaryStreak": "تتابع أسطوري",
+  "achLegendaryStreakDesc": "العب 100 يوم متتالي",
+  
+  "achSpeedDemon": "شيطان السرعة",
+  "achSpeedDemonDesc": "أكمل مستوى في أقل من 5 ثوانٍ",
+  "achLightningFast": "سريع كالبرق",
+  "achLightningFastDesc": "أكمل مستوى في أقل من 3 ثوانٍ",
+  
+  "achBasicExpert": "خبير الأساسيات",
+  "achBasicExpertDesc": "أكمل 100 مستوى أساسي",
+  "achFormatPro": "محترف التنسيق",
+  "achFormatProDesc": "أكمل 100 مستوى منسق",
+  "achTimeLord": "سيد الوقت",
+  "achTimeLordDesc": "أكمل 100 مستوى وقت",
+  "achAlphabetizer": "مرتب الحروف",
+  "achAlphabetizerDesc": "أكمل 100 مستوى أسماء",
+  "achMixMaster": "سيد المزج",
+  "achMixMasterDesc": "أكمل 100 مستوى مختلط",
+  "achKnowledgeKing": "ملك المعرفة",
+  "achKnowledgeKingDesc": "أكمل 100 مستوى معرفة",
+  
+  "achBasicPerfectionist": "كمالي الأساسيات",
+  "achBasicPerfectionistDesc": "100% مستويات أساسية",
+  "achFormatPerfectionist": "كمالي التنسيق",
+  "achFormatPerfectionistDesc": "100% مستويات منسقة",
+  "achTimePerfectionist": "كمالي الوقت",
+  "achTimePerfectionistDesc": "100% مستويات وقت",
+  "achNamesPerfectionist": "كمالي الأسماء",
+  "achNamesPerfectionistDesc": "100% مستويات أسماء",
+  "achMixedPerfectionist": "كمالي المختلط",
+  "achMixedPerfectionistDesc": "100% مستويات مختلطة",
+  "achKnowledgePerfectionist": "كمالي المعرفة",
+  "achKnowledgePerfectionistDesc": "100% مستويات معرفة",
+  
+  "achMemoryNovice": "مبتدئ الذاكرة",
+  "achMemoryNoviceDesc": "10 مستويات ذاكرة",
+  "achMemoryExpert": "خبير الذاكرة",
+  "achMemoryExpertDesc": "50 مستوى ذاكرة",
+  "achMemoryMaster": "سيد الذاكرة",
+  "achMemoryMasterDesc": "100 مستوى ذاكرة",
+  
+  "achPerfectRecall": "استذكار مثالي",
+  "achPerfectRecallDesc": "5 مستويات ذاكرة مثالية",
+  "achMemoryPro": "محترف الذاكرة",
+  "achMemoryProDesc": "10 مستويات ذاكرة مثالية",
+  "achMemoryGenius": "عبقري الذاكرة",
+  "achMemoryGeniusDesc": "25 مستوى ذاكرة مثالي",
+  "achEideticMemory": "ذاكرة فوتوغرافية",
+  "achEideticMemoryDesc": "50 مستوى ذاكرة مثالي",
+  "achPhotographicMemory": "ذاكرة خارقة",
+  "achPhotographicMemoryDesc": "100 مستوى ذاكرة مثالي",
+  
+  "achMemoryBasicMaster": "سيد ذاكرة الأساسيات",
+  "achMemoryBasicMasterDesc": "جميع الأساسيات في الذاكرة",
+  "achMemoryFormatMaster": "سيد ذاكرة التنسيق",
+  "achMemoryFormatMasterDesc": "جميع المنسق في الذاكرة",
+  "achMemoryTimeMaster": "سيد ذاكرة الوقت",
+  "achMemoryTimeMasterDesc": "جميع الوقت في الذاكرة",
+  "achMemoryNamesMaster": "سيد ذاكرة الأسماء",
+  "achMemoryNamesMasterDesc": "جميع الأسماء في الذاكرة",
+  "achMemoryMixedMaster": "سيد ذاكرة المختلط",
+  "achMemoryMixedMasterDesc": "جميع المختلط في الذاكرة",
+  
+  "achDailyStarter": "بداية يومية",
+  "achDailyStarterDesc": "أول تحدي يومي",
+  "achWeeklyChallenger": "متحدي الأسبوع",
+  "achWeeklyChallengerDesc": "7 تحديات يومية",
+  "achMonthlyChallenger": "متحدي الشهر",
+  "achMonthlyChallengerDesc": "30 تحدي يومي",
+  "achDailyLegend": "أسطورة يومية",
+  "achDailyLegendDesc": "100 تحدي يومي",
+  
+  "achPerfectDay": "يوم مثالي",
+  "achPerfectDayDesc": "5 يوميات مثالية",
+  "achPerfectWeek": "أسبوع مثالي",
+  "achPerfectWeekDesc": "10 يوميات مثالية",
+  "achPerfectStreak": "تتابع مثالي",
+  "achPerfectStreakDesc": "25 يومية مثالية",
+  "achFlawlessPlayer": "لاعب بلا أخطاء",
+  "achFlawlessPlayerDesc": "50 يومية مثالية",
+  "achDailyPerfectionist": "كمالي يومي",
+  "achDailyPerfectionistDesc": "100 يومية مثالية",
+  
+  "achPartyHost": "مضيف الحفلة",
+  "achPartyHostDesc": "استضف 10 ألعاب متعددة",
+  "achSocialGamer": "لاعب اجتماعي",
+  "achSocialGamerDesc": "استضف 25 لعبة متعددة",
+  "achMultiplayerLegend": "أسطورة متعدد اللاعبين",
+  "achMultiplayerLegendDesc": "استضف 50 لعبة متعددة",
+  
+  "achPerfectRun": "جري مثالي",
+  "achPerfectRunDesc": "10 مستويات بدون أخطاء",
+  "achDedicatedPlayer": "لاعب متفاني",
+  "achDedicatedPlayerDesc": "العب ساعة إجمالياً",
+  "achMarathonRunner": "عداء الماراثون",
+  "achMarathonRunnerDesc": "العب 5 ساعات إجمالياً",
+  "achTotalMaster": "السيد الشامل",
+  "achTotalMasterDesc": "1100 مستوى (عادي + ذاكرة)",
+  "achCompletionist": "المكمل",
+  "achCompletionistDesc": "افتح جميع الإنجازات",
+  
+  "achNightOwl": "بومة الليل",
+  "achNightOwlDesc": "العب بين منتصف الليل و5 صباحاً",
+  "achEarlyBird": "الطائر المبكر",
+  "achEarlyBirdDesc": "العب بين 5 و7 صباحاً",
+  "achNewYearSorter": "مرتب العام الجديد",
+  "achNewYearSorterDesc": "العب في 1 يناير",
+  "achNeverGiveUp": "لا تستسلم أبداً",
+  "achNeverGiveUpDesc": "استخدم إعادة المحاولة 50 مرة",
+  "achInstantWin": "فوز فوري",
+  "achInstantWinDesc": "أكمل في أقل من ثانيتين",
+  "achDescendingFan": "محب التنازلي",
+  "achDescendingFanDesc": "20 تنازلي متتالي",
+  "achSwapMaster": "سيد التبديل",
+  "achSwapMasterDesc": "10 مستويات بالتبديل فقط",
+  "achShiftMaster": "سيد الإزاحة",
+  "achShiftMasterDesc": "10 مستويات بالإزاحة فقط",
+  
+  "watchAd": "شاهد إعلاناً لفرصة إضافية",
+  "goPro": "اشترك برو",
+  
+  "noAds": "بدون إعلانات",
+  "noAdsDesc": "إزالة جميع الإعلانات",
+  "unlimitedAttempts": "محاولات غير محدودة",
+  "unlimitedAttemptsDesc": "لن تنفد فرصك أبداً",
+  "proBadge": "شارة برو",
+  "proBadgeDesc": "أظهر حالتك المميزة",
+  "supportDev": "ادعم المطور",
+  "supportDevDesc": "ساعدنا في إنشاء المزيد",
+  
+  "whatYouGet": "ما ستحصل عليه",
+  "processing": "جارٍ المعالجة...",
+  "purchaseSuccess": "مرحباً بك في برو!",
+  "youAreNowPro": "لديك الآن وصول غير محدود لجميع الميزات!",
+  "ok": "حسناً",
+  "restorePurchases": "استعادة المشتريات",
+  "noPurchasesToRestore": "لم يتم العثور على مشتريات سابقة",
+  "alreadyPro": "أنت برو بالفعل!"
+}

@@ -101,4 +101,7 @@ Version 1.0.0 - Initial Release
 - German (Deutsch)
 - Japanese (日本語)
 - Korean (한국어)
+- Portuguese (Português)
 - Chinese Simplified (简体中文)
+- Hindi (हिन्दी)
+- Arabic (العربية)
