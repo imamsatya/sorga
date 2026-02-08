@@ -157,7 +157,7 @@ class ProService {
   ProductDetails? get proProduct => _proProduct;
   
   /// Get formatted price string
-  String get priceString => _proProduct?.price ?? '\$4.99';
+  String get priceString => _proProduct?.price ?? '\$2.99';
   
   /// Set Pro status (for testing or after purchase)
   Future<void> setProStatus(bool value) async {
