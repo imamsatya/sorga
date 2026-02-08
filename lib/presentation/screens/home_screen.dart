@@ -152,7 +152,7 @@ class HomeScreen extends ConsumerWidget {
                         // Logo/Title Area
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                         _buildLogo(scaleFactor),
-                        SizedBox(height: 16 * scaleFactor),
+                        SizedBox(height: 4 * scaleFactor),
                         _buildTitle(scaleFactor),
                         SizedBox(height: 8 * scaleFactor),
                         _buildSubtitle(context, scaleFactor),
@@ -193,24 +193,24 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildLogo(double scale) {
     return Container(
-      width: 180 * scale,
-      height: 180 * scale,
-      decoration: BoxDecoration(
-        // Subtle glow effect behind the logo
-        boxShadow: [
-          // Center glow (subtle ambient)
-          BoxShadow(
-            color: AppTheme.accentColor.withValues(alpha: 0.15),
-            blurRadius: 50 * scale,
-            spreadRadius: 10 * scale,
-          ),
-          BoxShadow(
-            color: AppTheme.warningColor.withValues(alpha: 0.1),
-            blurRadius: 60 * scale,
-            spreadRadius: 15 * scale,
-          ),
-        ],
-      ),
+      width: 320 * scale,
+      height: 320 * scale,
+      // decoration: BoxDecoration(
+      //   // Subtle glow effect behind the logo
+      //   boxShadow: [
+      //     // Center glow (subtle ambient)
+      //     BoxShadow(
+      //       color: AppTheme.accentColor.withValues(alpha: 0.15),
+      //       blurRadius: 50 * scale,
+      //       spreadRadius: 10 * scale,
+      //     ),
+      //     BoxShadow(
+      //       color: AppTheme.warningColor.withValues(alpha: 0.1),
+      //       blurRadius: 60 * scale,
+      //       spreadRadius: 15 * scale,
+      //     ),
+      //   ],
+      // ),
       child: Image.asset(
         'assets/icons/app_icon.png',
         fit: BoxFit.contain,
