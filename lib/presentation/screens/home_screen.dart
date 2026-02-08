@@ -155,11 +155,16 @@ class HomeScreen extends ConsumerWidget {
                         // Pull title closer to logo (compensate for image padding)
                         Transform.translate(
                           offset: Offset(0, -60 * scaleFactor),
-                          child: _buildTitle(scaleFactor),
+                          child: Column(
+                            children: [
+                              _buildTitle(scaleFactor),
+                              SizedBox(height: 4 * scaleFactor),
+                              _buildSubtitle(context, scaleFactor),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 8 * scaleFactor),
-                        _buildSubtitle(context, scaleFactor),
-                        const Spacer(flex: 1),
+                        // Reduced spacer (compensate for Transform offset)
+                        SizedBox(height: 0),
                         
                         // Stats Card
                         statsAsync.when(
