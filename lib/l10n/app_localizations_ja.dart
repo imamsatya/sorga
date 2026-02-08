@@ -395,6 +395,21 @@ class AppLocalizationsJa extends AppLocalizations {
   String get names => '名前';
 
   @override
+  String get imReady => '準備OK 👁️';
+
+  @override
+  String get timeUp => '時間切れ！';
+
+  @override
+  String get tapReadyToReveal => '\"準備OK\" をタップしてアイテムを表示';
+
+  @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => '覚えた！';
 
   @override
@@ -426,10 +441,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get descending => '降順';
 
   @override
-  String get multiplayer => 'マルチプレイヤー';
+  String get multiplayer => 'パス＆プレイ';
 
   @override
-  String get multiplayerSetup => 'マルチプレイヤー設定';
+  String get multiplayerSetup => 'パス＆プレイ設定';
 
   @override
   String get selectCategory => 'カテゴリ選択';
@@ -531,7 +546,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get perfectCompletions => 'パーフェクト';
 
   @override
-  String get multiplayerGames => 'マルチプレイ';
+  String get multiplayerGames => 'パス＆プレイ';
 
   @override
   String get memoryProgress => 'メモリー進捗';

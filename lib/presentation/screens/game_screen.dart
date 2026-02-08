@@ -145,7 +145,66 @@ class _GameScreenState extends ConsumerState<GameScreen> {
       );
     }
     
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        
+        // Check if we can actually pop (have a route to go back to)
+        final navigator = Navigator.of(context);
+        if (!navigator.canPop()) {
+          // No route to pop to - go to home instead
+          if (context.mounted) {
+            context.go('/');
+          }
+          return;
+        }
+        
+        // Show confirmation dialog before leaving game
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => AlertDialog(
+            backgroundColor: AppTheme.surfaceColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text(
+              'Exit Game?',
+              style: TextStyle(color: AppTheme.textPrimary),
+            ),
+            content: const Text(
+              'Your progress will be lost.',
+              style: TextStyle(color: AppTheme.textSecondary),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppTheme.textMuted),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text(
+                  'Exit',
+                  style: TextStyle(color: AppTheme.errorColor),
+                ),
+              ),
+            ],
+          ),
+        );
+        if (shouldPop == true && context.mounted) {
+          // Use go_router's pop or go to home
+          if (navigator.canPop()) {
+            context.pop();
+          } else {
+            context.go('/');
+          }
+        }
+      },
+      child: Scaffold(
       body: Stack(
         children: [
           Container(
@@ -267,8 +326,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildModeToggle() {
     return Container(
@@ -553,61 +613,116 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final categoryColor = _getCategoryColor(gameState.level.category);
     final totalItems = items.length;
     
+    // Hide items during "I'm Ready" phase (before countdown starts)
+    if (gameState.phase == GamePhase.memorizing && !gameState.isMemorizeCountdownActive) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.visibility_off,
+                size: 64,
+                color: AppTheme.textMuted.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '$totalItems items',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: categoryColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                AppLocalizations.of(context)?.tapReadyToReveal ?? 'Tap "I\'m Ready" to reveal',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.textMuted.withValues(alpha: 0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       child: LayoutBuilder(
         builder: (context, constraints) {
           final double availableWidth = constraints.maxWidth;
+          final double availableHeight = constraints.maxHeight;
           
-          // Responsive column count based on screen width
-          // Phone: 5 columns, Tablet: 7 columns, Large tablet: 8 columns
-          int crossAxisCount;
-          if (availableWidth > 800) {
-            crossAxisCount = 8;
-          } else if (availableWidth > 500) {
-            crossAxisCount = 7;
-          } else {
-            crossAxisCount = 5;
+          // Calculate optimal grid that fits ALL items without scrolling
+          // Try different column counts and pick the one that gives largest cards
+          int bestCols = 4;
+          double bestCardSize = 0;
+          
+          for (int cols = 3; cols <= 10; cols++) {
+            final int rows = (totalItems / cols).ceil();
+            final double spacing = 6.0;
+            
+            // Calculate max card width for this column count
+            final double maxCardWidth = (availableWidth - (cols - 1) * spacing) / cols;
+            // Calculate max card height for this row count
+            final double maxCardHeight = (availableHeight - (rows - 1) * spacing - 20) / rows;
+            
+            // Card size is limited by the smaller dimension
+            final double cardSize = maxCardWidth < maxCardHeight ? maxCardWidth : maxCardHeight;
+            
+            // Check if this fits and gives larger cards
+            if (cardSize > 30 && cardSize > bestCardSize) {
+              bestCardSize = cardSize;
+              bestCols = cols;
+            }
           }
           
-          const double spacing = 8.0;
+          // Use the best column count found
+          final int crossAxisCount = bestCols;
           
-          // Calculate width based on available space and column count
-          final double totalSpacing = (crossAxisCount - 1) * spacing;
-          final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
+          // Spacing - slightly reduced for tighter grid
+          final double spacing = 6.0;
           
-          // Dynamic height and font size
-          final double cardHeight = cardWidth * 1.2; // 1.2 aspect ratio
-          final double fontSize = cardWidth * 0.22; // Proportional font size
+          // Recalculate card dimensions with best columns
+          final int rowCount = (totalItems / crossAxisCount).ceil();
+          final double maxCardWidth = (availableWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
+          final double maxCardHeight = (availableHeight - (rowCount - 1) * spacing - 20) / rowCount;
           
-          return SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: spacing,
-                  runSpacing: spacing,
-                  alignment: WrapAlignment.center,
-                  children: List.generate(items.length, (index) {
-                    final item = items[index];
-                    // Disable drag during memorizing phase
-                    final bool canDrag = gameState.phase != GamePhase.memorizing;
-                    // Get original position for display (memory mode: card number moves with card)
-                    final int displayIndex = gameState.getOriginalIndex(item);
-                    return _buildDraggableCard(
-                      item, 
-                      index, 
-                      categoryColor, 
-                      cardWidth, 
-                      cardHeight, 
-                      fontSize,
-                      labelsVisible: gameState.labelsVisible,
-                      canDrag: canDrag,
-                      displayIndex: displayIndex,
-                    );
-                  }),
-                ),
-              ],
+          // Use the smaller dimension to ensure it fits both ways
+          final double cardSize = maxCardWidth < maxCardHeight ? maxCardWidth : maxCardHeight;
+          final double cardWidth = cardSize;
+          final double cardHeight = cardSize; // Square cards
+          
+          // Proportional font size
+          final double fontSize = cardWidth * 0.22;
+          
+          return Center(
+            child: Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              alignment: WrapAlignment.center,
+              children: List.generate(items.length, (index) {
+                final item = items[index];
+                // Disable drag during memorizing phase
+                final bool canDrag = gameState.phase != GamePhase.memorizing;
+                // Get original position for display (memory mode: card number moves with card)
+                final int displayIndex = gameState.getOriginalIndex(item);
+                return _buildDraggableCard(
+                  item, 
+                  index, 
+                  categoryColor, 
+                  cardWidth, 
+                  cardHeight, 
+                  fontSize,
+                  labelsVisible: gameState.labelsVisible,
+                  canDrag: canDrag,
+                  displayIndex: displayIndex,
+                );
+              }),
             ),
           );
         },
@@ -820,88 +935,237 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: categoryColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              '$cardNumber',
-              style: TextStyle(
-                color: categoryColor,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Card number badge - scaled to fit
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                decoration: BoxDecoration(
+                  color: categoryColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$cardNumber',
+                  style: TextStyle(
+                    color: categoryColor,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-              labelsVisible ? item.displayValue : '?',
-              style: TextStyle(
-                color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
-                fontSize: labelsVisible ? fontSize : fontSize * 1.5,
-                fontWeight: FontWeight.w600,
+              const SizedBox(height: 2),
+              // Value text - fitted to available space
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: Text(
+                      labelsVisible ? item.displayValue : '?',
+                      style: TextStyle(
+                        color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                    ),
+                  ),
+                ),
               ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildBottomButtons(GameState gameState) {
-    // Memory mode: Memorizing phase shows "I've Memorized" button
+    // Memory mode: Memorizing phase
     if (gameState.phase == GamePhase.memorizing) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: GestureDetector(
-          onTap: () {
-            _hapticService.selectionClick();
-            ref.read(gameStateProvider.notifier).finishMemorizing();
-          },
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+      // Before countdown starts - show "I'm Ready" button
+      if (!gameState.isMemorizeCountdownActive) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Time available indicator
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceColor.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.psychology, color: Colors.white, size: 24),
-                const SizedBox(width: 10),
-                Builder(
-                  builder: (context) => Text(
-                    AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.timer_outlined, color: AppTheme.textMuted, size: 16),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${gameState.memorizeTimeLimit.inSeconds}s available',
+                      style: const TextStyle(
+                        color: AppTheme.textMuted,
+                        fontSize: 14,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              // I'm Ready button
+              GestureDetector(
+                onTap: () {
+                  _hapticService.selectionClick();
+                  ref.read(gameStateProvider.notifier).startMemorizeCountdown();
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.visibility, color: Colors.white, size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)?.imReady ?? "I'm Ready 👁️",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
-              ],
-            ),
+              ),
+            ],
           ),
+        );
+      }
+      
+      // After countdown starts - show timer + "I've Memorized" button
+      final progress = gameState.memorizeTimeRemaining.inMilliseconds / 
+                       gameState.memorizeTimeLimit.inMilliseconds;
+      final remainingSeconds = gameState.memorizeTimeRemaining.inSeconds;
+      
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Countdown timer display
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.surfaceColor,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: remainingSeconds <= 3 
+                      ? AppTheme.errorColor.withValues(alpha: 0.5)
+                      : AppTheme.primaryColor.withValues(alpha: 0.3),
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.timer,
+                        color: remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                        size: 28,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '$remainingSeconds',
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Progress bar
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 6,
+                      backgroundColor: AppTheme.textMuted.withValues(alpha: 0.2),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        remainingSeconds <= 3 ? AppTheme.errorColor : AppTheme.primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // I've Memorized button
+            GestureDetector(
+              onTap: () {
+                _hapticService.selectionClick();
+                ref.read(gameStateProvider.notifier).finishMemorizing();
+              },
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                decoration: BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.psychology, color: Colors.white, size: 24),
+                    const SizedBox(width: 10),
+                    Text(
+                      AppLocalizations.of(context)?.memorized ?? "I've Memorized!",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }

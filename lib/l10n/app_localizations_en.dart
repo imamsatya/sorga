@@ -401,6 +401,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get names => 'Names';
 
   @override
+  String get imReady => 'I\'m Ready 👁️';
+
+  @override
+  String get timeUp => 'Time\'s Up!';
+
+  @override
+  String get tapReadyToReveal => 'Tap \"I\'m Ready\" to reveal items';
+
+  @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => 'I\'ve Memorized!';
 
   @override
@@ -432,10 +447,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get descending => 'DESC';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'Pass & Play';
 
   @override
-  String get multiplayerSetup => 'Multiplayer Setup';
+  String get multiplayerSetup => 'Pass & Play Setup';
 
   @override
   String get selectCategory => 'Select Category';
@@ -537,7 +552,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perfectCompletions => 'Perfect';
 
   @override
-  String get multiplayerGames => 'Multiplayer';
+  String get multiplayerGames => 'Pass & Play';
 
   @override
   String get memoryProgress => 'Memory Progress';

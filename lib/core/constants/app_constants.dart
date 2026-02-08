@@ -6,13 +6,16 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
-  static const bool isDevMode = true;
+  static const bool isDevMode = false;
   
+  // 📢 Ads Toggle - set to false to disable all ads (AdMob suspended)
+  // Set to true when AdMob account is active again
+  static const bool adsEnabled = true;  
   // Level Constants
   static const int totalLevels = 600; // 500 regular + 100 knowledge
   
   // Memory Mode - unlock requirement (complete this many regular levels)
-  static const int memoryUnlockLevel = 1;
+  static const int memoryUnlockLevel = 30;
   
   // Level Ranges per Category (100 levels each for non-knowledge)
   static const int basicNumbersStart = 1;
@@ -52,4 +55,19 @@ class AppConstants {
   
   // In-App Purchase
   static const String iapProductId = 'sortiq_pro';
+  
+  // Memory Mode Timer
+  // Formula: baseTime + (itemCount × timePerItem × complexityMultiplier)
+  static const double memoryBaseTime = 3.0; // seconds
+  static const double memoryTimePerItem = 1.5; // seconds per item
+  
+  // Category complexity multipliers for memory timer
+  static const Map<String, double> categoryComplexity = {
+    'basic': 1.0,      // Simple digits (1, 2, 3)
+    'formatted': 1.5,  // Commas, decimals (1,234.56)
+    'time': 1.8,       // Time formats (08:30 AM)
+    'names': 1.3,      // Alphabetical names
+    'mixed': 2.0,      // Multiple formats mixed
+    'knowledge': 1.4,  // Visual/factual items
+  };
 }

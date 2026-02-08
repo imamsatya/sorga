@@ -401,6 +401,21 @@ class AppLocalizationsId extends AppLocalizations {
   String get names => 'Nama';
 
   @override
+  String get imReady => 'Saya Siap 👁️';
+
+  @override
+  String get timeUp => 'Waktu Habis!';
+
+  @override
+  String get tapReadyToReveal => 'Ketuk \"Saya Siap\" untuk melihat item';
+
+  @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => 'Sudah Dihafal!';
 
   @override
@@ -432,10 +447,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get descending => 'Turun';
 
   @override
-  String get multiplayer => 'Multiplayer';
+  String get multiplayer => 'Pass & Play';
 
   @override
-  String get multiplayerSetup => 'Pengaturan Multiplayer';
+  String get multiplayerSetup => 'Pengaturan Pass & Play';
 
   @override
   String get selectCategory => 'Pilih Kategori';
@@ -537,7 +552,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get perfectCompletions => 'Sempurna';
 
   @override
-  String get multiplayerGames => 'Multiplayer';
+  String get multiplayerGames => 'Pass & Play';
 
   @override
   String get memoryProgress => 'Progres Memory';

@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../constants/app_constants.dart';
 
 /// Service to manage AdMob ads
 /// Only works on iOS and Android - gracefully disabled on web
+/// Also respects AppConstants.adsEnabled flag
 class AdService {
   static AdService? _instance;
   static AdService get instance => _instance ??= AdService._();
@@ -30,8 +32,15 @@ class AdService {
   bool get isInitialized => _isInitialized;
   bool get isLoading => _isRewardedAdLoading;
   
-  /// Check if ads are supported on current platform
-  static bool get isSupported => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+  /// Check if ads are supported and enabled
+  /// Returns false if:
+  /// - Platform is web
+  /// - Platform is not Android/iOS
+  /// - AppConstants.adsEnabled is false (AdMob suspended)
+  static bool get isSupported => 
+      AppConstants.adsEnabled && 
+      !kIsWeb && 
+      (Platform.isAndroid || Platform.isIOS);
   
   // Ad Unit IDs
   // Android: Production IDs | iOS: Test IDs (update when iOS is set up)

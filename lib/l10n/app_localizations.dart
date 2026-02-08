@@ -5,14 +5,17 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_hi.dart';
 import 'app_localizations_id.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_pt.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -100,14 +103,17 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
     Locale('es'),
     Locale('fr'),
+    Locale('hi'),
     Locale('id'),
     Locale('ja'),
     Locale('ko'),
     Locale('pt'),
+    Locale('zh'),
   ];
 
   /// No description provided for @appTitle.
@@ -866,6 +872,36 @@ abstract class AppLocalizations {
   /// **'Names'**
   String get names;
 
+  /// No description provided for @imReady.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m Ready 👁️'**
+  String get imReady;
+
+  /// No description provided for @timeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Time\'s Up!'**
+  String get timeUp;
+
+  /// No description provided for @tapReadyToReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"I\'m Ready\" to reveal items'**
+  String get tapReadyToReveal;
+
+  /// No description provided for @exitGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit Game?'**
+  String get exitGame;
+
+  /// No description provided for @exitGameConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Your progress will be lost.'**
+  String get exitGameConfirm;
+
   /// No description provided for @memorized.
   ///
   /// In en, this message translates to:
@@ -923,13 +959,13 @@ abstract class AppLocalizations {
   /// No description provided for @multiplayer.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer'**
+  /// **'Pass & Play'**
   String get multiplayer;
 
   /// No description provided for @multiplayerSetup.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer Setup'**
+  /// **'Pass & Play Setup'**
   String get multiplayerSetup;
 
   /// No description provided for @selectCategory.
@@ -1121,7 +1157,7 @@ abstract class AppLocalizations {
   /// No description provided for @multiplayerGames.
   ///
   /// In en, this message translates to:
-  /// **'Multiplayer'**
+  /// **'Pass & Play'**
   String get multiplayerGames;
 
   /// No description provided for @memoryProgress.
@@ -1994,14 +2030,17 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+    'ar',
     'de',
     'en',
     'es',
     'fr',
+    'hi',
     'id',
     'ja',
     'ko',
     'pt',
+    'zh',
   ].contains(locale.languageCode);
 
   @override
@@ -2011,6 +2050,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'de':
       return AppLocalizationsDe();
     case 'en':
@@ -2019,6 +2060,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'hi':
+      return AppLocalizationsHi();
     case 'id':
       return AppLocalizationsId();
     case 'ja':
@@ -2027,6 +2070,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsKo();
     case 'pt':
       return AppLocalizationsPt();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

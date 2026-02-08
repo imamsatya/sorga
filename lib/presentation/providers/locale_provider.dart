@@ -12,6 +12,9 @@ const supportedLocales = [
   Locale('ja'), // Japanese
   Locale('ko'), // Korean
   Locale('id'), // Indonesian
+  Locale('zh'), // Chinese Simplified
+  Locale('hi'), // Hindi
+  Locale('ar'), // Arabic
 ];
 
 /// Map of locale codes to display names
@@ -24,6 +27,9 @@ const localeDisplayNames = {
   'ja': '日本語',
   'ko': '한국어',
   'id': 'Bahasa Indonesia',
+  'zh': '简体中文',
+  'hi': 'हिन्दी',
+  'ar': 'العربية',
 };
 
 /// Locale state notifier for in-app language switching

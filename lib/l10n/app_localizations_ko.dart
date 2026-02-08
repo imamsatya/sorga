@@ -396,6 +396,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get names => '이름';
 
   @override
+  String get imReady => '준비됐어요 👁️';
+
+  @override
+  String get timeUp => '시간 초과!';
+
+  @override
+  String get tapReadyToReveal => '\"준비됐어요\" 를 누르면 항목이 표시됨';
+
+  @override
+  String get exitGame => 'Exit Game?';
+
+  @override
+  String get exitGameConfirm => 'Your progress will be lost.';
+
+  @override
   String get memorized => '외웠어요!';
 
   @override
@@ -427,10 +442,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get descending => '내림차순';
 
   @override
-  String get multiplayer => '멀티플레이어';
+  String get multiplayer => '교대로 플레이';
 
   @override
-  String get multiplayerSetup => '멀티플레이어 설정';
+  String get multiplayerSetup => '교대로 플레이 설정';
 
   @override
   String get selectCategory => '카테고리 선택';
@@ -532,7 +547,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get perfectCompletions => '퍼펙트';
 
   @override
-  String get multiplayerGames => '멀티플레이어';
+  String get multiplayerGames => '교대로 플레이';
 
   @override
   String get memoryProgress => '메모리 진행';

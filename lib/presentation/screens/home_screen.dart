@@ -31,43 +31,18 @@ class HomeScreen extends ConsumerWidget {
                 left: 16,
                 child: _buildStreakBadge(gameStats.currentStreak),
               ),
-              // Settings Row at top right
+              // Settings Row at top right (simplified)
               Positioned(
                 top: 16,
                 right: 16,
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Statistics Button
-                    GestureDetector(
-                      onTap: () => context.push('/statistics'),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppTheme.surfaceColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text('📊', style: TextStyle(fontSize: 20)),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Achievements Button
-                    GestureDetector(
-                      onTap: () => context.push('/achievements'),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppTheme.surfaceColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text('🏆', style: TextStyle(fontSize: 20)),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
                     // Sound Toggle
                     GestureDetector(
                       onTap: () => ref.read(feedbackSettingsProvider.notifier).toggleSound(),
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(12),
@@ -75,16 +50,16 @@ class HomeScreen extends ConsumerWidget {
                         child: Icon(
                           feedbackSettings.soundEnabled ? Icons.volume_up : Icons.volume_off,
                           color: feedbackSettings.soundEnabled ? AppTheme.accentColor : AppTheme.textMuted,
-                          size: 24,
+                          size: 20,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     // Haptic Toggle
                     GestureDetector(
                       onTap: () => ref.read(feedbackSettingsProvider.notifier).toggleHaptic(),
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(12),
@@ -92,16 +67,16 @@ class HomeScreen extends ConsumerWidget {
                         child: Icon(
                           feedbackSettings.hapticEnabled ? Icons.vibration : Icons.phone_android,
                           color: feedbackSettings.hapticEnabled ? AppTheme.accentColor : AppTheme.textMuted,
-                          size: 24,
+                          size: 20,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     // Pro Badge / Go Pro Button
                     GestureDetector(
                       onTap: () => context.push('/pro'),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           gradient: ProService.instance.isPro
                               ? const LinearGradient(
@@ -114,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
                               ? [
                                   BoxShadow(
                                     color: const Color(0xFFFFD700).withValues(alpha: 0.3),
-                                    blurRadius: 8,
+                                    blurRadius: 6,
                                     offset: const Offset(0, 2),
                                   ),
                                 ]
@@ -125,13 +100,13 @@ class HomeScreen extends ConsumerWidget {
                           children: [
                             Text(
                               ProService.instance.isPro ? '👑' : '✨',
-                              style: const TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 14),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 3),
                             Text(
                               ProService.instance.isPro ? 'PRO' : 'Go Pro',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: FontWeight.bold,
                                 color: ProService.instance.isPro ? Colors.white : AppTheme.primaryColor,
                               ),
@@ -140,12 +115,12 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     // Settings Button
                     GestureDetector(
                       onTap: () => context.push('/settings'),
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(12),
@@ -153,7 +128,7 @@ class HomeScreen extends ConsumerWidget {
                         child: const Icon(
                           Icons.settings,
                           color: AppTheme.textSecondary,
-                          size: 24,
+                          size: 20,
                         ),
                       ),
                     ),
@@ -172,14 +147,24 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Minimum spacing from top bar
+                        const SizedBox(height: 20),
                         // Logo/Title Area
-                        Spacer(flex: screenHeight < 700 ? 1 : 2),
-                        _buildLogo(scaleFactor),
-                        SizedBox(height: 16 * scaleFactor),
-                        _buildTitle(scaleFactor),
-                        SizedBox(height: 8 * scaleFactor),
-                        _buildSubtitle(context, scaleFactor),
-                        const Spacer(flex: 1),
+                        Spacer(flex: screenHeight < 700 ? 1 : 1),
+                        _buildLogo(scaleFactor, screenHeight),
+                        // Pull title closer to logo (compensate for image padding)
+                        Transform.translate(
+                          offset: Offset(0, screenHeight < 750 ? -40 * scaleFactor : -60 * scaleFactor),
+                          child: Column(
+                            children: [
+                              _buildTitle(scaleFactor),
+                              SizedBox(height: 4 * scaleFactor),
+                              _buildSubtitle(context, scaleFactor),
+                            ],
+                          ),
+                        ),
+                        // Reduced spacer (compensate for Transform offset)
+                        SizedBox(height: 0),
                         
                         // Stats Card
                         statsAsync.when(
@@ -192,11 +177,11 @@ class HomeScreen extends ConsumerWidget {
                         
                         // Play Button
                         _buildPlayButton(context, scaleFactor),
-                        SizedBox(height: 12 * scaleFactor),
+                        SizedBox(height: 16 * scaleFactor),
                         
                         // Daily Challenge Button
                         _buildDailyChallengeButton(context, scaleFactor),
-                        SizedBox(height: 12 * scaleFactor),
+                        SizedBox(height: 16 * scaleFactor),
                         
                         // Multiplayer Button
                         _buildMultiplayerButton(context, scaleFactor),
@@ -214,35 +199,26 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildLogo(double scale) {
+  Widget _buildLogo(double scale, double screenHeight) {
+    // Dynamic logo size based on screen height
+    // Very small (<700): 150px, Small (700-750): 180px, Medium (750-850): 220px, Large (>850): 280px
+    double baseLogoSize;
+    if (screenHeight < 700) {
+      baseLogoSize = 150;
+    } else if (screenHeight < 750) {
+      baseLogoSize = 180;
+    } else if (screenHeight < 850) {
+      baseLogoSize = 220;
+    } else {
+      baseLogoSize = 280;
+    }
+    
     return Container(
-      width: 120 * scale,
-      height: 120 * scale,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30 * scale),
-        boxShadow: [
-          // Cyan glow (top/left - for up arrow)
-          BoxShadow(
-            color: AppTheme.accentColor.withOpacity(0.4),
-            blurRadius: 30 * scale,
-            spreadRadius: 3 * scale,
-            offset: Offset(-5 * scale, -5 * scale),
-          ),
-          // Orange glow (bottom/right - for down arrow)
-          BoxShadow(
-            color: AppTheme.warningColor.withOpacity(0.4),
-            blurRadius: 30 * scale,
-            spreadRadius: 3 * scale,
-            offset: Offset(5 * scale, 5 * scale),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30 * scale),
-        child: Image.asset(
-          'assets/icons/app_icon.png',
-          fit: BoxFit.cover,
-        ),
+      width: baseLogoSize * scale,
+      height: baseLogoSize * scale,
+      child: Image.asset(
+        'assets/icons/app_icon.png',
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -284,7 +260,7 @@ class HomeScreen extends ConsumerWidget {
       padding: EdgeInsets.all(20 * scale),
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(20 * scale),
+        borderRadius: BorderRadius.circular(16 * scale),
         border: Border.all(
           color: AppTheme.primaryColor.withOpacity(0.3),
           width: 1,
@@ -342,6 +318,88 @@ class HomeScreen extends ConsumerWidget {
               valueColor: const AlwaysStoppedAnimation(AppTheme.primaryColor),
             ),
           ),
+          SizedBox(height: 12 * scale),
+          // Quick access links
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => context.push('/statistics'),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12 * scale,
+                      vertical: 8 * scale,
+                    ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(16 * scale),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.bar_chart,
+                        size: 14 * scale,
+                        color: AppTheme.primaryColor,
+                      ),
+                      SizedBox(width: 4 * scale),
+                      Flexible(
+                        child: Text(
+                          l10n.statistics,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11 * scale,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 12 * scale),
+            Flexible(
+              child: GestureDetector(
+                onTap: () => context.push('/achievements'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12 * scale,
+                    vertical: 8 * scale,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.warningColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(16 * scale),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.emoji_events,
+                        size: 14 * scale,
+                        color: AppTheme.warningColor,
+                      ),
+                      SizedBox(width: 4 * scale),
+                      Flexible(
+                        child: Text(
+                          l10n.achievements,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11 * scale,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.warningColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         ],
       ),
     );
@@ -416,7 +474,7 @@ class HomeScreen extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: AppTheme.warningColor.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppTheme.warningColor.withOpacity(0.5),
           width: 1,
