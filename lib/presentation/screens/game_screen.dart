@@ -935,40 +935,53 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           ),
         ],
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: categoryColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              '$cardNumber',
-              style: TextStyle(
-                color: categoryColor,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Card number badge - scaled to fit
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                decoration: BoxDecoration(
+                  color: categoryColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$cardNumber',
+                  style: TextStyle(
+                    color: categoryColor,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Text(
-              labelsVisible ? item.displayValue : '?',
-              style: TextStyle(
-                color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
-                fontSize: labelsVisible ? fontSize : fontSize * 1.5,
-                fontWeight: FontWeight.w600,
+              const SizedBox(height: 2),
+              // Value text - fitted to available space
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: Text(
+                      labelsVisible ? item.displayValue : '?',
+                      style: TextStyle(
+                        color: labelsVisible ? AppTheme.textPrimary : AppTheme.textMuted,
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                    ),
+                  ),
+                ),
               ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
