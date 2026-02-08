@@ -151,7 +151,7 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 20),
                         // Logo/Title Area
                         Spacer(flex: screenHeight < 700 ? 1 : 1),
-                        _buildLogo(scaleFactor),
+                        _buildLogo(scaleFactor, screenHeight),
                         // Pull title closer to logo (compensate for image padding)
                         Transform.translate(
                           offset: Offset(0, -60 * scaleFactor),
@@ -199,26 +199,21 @@ class HomeScreen extends ConsumerWidget {
     );
   }
   
-  Widget _buildLogo(double scale) {
+  Widget _buildLogo(double scale, double screenHeight) {
+    // Dynamic logo size based on screen height
+    // Small screens (< 700): 200px, Medium (700-850): 260px, Large (> 850): 320px
+    double baseLogoSize;
+    if (screenHeight < 700) {
+      baseLogoSize = 200;
+    } else if (screenHeight < 850) {
+      baseLogoSize = 260;
+    } else {
+      baseLogoSize = 320;
+    }
+    
     return Container(
-      width: 320 * scale,
-      height: 320 * scale,
-      // decoration: BoxDecoration(
-      //   // Subtle glow effect behind the logo
-      //   boxShadow: [
-      //     // Center glow (subtle ambient)
-      //     BoxShadow(
-      //       color: AppTheme.accentColor.withValues(alpha: 0.15),
-      //       blurRadius: 50 * scale,
-      //       spreadRadius: 10 * scale,
-      //     ),
-      //     BoxShadow(
-      //       color: AppTheme.warningColor.withValues(alpha: 0.1),
-      //       blurRadius: 60 * scale,
-      //       spreadRadius: 15 * scale,
-      //     ),
-      //   ],
-      // ),
+      width: baseLogoSize * scale,
+      height: baseLogoSize * scale,
       child: Image.asset(
         'assets/icons/app_icon.png',
         fit: BoxFit.contain,
