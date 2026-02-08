@@ -193,24 +193,21 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildLogo(double scale) {
     return Container(
-      width: 140 * scale,
-      height: 140 * scale,
+      width: 180 * scale,
+      height: 180 * scale,
       decoration: BoxDecoration(
-        // Glow effect behind the logo
+        // Subtle glow effect behind the logo
         boxShadow: [
-          // Cyan glow (top/left - for up arrow)
+          // Center glow (subtle ambient)
           BoxShadow(
-            color: AppTheme.accentColor.withValues(alpha: 0.3),
-            blurRadius: 40 * scale,
-            spreadRadius: 5 * scale,
-            offset: Offset(-10 * scale, -10 * scale),
+            color: AppTheme.accentColor.withValues(alpha: 0.15),
+            blurRadius: 50 * scale,
+            spreadRadius: 10 * scale,
           ),
-          // Orange glow (bottom/right - for down arrow)
           BoxShadow(
-            color: AppTheme.warningColor.withValues(alpha: 0.3),
-            blurRadius: 40 * scale,
-            spreadRadius: 5 * scale,
-            offset: Offset(10 * scale, 10 * scale),
+            color: AppTheme.warningColor.withValues(alpha: 0.1),
+            blurRadius: 60 * scale,
+            spreadRadius: 15 * scale,
           ),
         ],
       ),
