@@ -152,8 +152,11 @@ class HomeScreen extends ConsumerWidget {
                         // Logo/Title Area
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                         _buildLogo(scaleFactor),
-                        SizedBox(height: 4 * scaleFactor),
-                        _buildTitle(scaleFactor),
+                        // Pull title closer to logo (compensate for image padding)
+                        Transform.translate(
+                          offset: Offset(0, -20 * scaleFactor),
+                          child: _buildTitle(scaleFactor),
+                        ),
                         SizedBox(height: 8 * scaleFactor),
                         _buildSubtitle(context, scaleFactor),
                         const Spacer(flex: 1),
