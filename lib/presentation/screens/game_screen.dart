@@ -657,71 +657,72 @@ class _GameScreenState extends ConsumerState<GameScreen> {
           final double availableWidth = constraints.maxWidth;
           final double availableHeight = constraints.maxHeight;
           
-          // Adaptive column count based on screen width AND item count
-          // For levels with many items, use more columns to fit everything
-          int crossAxisCount;
-          if (availableWidth > 800) {
-            crossAxisCount = totalItems > 20 ? 10 : 8;
-          } else if (availableWidth > 500) {
-            crossAxisCount = totalItems > 20 ? 8 : 7;
-          } else {
-            // Phone: adapt based on item count
-            if (totalItems >= 30) {
-              crossAxisCount = 7; // Maximum columns for 30+ items
-            } else if (totalItems > 20) {
-              crossAxisCount = 6; // More columns for 20-29 items
-            } else if (totalItems > 12) {
-              crossAxisCount = 5; // Standard for 12-20 items
-            } else {
-              crossAxisCount = 4; // Fewer columns for small levels (bigger cards)
+          // Calculate optimal grid that fits ALL items without scrolling
+          // Try different column counts and pick the one that gives largest cards
+          int bestCols = 4;
+          double bestCardSize = 0;
+          
+          for (int cols = 3; cols <= 10; cols++) {
+            final int rows = (totalItems / cols).ceil();
+            final double spacing = 6.0;
+            
+            // Calculate max card width for this column count
+            final double maxCardWidth = (availableWidth - (cols - 1) * spacing) / cols;
+            // Calculate max card height for this row count
+            final double maxCardHeight = (availableHeight - (rows - 1) * spacing - 20) / rows;
+            
+            // Card size is limited by the smaller dimension
+            final double cardSize = maxCardWidth < maxCardHeight ? maxCardWidth : maxCardHeight;
+            
+            // Check if this fits and gives larger cards
+            if (cardSize > 30 && cardSize > bestCardSize) {
+              bestCardSize = cardSize;
+              bestCols = cols;
             }
           }
           
-          // Calculate rows needed
+          // Use the best column count found
+          final int crossAxisCount = bestCols;
+          
+          // Spacing - slightly reduced for tighter grid
+          final double spacing = 6.0;
+          
+          // Recalculate card dimensions with best columns
           final int rowCount = (totalItems / crossAxisCount).ceil();
+          final double maxCardWidth = (availableWidth - (crossAxisCount - 1) * spacing) / crossAxisCount;
+          final double maxCardHeight = (availableHeight - (rowCount - 1) * spacing - 20) / rowCount;
           
-          // Reduce spacing for large grids
-          final double spacing = totalItems >= 30 ? 4.0 : (totalItems > 20 ? 6.0 : 8.0);
+          // Use the smaller dimension to ensure it fits both ways
+          final double cardSize = maxCardWidth < maxCardHeight ? maxCardWidth : maxCardHeight;
+          final double cardWidth = cardSize;
+          final double cardHeight = cardSize; // Square cards
           
-          // Calculate width based on available space and column count
-          final double totalSpacing = (crossAxisCount - 1) * spacing;
-          final double cardWidth = (availableWidth - totalSpacing) / crossAxisCount;
+          // Proportional font size
+          final double fontSize = cardWidth * 0.22;
           
-          // Dynamic height - reduce aspect ratio for large grids to fit more rows
-          final double aspectRatio = totalItems >= 30 ? 1.0 : (totalItems > 20 ? 1.1 : 1.2);
-          final double cardHeight = cardWidth * aspectRatio;
-          
-          // Proportional font size - smaller for large grids
-          final double fontSize = cardWidth * (totalItems >= 30 ? 0.18 : (totalItems > 20 ? 0.20 : 0.22));
-          
-          return SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: spacing,
-                  runSpacing: spacing,
-                  alignment: WrapAlignment.center,
-                  children: List.generate(items.length, (index) {
-                    final item = items[index];
-                    // Disable drag during memorizing phase
-                    final bool canDrag = gameState.phase != GamePhase.memorizing;
-                    // Get original position for display (memory mode: card number moves with card)
-                    final int displayIndex = gameState.getOriginalIndex(item);
-                    return _buildDraggableCard(
-                      item, 
-                      index, 
-                      categoryColor, 
-                      cardWidth, 
-                      cardHeight, 
-                      fontSize,
-                      labelsVisible: gameState.labelsVisible,
-                      canDrag: canDrag,
-                      displayIndex: displayIndex,
-                    );
-                  }),
-                ),
-              ],
+          return Center(
+            child: Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              alignment: WrapAlignment.center,
+              children: List.generate(items.length, (index) {
+                final item = items[index];
+                // Disable drag during memorizing phase
+                final bool canDrag = gameState.phase != GamePhase.memorizing;
+                // Get original position for display (memory mode: card number moves with card)
+                final int displayIndex = gameState.getOriginalIndex(item);
+                return _buildDraggableCard(
+                  item, 
+                  index, 
+                  categoryColor, 
+                  cardWidth, 
+                  cardHeight, 
+                  fontSize,
+                  labelsVisible: gameState.labelsVisible,
+                  canDrag: canDrag,
+                  displayIndex: displayIndex,
+                );
+              }),
             ),
           );
         },

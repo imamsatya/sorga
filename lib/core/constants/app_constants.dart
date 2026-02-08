@@ -10,7 +10,7 @@ class AppConstants {
   
   // 📢 Ads Toggle - set to false to disable all ads (AdMob suspended)
   // Set to true when AdMob account is active again
-  static const bool adsEnabled = false;  
+  static const bool adsEnabled = true;  
   // Level Constants
   static const int totalLevels = 600; // 500 regular + 100 knowledge
   

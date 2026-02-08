@@ -580,18 +580,24 @@ Can you beat my time? 💪
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.timer, color: AppTheme.accentColor, size: 28),
               const SizedBox(width: 12),
-              Text(
-                gameState.level.isMemory
-                    ? _formatTotalTime(gameState.memorizeTime + gameState.elapsedTime)
-                    : gameState.formattedTime,
-                style: const TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                  fontFamily: 'monospace',
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    gameState.level.isMemory
+                        ? _formatTotalTime(gameState.memorizeTime + gameState.elapsedTime)
+                        : gameState.formattedTime,
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
                 ),
               ),
             ],
