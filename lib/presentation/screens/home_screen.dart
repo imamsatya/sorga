@@ -154,7 +154,7 @@ class HomeScreen extends ConsumerWidget {
                         _buildLogo(scaleFactor, screenHeight),
                         // Pull title closer to logo (compensate for image padding)
                         Transform.translate(
-                          offset: Offset(0, -60 * scaleFactor),
+                          offset: Offset(0, screenHeight < 750 ? -40 * scaleFactor : -60 * scaleFactor),
                           child: Column(
                             children: [
                               _buildTitle(scaleFactor),
@@ -201,14 +201,16 @@ class HomeScreen extends ConsumerWidget {
   
   Widget _buildLogo(double scale, double screenHeight) {
     // Dynamic logo size based on screen height
-    // Small screens (< 700): 200px, Medium (700-850): 260px, Large (> 850): 320px
+    // Very small (<700): 150px, Small (700-750): 180px, Medium (750-850): 220px, Large (>850): 280px
     double baseLogoSize;
     if (screenHeight < 700) {
-      baseLogoSize = 200;
+      baseLogoSize = 150;
+    } else if (screenHeight < 750) {
+      baseLogoSize = 180;
     } else if (screenHeight < 850) {
-      baseLogoSize = 260;
+      baseLogoSize = 220;
     } else {
-      baseLogoSize = 320;
+      baseLogoSize = 280;
     }
     
     return Container(
@@ -338,16 +340,19 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.bar_chart,
-                        size: 16 * scale,
+                        size: 14 * scale,
                         color: AppTheme.primaryColor,
                       ),
-                      SizedBox(width: 6 * scale),
-                      Text(
-                        l10n.statistics,
-                        style: TextStyle(
-                          fontSize: 12 * scale,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.primaryColor,
+                      SizedBox(width: 4 * scale),
+                      Flexible(
+                        child: Text(
+                          l10n.statistics,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11 * scale,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.primaryColor,
+                          ),
                         ),
                       ),
                     ],
@@ -373,16 +378,19 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       Icon(
                         Icons.emoji_events,
-                        size: 16 * scale,
+                        size: 14 * scale,
                         color: AppTheme.warningColor,
                       ),
-                      SizedBox(width: 6 * scale),
-                      Text(
-                        l10n.achievements,
-                        style: TextStyle(
-                          fontSize: 12 * scale,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.warningColor,
+                      SizedBox(width: 4 * scale),
+                      Flexible(
+                        child: Text(
+                          l10n.achievements,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11 * scale,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.warningColor,
+                          ),
                         ),
                       ),
                     ],
