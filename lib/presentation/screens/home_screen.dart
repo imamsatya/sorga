@@ -324,13 +324,14 @@ class HomeScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              GestureDetector(
-                onTap: () => context.push('/statistics'),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16 * scale,
-                    vertical: 8 * scale,
-                  ),
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => context.push('/statistics'),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12 * scale,
+                      vertical: 8 * scale,
+                    ),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20 * scale),
@@ -356,11 +357,14 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              GestureDetector(
+            ),
+            SizedBox(width: 8 * scale),
+            Flexible(
+              child: GestureDetector(
                 onTap: () => context.push('/achievements'),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 16 * scale,
+                    horizontal: 12 * scale,
                     vertical: 8 * scale,
                   ),
                   decoration: BoxDecoration(
@@ -388,8 +392,9 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
         ],
       ),
     );
