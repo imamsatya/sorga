@@ -147,6 +147,8 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Minimum spacing from top bar
+                        const SizedBox(height: 60),
                         // Logo/Title Area
                         Spacer(flex: screenHeight < 700 ? 1 : 2),
                         _buildLogo(scaleFactor),

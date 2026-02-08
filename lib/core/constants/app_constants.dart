@@ -6,7 +6,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   
   // 🔧 Development Mode - set to false for production
-  static const bool isDevMode = true;
+  static const bool isDevMode = false;
   
   // 📢 Ads Toggle - set to false to disable all ads (AdMob suspended)
   // Set to true when AdMob account is active again
