@@ -148,13 +148,13 @@ class HomeScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Minimum spacing from top bar
-                        const SizedBox(height: 60),
+                        const SizedBox(height: 20),
                         // Logo/Title Area
-                        Spacer(flex: screenHeight < 700 ? 1 : 2),
+                        Spacer(flex: screenHeight < 700 ? 1 : 1),
                         _buildLogo(scaleFactor),
                         // Pull title closer to logo (compensate for image padding)
                         Transform.translate(
-                          offset: Offset(0, -20 * scaleFactor),
+                          offset: Offset(0, -60 * scaleFactor),
                           child: _buildTitle(scaleFactor),
                         ),
                         SizedBox(height: 8 * scaleFactor),
