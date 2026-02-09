@@ -14,6 +14,40 @@ class LevelGenerator {
   /// Random generator with seed for reproducibility
   Random _getSeededRandom(int levelId) => Random(levelId * 12345);
   
+  /// Ensure items are not already in sorted order (would make level trivial)
+  /// Reshuffles if items happen to be in correct order
+  void _ensureNotSorted(List<LevelItem> items, SortOrder sortOrder, Random random) {
+    int attempts = 0;
+    while (_isSorted(items, sortOrder) && attempts < 10) {
+      items.shuffle(random);
+      attempts++;
+    }
+    
+    // If still sorted after 10 attempts, just swap first two items
+    if (_isSorted(items, sortOrder) && items.length >= 2) {
+      final temp = items[0];
+      items[0] = items[1];
+      items[1] = temp;
+    }
+  }
+  
+  /// Check if items are already in the target sorted order
+  bool _isSorted(List<LevelItem> items, SortOrder sortOrder) {
+    if (items.length < 2) return false;
+    
+    for (int i = 0; i < items.length - 1; i++) {
+      final current = items[i].sortValue;
+      final next = items[i + 1].sortValue;
+      
+      if (sortOrder == SortOrder.ascending) {
+        if (current > next) return false;
+      } else {
+        if (current < next) return false;
+      }
+    }
+    return true;
+  }
+  
   /// Get sort order for a level within its category (ensures max 3 consecutive same type)
   SortOrder _getSortOrder(LevelCategory category, int relativeId) {
     if (!_sortOrderCache.containsKey(category)) {
@@ -313,8 +347,9 @@ class LevelGenerator {
       );
     }).toList();
     
-    // Shuffle items
+    // Shuffle items and ensure not already sorted
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     return Level(
       id: levelId,
@@ -344,6 +379,7 @@ class LevelGenerator {
     
     final items = _generateFormattedItems(random, itemCount, formatType, levelId);
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     final formatName = ['fractions', 'powers', 'percentages'][formatType];
     
@@ -440,6 +476,7 @@ class LevelGenerator {
     final itemCount = _getItemCountForLevel(relativeId);
     final items = _generateTimeItems(random, itemCount);
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     return Level(
       id: levelId,
@@ -550,6 +587,7 @@ class LevelGenerator {
     }).toList();
     
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     return Level(
       id: levelId,
@@ -581,6 +619,7 @@ class LevelGenerator {
     }
     
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     return Level(
       id: levelId,
@@ -678,6 +717,7 @@ class LevelGenerator {
     }).toList();
     
     items.shuffle(random);
+    _ensureNotSorted(items, sortOrder, random);
     
     return Level(
       id: levelId,

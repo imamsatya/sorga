@@ -38,7 +38,7 @@ class DailyChallengeGenerator {
     
     // DEV MODE: Reduced to 3 items for testing
     // TODO: Change back to 15 + random.nextInt(16) for production (15-30 items)
-    final itemCount = 3;
+    final itemCount = 15 + random.nextInt(16);
     
     // Random sort order
     final sortOrder = random.nextBool() 
