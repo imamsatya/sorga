@@ -2,15 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/services/ad_service.dart';
 import '../../domain/entities/multiplayer_session.dart';
 import '../providers/multiplayer_provider.dart';
 import '../../l10n/app_localizations.dart';
 
-class MultiplayerResultsScreen extends ConsumerWidget {
+class MultiplayerResultsScreen extends ConsumerStatefulWidget {
   const MultiplayerResultsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MultiplayerResultsScreen> createState() => _MultiplayerResultsScreenState();
+}
+
+class _MultiplayerResultsScreenState extends ConsumerState<MultiplayerResultsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Show interstitial ad before results are displayed
+    if (AdService.isSupported) {
+      AdService.instance.onLevelCompleted();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final session = ref.watch(multiplayerSessionProvider);
     if (session == null) {
       return const Scaffold(backgroundColor: AppTheme.backgroundDark, body: Center(child: Text('No session', style: TextStyle(color: Colors.white))));

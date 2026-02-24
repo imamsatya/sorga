@@ -969,6 +969,8 @@ Can you beat my time? 💪
                           if (gameState != null) {
                             // Reset failed attempts to allow one more try
                             ref.read(gameStateProvider.notifier).resetFailedAttempts();
+                            // Continue game to preserve current order and timer
+                            ref.read(gameStateProvider.notifier).continueGame();
                             
                             // Navigate back to game
                             if (gameState.level.localId == 0) {

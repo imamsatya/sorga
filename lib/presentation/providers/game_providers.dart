@@ -79,7 +79,7 @@ final highestUnlockedProvider = FutureProvider<int>((ref) async {
   return repository.getHighestUnlockedLevel();
 });
 
-/// Check if a level is unlocked
+/// Check if a level is unlocked (per-category progression)
 final isLevelUnlockedProvider = FutureProvider.family<bool, int>((ref, levelId) async {
   // In dev mode, all levels are unlocked
   if (AppConstants.isDevMode) return true;
@@ -96,16 +96,9 @@ final isLevelUnlockedProvider = FutureProvider.family<bool, int>((ref, levelId) 
   
   if (categoryStarts.contains(levelId)) return true;
   
-  // Check if previous level is completed (allows progression within a category)
-  if (levelId > 1) {
-    final prevProgress = await ref.watch(levelProgressProvider(levelId - 1).future);
-    if (prevProgress != null && prevProgress.completed) {
-      return true;
-    }
-  }
-  
-  final highest = await ref.watch(highestUnlockedProvider.future);
-  return levelId <= highest;
+  // Only unlock if previous level in the SAME category is completed
+  final prevProgress = await ref.watch(levelProgressProvider(levelId - 1).future);
+  return prevProgress != null && prevProgress.completed;
 });
 
 /// Total levels constant
