@@ -26,6 +26,12 @@ class AdService {
   int _levelCompletionCount = 0;
   static const int _levelsPerInterstitial = 3;
   
+  // Anti-spam: Cooldown & session cap for interstitial ads
+  DateTime? _lastInterstitialTime;
+  int _interstitialSessionCount = 0;
+  static const int _interstitialCooldownSeconds = 60; // Min 60s between interstitials
+  static const int _maxInterstitialsPerSession = 5;   // Max 5 interstitials per app session
+  
   // Debug info for troubleshooting
   String _lastError = '';
   String get lastError => _lastError;
@@ -294,6 +300,7 @@ class AdService {
   
   /// Call this when a level is completed successfully
   /// Returns true if an interstitial ad was shown
+  /// Includes anti-spam protections: cooldown + session cap
   Future<bool> onLevelCompleted() async {
     if (!isSupported || !_isInitialized) return false;
     
@@ -302,7 +309,29 @@ class AdService {
     
     if (_levelCompletionCount >= _levelsPerInterstitial) {
       _levelCompletionCount = 0;
-      return await _showInterstitialAd();
+      
+      // Anti-spam: Check session cap
+      if (_interstitialSessionCount >= _maxInterstitialsPerSession) {
+        debugPrint('📢 AdService: Session cap reached ($_interstitialSessionCount/$_maxInterstitialsPerSession), skipping ad');
+        return false;
+      }
+      
+      // Anti-spam: Check cooldown
+      if (_lastInterstitialTime != null) {
+        final elapsed = DateTime.now().difference(_lastInterstitialTime!).inSeconds;
+        if (elapsed < _interstitialCooldownSeconds) {
+          debugPrint('📢 AdService: Cooldown active (${_interstitialCooldownSeconds - elapsed}s remaining), skipping ad');
+          return false;
+        }
+      }
+      
+      final shown = await _showInterstitialAd();
+      if (shown) {
+        _lastInterstitialTime = DateTime.now();
+        _interstitialSessionCount++;
+        debugPrint('📢 AdService: Session interstitial count: $_interstitialSessionCount/$_maxInterstitialsPerSession');
+      }
+      return shown;
     }
     
     return false;
