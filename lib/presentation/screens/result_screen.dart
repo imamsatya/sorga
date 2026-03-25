@@ -84,7 +84,7 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
       await Share.shareXFiles(
         [xFile],
-        text: 'I just completed this level in SORTIQ! Can you beat my time?',
+        text: 'I just completed this level in SORTIQ! Can you beat my time? 💪\n\nDownload: https://play.google.com/store/apps/details?id=com.sorga.sorga',
       );
     } catch (e) {
       debugPrint('Error sharing: $e');
@@ -126,6 +126,8 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
 
 Can you beat my time? 💪
 #SORTIQDaily #PuzzleGame
+
+📲 https://play.google.com/store/apps/details?id=com.sorga.sorga
 '''.trim();
     
     try {
@@ -1057,17 +1059,9 @@ Can you beat my time? 💪
                 ),
                 const SizedBox(height: 12),
               ],
-              // 2. Go Pro for unlimited mistakes (dummy)
+              // 2. Go Pro for unlimited mistakes
               GestureDetector(
-                onTap: () {
-                  // TODO: Integrate IAP / payment
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('⭐ Pro upgrade coming soon!'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/pro'),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 16),

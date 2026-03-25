@@ -590,7 +590,7 @@ class LevelSelectScreen extends ConsumerWidget {
 
       await Share.shareXFiles(
         [xFile],
-        text: message,
+        text: '$message\n\n📲 https://play.google.com/store/apps/details?id=com.sorga.sorga',
       );
     } catch (e) {
       debugPrint('Error sharing: $e');

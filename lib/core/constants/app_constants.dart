@@ -3,7 +3,7 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = 'SORTIQ';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.2.0';
   
   // 🔧 Development Mode - set to false for production
   static const bool isDevMode = false;

@@ -453,6 +453,8 @@ class DailyChallengeScreen extends ConsumerWidget {
 
 Can you beat my time? 💪
 #SORTIQDaily #PuzzleGame
+
+📲 https://play.google.com/store/apps/details?id=com.sorga.sorga
 '''.trim();
     
     try {
