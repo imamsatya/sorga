@@ -5,7 +5,6 @@ import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
 import '../../domain/entities/level_item.dart';
 import '../../domain/entities/multiplayer_session.dart';
-import '../../levels/level_generator.dart';
 
 /// Provider for the multiplayer session
 final multiplayerSessionProvider = StateNotifierProvider<MultiplayerNotifier, MultiplayerSession?>(
@@ -15,9 +14,7 @@ final multiplayerSessionProvider = StateNotifierProvider<MultiplayerNotifier, Mu
 /// Notifier for managing multiplayer game state
 class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
   MultiplayerNotifier() : super(null);
-  
-  final LevelGenerator _levelGenerator = LevelGenerator();
-  
+
   /// Start a new multiplayer session
   void startSession({
     required int itemCount,
@@ -67,8 +64,6 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
     required bool isMemoryMode,
     required String sessionId,
   }) {
-    // Use a sample level from the category and adjust item count
-    final sampleLevel = _levelGenerator.getLevelsByCategory(category).first;
     final random = Random(sessionId.hashCode);
     
     // Generate items based on category
