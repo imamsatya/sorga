@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/services/ad_service.dart';
+import '../../core/services/pro_service.dart';
 import '../../domain/entities/multiplayer_session.dart';
 import '../providers/multiplayer_provider.dart';
 import '../../l10n/app_localizations.dart';
@@ -18,8 +19,8 @@ class _MultiplayerResultsScreenState extends ConsumerState<MultiplayerResultsScr
   @override
   void initState() {
     super.initState();
-    // Show interstitial ad before results are displayed
-    if (AdService.isSupported) {
+    // Show interstitial ad before results are displayed (non-Pro users only)
+    if (AdService.isSupported && !ProService.instance.isPro) {
       AdService.instance.onLevelCompleted();
     }
   }
