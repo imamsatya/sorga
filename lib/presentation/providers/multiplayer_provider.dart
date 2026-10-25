@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/local_database.dart';
 import '../../domain/entities/level.dart';
@@ -38,7 +39,7 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
     }).toList();
     
     // Generate a custom level for this session
-    final level = _generateCustomLevel(
+    final level = generateCustomLevel(
       category: category,
       itemCount: itemCount,
       isMemoryMode: isMemoryMode,
@@ -59,7 +60,8 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
   }
   
   /// Generate a custom level based on session settings
-  Level _generateCustomLevel({
+  @visibleForTesting
+  Level generateCustomLevel({
     required LevelCategory category,
     required int itemCount,
     required bool isMemoryMode,
@@ -127,7 +129,11 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
         // Generate time durations
         final times = <int>{};
         while (times.length < itemCount) {
-          times.add(random.nextInt(7200) + 60); // 1 min to 2 hours in seconds
+          var t = random.nextInt(7200) + 60; // 1 min to 2 hours in seconds
+          // Durations >= 1 hour are displayed without seconds ("1h 5m"),
+          // so drop the seconds to keep sortValue in line with the display
+          if (t >= 3600) t -= t % 60;
+          times.add(t);
         }
         return times.map((t) {
           final hours = t ~/ 3600;
@@ -156,12 +162,14 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
           'Owen', 'Elizabeth', 'Samuel', 'Sofia', 'Ryan', 'Avery'];
         final shuffled = List<String>.from(firstNames)..shuffle(random);
         final selected = shuffled.take(itemCount).toList();
-        return selected.asMap().entries.map((entry) {
-          final name = entry.value;
+        // Use the index in the alphabetically sorted list as the sort value.
+        // This guarantees correct ordering regardless of name length.
+        final sortedReference = List<String>.from(selected)..sort();
+        return selected.map((name) {
           return LevelItem(
             id: 'item_$name',
             displayValue: name,
-            sortValue: name.toLowerCase().codeUnits.fold(0.0, (sum, c) => sum * 26 + c - 96),
+            sortValue: sortedReference.indexOf(name).toDouble(),
           );
         }).toList();
         
@@ -175,7 +183,8 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
           // Randomly format some as decimals, some as plain
           final useDecimal = random.nextBool();
           if (useDecimal) {
-            final decimal = n + random.nextDouble();
+            // .01-.99 so the 2-decimal display never rounds up to n + 1
+            final decimal = n + (random.nextInt(99) + 1) / 100;
             return LevelItem(
               id: 'item_$n',
               displayValue: decimal.toStringAsFixed(2),
@@ -298,7 +307,7 @@ class MultiplayerNotifier extends StateNotifier<MultiplayerSession?> {
     if (state == null) return;
     
     final newSessionId = DateTime.now().millisecondsSinceEpoch.toString();
-    final newLevel = _generateCustomLevel(
+    final newLevel = generateCustomLevel(
       category: state!.category,
       itemCount: state!.itemCount,
       isMemoryMode: state!.isMemoryMode,

@@ -166,23 +166,25 @@ class DailyChallengeGenerator {
       
       do {
         final unitType = random.nextInt(4);
+        // Values are rounded to the displayed precision first so that
+        // sortValue matches exactly what the player sees
         switch (unitType) {
           case 0:
             seconds = random.nextInt(120) + 1;
             display = '$seconds sec';
             break;
           case 1:
-            final minutes = random.nextDouble() * 60;
+            final minutes = (random.nextDouble() * 600).round() / 10;
             seconds = (minutes * 60).round();
             display = '${minutes.toStringAsFixed(1)} min';
             break;
           case 2:
-            final hours = random.nextDouble() * 24;
+            final hours = (random.nextDouble() * 2400).round() / 100;
             seconds = (hours * 3600).round();
             display = '${hours.toStringAsFixed(2)} hr';
             break;
           default:
-            final days = random.nextDouble() * 7;
+            final days = (random.nextDouble() * 700).round() / 100;
             seconds = (days * 86400).round();
             display = '${days.toStringAsFixed(2)} days';
         }

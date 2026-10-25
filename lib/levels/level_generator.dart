@@ -218,7 +218,7 @@ class LevelGenerator {
       case LevelCategory.basic:
         return _generateBasicItems(random, count);
       case LevelCategory.formatted:
-        final formatType = (levelId % 5);
+        final formatType = levelId % 3; // 0: fractions, 1: powers, 2: percentages
         return _generateFormattedItems(random, count, formatType, levelId + _memorySeedOffset);
       case LevelCategory.time:
         return _generateTimeItems(random, count);
@@ -452,10 +452,11 @@ class LevelGenerator {
         );
       
       default:
+        final value = random.nextInt(100);
         return LevelItem(
           id: 'item_$index',
-          displayValue: '${random.nextInt(100)}',
-          sortValue: random.nextDouble() * 100,
+          displayValue: '$value',
+          sortValue: value.toDouble(),
         );
     }
   }
@@ -500,23 +501,25 @@ class LevelGenerator {
       do {
         final unitType = random.nextInt(4); // 0: sec, 1: min, 2: hour, 3: day
         
+        // Values are rounded to the displayed precision first so that
+        // sortValue matches exactly what the player sees
         switch (unitType) {
           case 0:
             seconds = random.nextInt(120) + 1;
             display = '$seconds sec';
             break;
           case 1:
-            final minutes = random.nextDouble() * 60;
+            final minutes = (random.nextDouble() * 600).round() / 10;
             seconds = (minutes * 60).round();
             display = '${minutes.toStringAsFixed(1)} min';
             break;
           case 2:
-            final hours = random.nextDouble() * 24;
+            final hours = (random.nextDouble() * 2400).round() / 100;
             seconds = (hours * 3600).round();
             display = '${hours.toStringAsFixed(2)} hr';
             break;
           case 3:
-            final days = random.nextDouble() * 7;
+            final days = (random.nextDouble() * 700).round() / 100;
             seconds = (days * 86400).round();
             display = '${days.toStringAsFixed(2)} days';
             break;
